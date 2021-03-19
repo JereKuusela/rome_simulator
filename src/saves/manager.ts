@@ -1,4 +1,4 @@
-import { countriesIR, culturesIR, inventionsIR, laws, territoriesIR, traditionsArrayIR, traitsIR } from 'data'
+import { countriesIR, culturesIR, inventionsIR, laws, territoriesIR, traditionsIR, traitsIR } from 'data'
 import { flatten, sum } from 'lodash'
 import {
   ArmyName,
@@ -33,7 +33,7 @@ const getCharacterMartial = (character: SaveCharacter) =>
   sum(
     arrayify(character.traits).map(
       (key: string) =>
-        traitsIR[key]?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0
+        traitsIR.get(key)?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0
     )
   )
 
@@ -69,7 +69,7 @@ export const loadCountry = (file: Save, id: number) => {
     inventions: arrayify(data.active_inventions)
       .map((value, index) => (value ? index : -1))
       .filter(index => index > -1)
-      .map(index => inventionsIR[index]),
+      .map(index => inventionsIR.byIndex[index]),
     heritage: data.heritage ?? '',
     militaryExperience: data.currency_data?.military_experience ?? 0,
     name: (countriesIR[data.country_name?.name.toLowerCase() ?? ''] ?? '') as CountryName,
@@ -82,7 +82,7 @@ export const loadCountry = (file: Save, id: number) => {
     traditions: arrayify(data.military_bonuses)
       .map((value, index) => (value ? index : -1))
       .filter(index => index > -1)
-      .map(index => traditionsArrayIR[index]),
+      .map(index => traditionsIR.byIndex[index]),
     laws: [],
     surplus: [],
     ideas: flatten(arrayify(data.ideas?.idea).map(idea => idea.idea)),
@@ -244,7 +244,7 @@ export const loadCountryWithArmies = (save: Save, id: number) => {
 }
 
 export const countTech = (country: SaveCountry, tech: Tech) =>
-  country.inventions.filter(invention => invention.tech === tech).length + ' inventions'
+  country.inventions.filter(invention => invention.parent === tech).length + ' inventions'
 
 export const getTagName = (tag: string) =>
   countriesIR[tag.toLowerCase()] ? countriesIR[tag.toLowerCase()] + ' (' + tag + ')' : tag

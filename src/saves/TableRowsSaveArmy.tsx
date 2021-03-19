@@ -20,9 +20,7 @@ const TableRowsSaveArmy = ({ army }: { army: SaveArmy }) => {
     type => type,
     type => cohorts.filter(item => item === type).length
   )
-  const ability = abilitiesIR
-    .find(abilities => abilities.find(ability => ability.key === army.ability))
-    ?.find(ability => ability.key === army.ability)?.name
+  const ability = abilitiesIR.get(army.ability)
   return (
     <>
       <Table.Row>
@@ -48,7 +46,7 @@ const TableRowsSaveArmy = ({ army }: { army: SaveArmy }) => {
             ''
           )}
         </Table.Cell>
-        <Table.Cell>{army.leader ? army.leader.traits.map(key => traitsIR[key]?.name).join(', ') : ''}</Table.Cell>
+        <Table.Cell>{army.leader ? army.leader.traits.map(key => traitsIR.get(key)?.name).join(', ') : ''}</Table.Cell>
       </Table.Row>
       <Table.Row>
         <Table.Cell>Tactic / Ability</Table.Cell>

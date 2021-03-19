@@ -1,35 +1,28 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { readFiles, writeFile, getModifier, sort } = require('./core')
+const { readFiles, writeFile, getModifiers, isRelevant } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
-const results = {}
+const results = []
+const ignoredKeys = ['type', 'unit', 'opposites']
+
+const convertEntry = (key, rawGeneralModifiers, rawUnitModifiers, parent = undefined, ignoredKeys = []) => {
+  const generalModifiers = getModifiers(rawGeneralModifiers, ignoredKeys)
+  const unitModifiers = getModifiers(rawUnitModifiers, ignoredKeys)
+  const modifiers = [...generalModifiers, ...unitModifiers]
+  return {
+    name: getAttribute(key) || key,
+    key,
+    relevant: isRelevant(modifiers),
+    modifiers,
+    parent
+  }
+}
 
 const handler = data => {
   Object.keys(data).forEach(key => {
-    const name = getAttribute(key)
     const trait = data[key]
-    const entity = {
-      name,
-      key,
-      modifiers: []
-    }
-    Object.keys(trait).forEach(key => {
-      const attribute = trait[key]
-      if (key === 'type') return
-      if (key === 'unit') {
-        Object.keys(attribute).forEach(key => {
-          const modifier = getModifier(key, attribute[key])
-          if (modifier.target !== 'Text') entity.modifiers.push(modifier)
-        })
-        return
-      }
-      if (getAttribute(key)) {
-        const modifier = getModifier(key, attribute)
-        if (modifier.target !== 'Text') entity.modifiers.push(modifier)
-      }
-    })
-    results[key] = entity
+    results.push(convertEntry(key, trait, trait.unit, trait.type, ignoredKeys))
   })
 }
 
@@ -39,5 +32,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(path.join('ir', 'traits.json'), sort(results))
+  writeFile(path.join('ir', 'traits.json'), results)
 }

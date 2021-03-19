@@ -44,12 +44,6 @@ const SettingsTransform = createTransform(
   { whitelist: ['settings'] }
 )
 
-const IgnoreTransform = createTransform(
-  () => undefined,
-  () => ({}),
-  { whitelist: ['data'] }
-)
-
 const migrations = {
   11: () => rootReducer(undefined, { type: 'dummy' }) as never
 }
@@ -59,14 +53,7 @@ const persistConfig = {
   storage: storage,
   version: 11,
   migrate: createMigrate(migrations, { debug: false }),
-  transforms: [
-    TacticsTransform,
-    TerrainsTransform,
-    BattleTransform,
-    CountriesTransform,
-    SettingsTransform,
-    IgnoreTransform
-  ]
+  transforms: [TacticsTransform, TerrainsTransform, BattleTransform, CountriesTransform, SettingsTransform]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

@@ -1,7 +1,8 @@
-{
-  "idea_martial_ethos": {
+[
+  {
     "name": "Martial Ethos",
     "key": "idea_martial_ethos",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Land",
@@ -9,11 +10,13 @@
         "type": "Modifier",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "military_ideas"
   },
-  "idea_thalassocracy": {
+  {
     "name": "Thalassocracy",
     "key": "idea_thalassocracy",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -21,11 +24,13 @@
         "type": "Modifier",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "military_ideas"
   },
-  "idea_elite_soldiers": {
+  {
     "name": "Elite Soldiery",
     "key": "idea_elite_soldiers",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Global",
@@ -33,11 +38,13 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "military_ideas"
   },
-  "idea_permanent_shipyards": {
+  {
     "name": "Permanent Shipyards",
     "key": "idea_permanent_shipyards",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Naval",
@@ -45,11 +52,13 @@
         "type": "Modifier",
         "value": -0.25
       }
-    ]
+    ],
+    "parent": "military_ideas"
   },
-  "idea_conscription": {
+  {
     "name": "Conscription",
     "key": "idea_conscription",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -57,11 +66,13 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "military_ideas"
   },
-  "idea_military_society": {
+  {
     "name": "Militarized Society",
     "key": "idea_military_society",
+    "relevant": true,
     "modifiers": [
       {
         "target": "Land",
@@ -75,11 +86,13 @@
         "type": "Modifier",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "military_ideas"
   },
-  "idea_retreat": {
+  {
     "name": "Ordered Retreat",
     "key": "idea_retreat",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -93,11 +106,13 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "military_ideas"
   },
-  "idea_siege_training": {
+  {
     "name": "Siege Training",
     "key": "idea_siege_training",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -105,11 +120,13 @@
         "type": "Base",
         "value": 0.15
       }
-    ]
+    ],
+    "parent": "military_ideas"
   },
-  "idea_triumph": {
+  {
     "name": "Support of the People",
     "key": "idea_triumph",
+    "relevant": false,
     "modifiers": [
       {
         "target": "Text",
@@ -117,6 +134,420 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "military_ideas"
+  },
+  {
+    "name": "Standardized Construction",
+    "key": "idea_standard_construction",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Time",
+        "type": "Base",
+        "value": -0.25
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "City Planning",
+    "key": "idea_city_plan",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Capacity",
+        "type": "Base",
+        "value": 0.25
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "Central Urban Spaces",
+    "key": "idea_forums",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Provincial Loyalty",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "Complex Tariffs",
+    "key": "idea_complex_tariffs",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "Patronized Trading Posts",
+    "key": "idea_trading_posts",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Capital Import Routes",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "Institute Tariff Exceptions",
+    "key": "idea_tariff_exceptions",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Province Import Routes",
+        "type": "Base",
+        "value": 1
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "Tax Farming",
+    "key": "idea_tax_farming",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "Land Appropriation Reform",
+    "key": "idea_land_appropriation",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.12
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "Grain Stockpile",
+    "key": "idea_grain_admin",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Base Food Capacity",
+        "type": "Base",
+        "value": 400
+      }
+    ],
+    "parent": "civic_ideas"
+  },
+  {
+    "name": "Sanctioned Privileges",
+    "key": "idea_bribery",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.05
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "Strategic Propaganda",
+    "key": "idea_smear",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Happiness",
+        "type": "Base",
+        "value": 0.06
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "Legislative Reform",
+    "key": "idea_legislative_reform",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Group Happiness",
+        "type": "Base",
+        "value": 0.06
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "Military Administration",
+    "key": "idea_mil_admin",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Generals",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Admirals",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "Patronized Scholars",
+    "key": "idea_patron_scholars",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "Functional Bureaucracy",
+    "key": "idea_functional_admin",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Governors",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "Hospitium",
+    "key": "idea_hospitality",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Improve Opinion Maximum",
+        "type": "Base",
+        "value": 0.33
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "Casus Belli",
+    "key": "idea_casus_belli",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "War score Cost",
+        "type": "Base",
+        "value": -0.1
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "Permanent Ambassadors",
+    "key": "idea_ambassadors",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      }
+    ],
+    "parent": "oratory_ideas"
+  },
+  {
+    "name": "State Religion",
+    "key": "idea_state_religion",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Civilization Change",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Country Civilization Level",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ],
+    "parent": "religious_ideas"
+  },
+  {
+    "name": "Religious Calendar",
+    "key": "idea_calendar",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly War Exhaustion",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "religious_ideas"
+  },
+  {
+    "name": "Mandated Observance",
+    "key": "idea_mandate_observe",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      }
+    ],
+    "parent": "religious_ideas"
+  },
+  {
+    "name": "Haruspicy",
+    "key": "idea_haruspex",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Subject States",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      }
+    ],
+    "parent": "religious_ideas"
+  },
+  {
+    "name": "Institutional Proselytism",
+    "key": "idea_proselytism",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "religious_ideas"
+  },
+  {
+    "name": "Tolerance of Pagans",
+    "key": "idea_tolerance",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.06
+      }
+    ],
+    "parent": "religious_ideas"
+  },
+  {
+    "name": "Origin Myth",
+    "key": "idea_origin_myth",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.33
+      }
+    ],
+    "parent": "religious_ideas"
+  },
+  {
+    "name": "Divine Mandate",
+    "key": "idea_divine_mandate",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.04
+      }
+    ],
+    "parent": "religious_ideas"
+  },
+  {
+    "name": "Loyalty to the State",
+    "key": "idea_loyalty",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ],
+    "parent": "religious_ideas"
   }
-}
+]

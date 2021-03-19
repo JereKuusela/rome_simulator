@@ -53,10 +53,6 @@ export const selectCulture = (country: CountryDefinition, culture: CultureType, 
   country.units = getDefaultUnits(loadAllUnits ? undefined : culture)
 }
 
-export const selectTradition = (country: CountryDefinition, tradition: string): void => {
-  country.modifiers.selectedTradition = tradition
-}
-
 export const enableCountrySelection = (country: CountryDefinition, type: SelectionType, key: string): void => {
   if (!country.modifiers.selections[type]) country.modifiers.selections[type] = {}
   country.modifiers.selections[type][key] = true
@@ -105,9 +101,9 @@ export const convertCountryDefinition = (country: CountryDefinition, settings: S
   return {
     ...calculated,
     selections: country.modifiers.selections,
-    selectedTradition: country.modifiers.selectedTradition,
     weariness: country.weariness,
-    name: country.name
+    name: country.name,
+    culture: country.modifiers.culture
   }
 }
 

@@ -1,33 +1,18 @@
-const { readFiles, writeFile, getModifier } = require('./core')
+/* eslint-disable @typescript-eslint/no-var-requires */
+const { readFiles, writeFile, convertEntry } = require('./core')
 const path = require('path')
 const { getAttribute } = require('./modifiers')
 
 const results = []
 
-const subHandler = (key, data) => {
-  const entity = {
-    name: getAttribute(key),
-    key,
-    modifiers: []
-  }
-  Object.keys(data).forEach(key => {
-    if (getAttribute(key)) {
-      const modifier = getModifier(key, data[key])
-      entity.modifiers.push(modifier)
-    }
-  })
-  return entity
-}
-
 const handler = data => {
   Object.keys(data).forEach(key => {
-    if (key !== 'expense_army' && key !== 'expense_navy') return
     const policy = data[key]
-    const entity = []
-    entity.push(subHandler(key + '_low', policy.low))
-    entity.push(subHandler(key + '_default', policy.default))
-    entity.push(subHandler(key + '_high', policy.high))
-    results.push(entity)
+    const parent = getAttribute(key) || key
+    convertEntry(key + '_low', policy.low, parent)
+    results.push(convertEntry(key + '_low', policy.low, parent))
+    results.push(convertEntry(key + '_default', policy.default, parent))
+    results.push(convertEntry(key + '_high', policy.high, parent))
   })
 }
 

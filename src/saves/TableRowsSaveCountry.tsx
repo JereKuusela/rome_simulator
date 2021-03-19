@@ -53,21 +53,9 @@ const TableRowsSaveCountry = ({ country }: { country: SaveCountry }) => {
       </Table.Row>
       <Table.Row>
         <Table.Cell>Army</Table.Cell>
-        <Table.Cell>
-          {
-            policiesIR
-              .find(policy => policy.find(option => option.key === country.armyMaintenance))
-              ?.find(option => option.key === country.armyMaintenance)?.name
-          }
-        </Table.Cell>
+        <Table.Cell>{policiesIR.get(country.armyMaintenance)}</Table.Cell>
         <Table.Cell>Navy</Table.Cell>
-        <Table.Cell>
-          {
-            policiesIR
-              .find(policy => policy.find(option => option.key === country.navalMaintenance))
-              ?.find(option => option.key === country.navalMaintenance)?.name
-          }
-        </Table.Cell>
+        <Table.Cell>{policiesIR.get(country.navalMaintenance)}</Table.Cell>
       </Table.Row>
       <Table.Row>
         <Table.Cell>Military experience</Table.Cell>
@@ -86,7 +74,7 @@ const TableRowsSaveCountry = ({ country }: { country: SaveCountry }) => {
         <Table.Cell>Ideas</Table.Cell>
         <Table.Cell>
           {country.ideas
-            .map(key => ideasIR[key]?.name)
+            .map(key => ideasIR.get(key)?.name)
             .filter(value => value)
             .join(', ')}
         </Table.Cell>
@@ -95,7 +83,7 @@ const TableRowsSaveCountry = ({ country }: { country: SaveCountry }) => {
         <Table.Cell>Laws</Table.Cell>
         <Table.Cell>
           {country.laws
-            .map(key => lawsIR[key]?.name)
+            .map(key => lawsIR.get(key)?.name)
             .filter(value => value)
             .join(', ')}
         </Table.Cell>

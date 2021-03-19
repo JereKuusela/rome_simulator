@@ -15,7 +15,8 @@ export enum SelectionType {
   Trade = 'Trade',
   Religion = 'Religion',
   Faction = 'Faction',
-  Modifier = 'Modifier'
+  Distinction = 'Distinction',
+  Effect = 'Effect'
 }
 
 export type Selections = Record<SelectionType, ObjSet>
@@ -59,16 +60,14 @@ export interface ListDefinition {
   key: string
   modifiers: Modifier[]
 }
+
+export type ListDefinition2 = ListDefinition & {
+  relevant: boolean
+  parent?: string
+}
 export type ListDefinitions = Record<string, ListDefinition>
 export type DeityDefinition = ListDefinition & { isOmen: boolean }
 export type DeityDefinitions = Record<string, DeityDefinition>
-
-export type InventionDefinition = ListDefinition & {
-  relevant: boolean
-  tech: string
-}
-
-export type OptionDefinition = ListDefinition[]
 
 type ListData = {
   name: string
@@ -95,5 +94,3 @@ export type InventionData = {
     modifiers: ModifierData[]
   }[]
 }
-
-export type Traditions = Record<string, ListDefinition[]>

@@ -1,21 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { readFiles, writeFile, getModifiers } = require('./core')
+const { readFiles, writeFile, convertEntry } = require('./core')
 const { getAttribute } = require('./modifiers')
 const path = require('path')
 
 const results = []
-
-const handleInvention = (tech, name, invention) => {
-  const modifiers = getModifiers(invention.modifier)
-  const militaryModifiers = modifiers.filter(modifier => modifier.target !== 'Text')
-  return {
-    name: name ? getAttribute(name) : '',
-    key: name || '',
-    tech,
-    relevant: militaryModifiers.length > 0,
-    modifiers
-  }
-}
 
 const handleInventions = data => {
   Object.keys(data).forEach(treeName => {
@@ -25,7 +13,7 @@ const handleInventions = data => {
       const invention = tree[inventionName]
       if (inventionName === 'technology') technology = getAttribute(invention).split(' ')[0]
       if (typeof invention === 'string') return
-      results.push(handleInvention(technology, inventionName, invention))
+      results.push(convertEntry(inventionName, invention.modifier, technology))
     })
   })
 }

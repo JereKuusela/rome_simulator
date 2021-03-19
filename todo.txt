@@ -52,6 +52,7 @@ Todo:
 Saves:
  - Add import from battle (involved armies) or war (all participants and all armies)
  * Fix tradition import.
+ * Data conversion for levy templates.
  * Investigate calculating levies.
   - From culture manager get integrated pops and their count.
   - Calculate levy multiplier from many places...
@@ -59,6 +60,12 @@ Saves:
   - Multiply pops with multiplier and levy template.
   - Replace units with support if needed.
 
+Countries:
+ * UI for distinctions.
+
+Combat:
+ * River/strait crossing negation when 1 engineer for every 10 cohort (+ setting). Try to verify is it 1 + 9 others or 1 + 10 others.
+ * Cohort size to 500.
 
 UI:
  * Add tooltip to frontline unit counter (shows combat width, amount of units with breakdown per type, maybe total morale/strength too?)

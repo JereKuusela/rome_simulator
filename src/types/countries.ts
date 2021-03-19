@@ -4,14 +4,14 @@ import { UnitsData, UnitAttribute } from './units'
 import { DefinitionValues } from 'definition_values'
 
 export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
-export type WearinessAttributes = { [key in WearinessAttribute]: MinMax }
+export type WearinessAttributes = Record<WearinessAttribute, MinMax>
 type MinMax = { min: number; max: number }
 
 export enum CountryName {
   Country1 = 'Country 1',
   Country2 = 'Country 2'
 }
-export type Countries = { [key in CountryName]: CountryDefinition }
+export type Countries = Record<CountryName, CountryDefinition>
 
 export enum CountryAttribute {
   CombatWidth = 'Combat Width',
@@ -21,7 +21,8 @@ export enum CountryAttribute {
   CivicTech = 'Civic Tech',
   MartialTech = 'Martial Tech',
   OratoryTech = 'Oratory Tech',
-  ReligiousTech = 'Religious Tech'
+  ReligiousTech = 'Religious Tech',
+  LevySize = 'Levy Size'
 }
 
 export const countryAttributeToEffect = (attribute: CountryAttribute) => {
@@ -33,11 +34,10 @@ export const countryAttributeToEffect = (attribute: CountryAttribute) => {
   return ''
 }
 
-export type CountryDefinitions = { [key in CountryName]: CountryDefinition }
+export type CountryDefinitions = Record<CountryName, CountryDefinition>
 
 export interface CountryModifiers extends DefinitionValues<CountryAttribute> {
   selections: Selections
-  selectedTradition: string
   culture: CultureType
   government: GovermentType
 }
@@ -50,10 +50,10 @@ export interface CountryDefinition {
   name: CountryName
 }
 
-export type Country = { [key in CountryAttribute]: number } & {
+export type Country = Record<CountryAttribute, number> & {
   selections: Selections
-  selectedTradition: string
   weariness: WearinessAttributes
+  culture: CultureType
   name: CountryName
 }
 

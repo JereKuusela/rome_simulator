@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox, Button, Tab } from 'semantic-ui-react'
 import { connect, useDispatch } from 'react-redux'
 import {
@@ -9,12 +9,11 @@ import {
   getSelectedArmy,
   getCountryDefinition
 } from 'state'
-import { mapRange, values, keys, toArr } from '../utils'
+import { mapRange, values, keys, toArr, ObjSet } from '../utils'
 
 import { addSignWithZero } from 'formatters'
 import {
   ListDefinition,
-  OptionDefinition,
   Modifier,
   CountryAttribute,
   GeneralAttribute,
@@ -25,7 +24,8 @@ import {
   SelectionType,
   ArmyName,
   Country,
-  InventionDefinition
+  ListDefinition2,
+  GeneralDefinition
 } from 'types'
 import {
   clearCountryAttributes,
@@ -35,7 +35,6 @@ import {
   clearCountrySelections,
   clearCountrySelection,
   setGeneralAttribute,
-  selectTradition,
   selectGovernment,
   setHasGeneral,
   clearGeneralAttributes,
@@ -57,25 +56,93 @@ import DropdownListDefinition from 'components/Dropdowns/DropdownListDefinition'
 import {
   traditionsIR,
   traitsIR,
-  abilitiesIR,
   tradesIR,
   deitiesIR,
   lawsIR,
-  policiesIR,
   ideasIR,
   effectsIR,
   heritagesIR,
   religionsIR,
   factionsIR,
-  inventionsByCategoryIR
+  abilitiesIR,
+  policiesIR,
+  inventionsIR
 } from 'data'
 import { TableModifierList } from 'components/TableModifierList'
-import { noop } from 'lodash'
+import { groupBy, maxBy, noop } from 'lodash'
 import { Tech } from 'types/generated'
+import { getSelections } from 'managers/modifiers'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
 const CELL_PADDING = '.78571429em .78571429em'
+
+type DataEntriesByParentProps = {
+  selections: ObjSet
+  type: SelectionType
+  entries: Record<string, ListDefinition2[]>
+  onClick: (enabled: boolean) => (type: SelectionType, key: string) => void
+  disabled: boolean
+  padding?: string
+}
+
+type RenderCellProps = {
+  type: SelectionType
+  key: string
+  name: string | null
+  enabled: boolean
+  modifiers: Modifier[]
+  onClick: (enabled: boolean) => (type: SelectionType, key: string) => void
+  padding?: string
+  disabled?: boolean
+  width?: number
+}
+
+const RenderCell = ({ type, key, name, enabled, modifiers, onClick, padding, disabled, width }: RenderCellProps) => (
+  <Table.Cell
+    disabled={disabled}
+    key={key}
+    positive={enabled}
+    selectable
+    colSpan={width || 1}
+    onClick={() => onClick(enabled)(type, key)}
+    style={{ padding: CELL_PADDING }}
+  >
+    <ListModifier name={name} modifiers={modifiers} padding={padding} />
+  </Table.Cell>
+)
+
+const DataEntriesByParent = ({ selections, type, entries, onClick, disabled, padding }: DataEntriesByParentProps) => {
+  const columns = maxBy(Object.values(values), item => item.length)?.length ?? 0
+  return (
+    <Table celled unstackable fixed>
+      <Table.Body>
+        {Object.values(entries).map((option, index) => (
+          <Table.Row key={index}>
+            {option.map(item => {
+              const key = item.key
+              return (
+                <RenderCell
+                  type={type}
+                  key={key}
+                  name={item.name}
+                  enabled={selections?.[key]}
+                  modifiers={item.modifiers}
+                  onClick={onClick}
+                  padding={padding}
+                  disabled={disabled}
+                />
+              )
+            })}
+            {mapRange(columns - option.length, value => (
+              <Table.Cell key={value} />
+            ))}
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  )
+}
 
 class CountriesIR extends Component<IProps> {
   render() {
@@ -84,9 +151,9 @@ class CountriesIR extends Component<IProps> {
       generalDefinition,
       general,
       filterNonCombat,
-      setHasGeneral,
       countryDefinition,
-      country
+      country,
+      selectedArmy
     } = this.props
     return (
       <Container>
@@ -105,77 +172,13 @@ class CountriesIR extends Component<IProps> {
               />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns='1'>
-            <Grid.Column>
-              <AccordionToggle title='General' identifier='countriesTraits'>
-                <Checkbox
-                  toggle
-                  label='General'
-                  checked={general.enabled}
-                  onChange={
-                    general.enabled
-                      ? () => this.execArmy(setHasGeneral, false)
-                      : () => this.execArmy(setHasGeneral, true)
-                  }
-                  style={{ float: 'right' }}
-                />
-                Base martial:{' '}
-                <Input
-                  disabled={!general.enabled}
-                  type='number'
-                  value={general.baseValues[GeneralAttribute.Martial]}
-                  onChange={(_, { value }) => this.setGeneralValue('Base', GeneralAttribute.Martial, Number(value))}
-                />{' '}
-                with <StyledNumber value={general.extraValues[GeneralAttribute.Martial]} formatter={addSignWithZero} />{' '}
-                from traits
-                <TableModifierList
-                  selections={general.selections[SelectionType.Trait]}
-                  columns={4}
-                  type={SelectionType.Trait}
-                  onClick={this.onCountryItemClick}
-                  items={values(traitsIR)}
-                  disabled={!general.enabled}
-                />
-                {this.renderAbilities()}
-              </AccordionToggle>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns='1'>
-            <Grid.Column>
-              <AccordionToggle title='Traditions' identifier='countriesTradition'>
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column width='4'>
-                      <SimpleDropdown
-                        values={Object.keys(traditionsIR).map(name => ({ value: name, text: name }))}
-                        value={country.selectedTradition}
-                        style={{ width: 200 }}
-                        onChange={this.selectTradition}
-                      />
-                    </Grid.Column>
-                    <Grid.Column width='8'>
-                      <div style={{ padding: '0.785714em' }}>
-                        Military experience:{' '}
-                        <CountryValueInput
-                          attribute={CountryAttribute.MilitaryExperience}
-                          country={country.name}
-                          showEffect
-                        />
-                      </div>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-                <TableModifierList
-                  selections={country.selections[SelectionType.Tradition]}
-                  columns={4}
-                  usePercentPadding
-                  type={SelectionType.Tradition}
-                  onClick={this.onCountryItemClick}
-                  items={traditionsIR[country.selectedTradition]}
-                />
-              </AccordionToggle>
-            </Grid.Column>
-          </Grid.Row>
+          <RenderGeneral
+            country={country}
+            armyName={selectedArmy}
+            general={general}
+            filterNonCombat={filterNonCombat}
+          />
+          <RenderTraditions country={country} filterNonCombat={filterNonCombat} />
           <Grid.Row columns='1'>
             <Grid.Column>
               <AccordionToggle title='Trade surplus' identifier='countriesTrade'>
@@ -226,23 +229,9 @@ class CountriesIR extends Component<IProps> {
                     <Grid.Column>{this.renderFactions()}</Grid.Column>
                   </Grid.Row>
                 </Grid>
-                <TableModifierList
-                  selections={country.selections[SelectionType.Law]}
-                  columns={3}
-                  usePercentPadding
-                  type={SelectionType.Law}
-                  onClick={this.onCountryItemClick}
-                  items={values(lawsIR)}
-                />
-                {this.renderPolicies()}
-                <TableModifierList
-                  selections={country.selections[SelectionType.Idea]}
-                  columns={3}
-                  usePercentPadding
-                  type={SelectionType.Idea}
-                  onClick={this.onCountryItemClick}
-                  items={values(ideasIR)}
-                />
+                {this.renderLaws(filterNonCombat)}
+                {this.renderPolicies(filterNonCombat)}
+                {this.renderIdeas(filterNonCombat)}
               </AccordionToggle>
             </Grid.Column>
           </Grid.Row>
@@ -250,10 +239,10 @@ class CountriesIR extends Component<IProps> {
             <Grid.Column>
               <AccordionToggle title='Modifiers & Events' identifier='countries_modifiers'>
                 <TableModifierList
-                  selections={this.props.country.selections[SelectionType.Modifier]}
+                  selections={this.props.country.selections[SelectionType.Effect]}
                   columns={4}
                   usePercentPadding
-                  type={SelectionType.Modifier}
+                  type={SelectionType.Effect}
                   onClick={this.onCountryItemClick}
                   items={values(effectsIR)}
                 />
@@ -339,24 +328,38 @@ class CountriesIR extends Component<IProps> {
     )
   }
 
-  renderPolicies = () =>
-    this.renderOptions(SelectionType.Policy, policiesIR, 3, this.onCountryItemClick, false, PERCENT_PADDING)
-  renderAbilities = () =>
-    this.renderOptions(SelectionType.Ability, abilitiesIR, 2, this.onGeneralItemClick, false, PERCENT_PADDING)
+  renderLaws = (filter: boolean) => this.renderByParentForCountries(SelectionType.Law, lawsIR.byParent(filter))
 
-  renderOptions = (
+  renderIdeas = (filter: boolean) => this.renderByParentForCountries(SelectionType.Idea, ideasIR.byParent(filter))
+
+  renderPolicies = (filter: boolean) =>
+    this.renderByParentForCountries(SelectionType.Policy, policiesIR.byParent(filter))
+
+  renderByParentForCountries = (type: SelectionType, values: Record<string, ListDefinition2[]>) =>
+    this.renderByParent(type, values, this.onCountryItemClick, false, PERCENT_PADDING)
+
+  renderAbilities = (filter: boolean) =>
+    this.renderByParent(
+      SelectionType.Ability,
+      abilitiesIR.byParent(filter),
+      this.onGeneralItemClick,
+      false,
+      PERCENT_PADDING
+    )
+
+  renderByParent = (
     type: SelectionType,
-    options: OptionDefinition[],
-    columns: number,
+    values: Record<string, ListDefinition2[]>,
     onClick: (enabled: boolean) => (type: SelectionType, key: string) => void,
     disabled: boolean,
     padding?: string
   ) => {
     const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
+    const columns = maxBy(Object.values(values), item => item.length)?.length ?? 0
     return (
       <Table celled unstackable fixed>
         <Table.Body>
-          {options.map((option, index) => (
+          {Object.values(values).map((option, index) => (
             <Table.Row key={index}>
               {option.map(item => {
                 const key = item.key
@@ -386,13 +389,10 @@ class CountriesIR extends Component<IProps> {
     this.execArmy(clearGeneralSelection, type, key)
   }
 
-  findOptionKeys = (options: OptionDefinition[], key: string) =>
-    options.find(policy => policy.find(option => option.key === key))?.map(option => option.key)
-
   enableGeneralSelection = (type: SelectionType, key: string) => {
     const { enableGeneralSelection, clearGeneralSelections } = this.props
     if (type === SelectionType.Ability) {
-      const keys = this.findOptionKeys(abilitiesIR, key)
+      const keys = abilitiesIR.siblingKeys(key)
       if (keys) this.execArmy(clearGeneralSelections, type, keys)
     }
     this.execArmy(enableGeneralSelection, type, key)
@@ -410,7 +410,7 @@ class CountriesIR extends Component<IProps> {
     if (type === SelectionType.Heritage || type === SelectionType.Religion || type === SelectionType.Faction)
       this.execCountry(clearCountrySelections, type)
     if (type === SelectionType.Policy) {
-      const keys = this.findOptionKeys(policiesIR, key)
+      const keys = policiesIR.siblingKeys(key)
       if (keys) this.execCountry(clearCountrySelections, type, keys)
     }
     this.execCountry(enableCountrySelection, type, key)
@@ -466,10 +466,6 @@ class CountriesIR extends Component<IProps> {
     </Table.Cell>
   )
 
-  selectTradition = (value: string) => {
-    this.execCountry(this.props.selectTradition, value)
-  }
-
   /** Executes a given function with currently selected country. */
   execCountry = <T1, T2>(func: (country: CountryName, value: T1, ...rest: T2[]) => void, value: T1, ...rest: T2[]) =>
     func(this.props.country.name, value, ...rest)
@@ -514,7 +510,6 @@ const mapStateToProps = (state: AppState) => {
 const actions = {
   clearGeneralSelections,
   setGeneralAttribute,
-  selectTradition,
   setCountryAttribute,
   clearGeneralSelection,
   enableGeneralSelection,
@@ -540,24 +535,37 @@ const getTechAttribute = (key: string) => {
   return CountryAttribute.MartialTech
 }
 
+const useCountrySelection = (countryName: CountryName) => {
+  const dispatch = useDispatch()
+
+  const clear = (type: SelectionType, key: string) => dispatch(clearCountrySelection(countryName, type, key))
+  const enable = (type: SelectionType, key: string) => {
+    dispatch(enableCountrySelection(countryName, type, key))
+  }
+
+  return (enabled: boolean) => (enabled ? clear : enable)
+}
+
+const useGeneralSelection = (countryName: CountryName, armyName: ArmyName) => {
+  const dispatch = useDispatch()
+
+  const clear = (type: SelectionType, key: string) => dispatch(clearGeneralSelection(countryName, armyName, type, key))
+  const enable = (type: SelectionType, key: string) => {
+    dispatch(enableGeneralSelection(countryName, armyName, type, key))
+  }
+
+  return (enabled: boolean) => (enabled ? clear : enable)
+}
+
 type RenderInventionsProps = {
   country: Country
-  inventions: InventionDefinition[]
+  tech: string
   attribute: CountryAttribute
   filterNonCombat: boolean
 }
 
-const RenderInventions = ({ country, inventions, attribute, filterNonCombat }: RenderInventionsProps) => {
-  const dispatch = useDispatch()
-
-  const handleClearCountrySelection = (type: SelectionType, key: string) =>
-    dispatch(clearCountrySelection(country.name, type, key))
-  const handleEnableCountrySelection = (type: SelectionType, key: string) => {
-    dispatch(enableCountrySelection(country.name, type, key))
-  }
-
-  const handleOnClick = (enabled: boolean) => (enabled ? handleClearCountrySelection : handleEnableCountrySelection)
-  const filtered = filterNonCombat ? inventions.filter(invention => invention.relevant) : inventions
+const RenderInventions = ({ country, tech, attribute, filterNonCombat }: RenderInventionsProps) => {
+  const handleOnClick = useCountrySelection(country.name)
   return (
     <>
       <div style={{ padding: '0.785714em' }}>
@@ -570,19 +578,21 @@ const RenderInventions = ({ country, inventions, attribute, filterNonCombat }: R
         usePercentPadding
         type={SelectionType.Invention}
         onClick={handleOnClick}
-        items={filtered}
+        items={inventionsIR.byParent(filterNonCombat)[tech]}
       />
     </>
   )
 }
 
-const RenderTechAndInventions = ({ country, filterNonCombat }: { country: Country; filterNonCombat: boolean }) => {
-  const panes = toArr(inventionsByCategoryIR, (value, key) => ({
+type TableProps = { country: Country; filterNonCombat: boolean }
+
+const RenderTechAndInventions = ({ country, filterNonCombat }: TableProps) => {
+  const panes = toArr(inventionsIR.byParent(), (_, key) => ({
     menuItem: key,
     render: () => (
       <RenderInventions
         country={country}
-        inventions={value}
+        tech={key}
         attribute={getTechAttribute(key)}
         filterNonCombat={filterNonCombat}
       />
@@ -601,4 +611,155 @@ const RenderTechAndInventions = ({ country, filterNonCombat }: { country: Countr
     </Grid.Row>
   )
 }
+
+type RenderTraitGroupProps = {
+  country: Country
+  armyName: ArmyName
+  parent: string
+  filterNonCombat: boolean
+}
+
+const RenderTraitGroup = ({ country, armyName, parent, filterNonCombat }: RenderTraitGroupProps) => {
+  const handleOnClick = useGeneralSelection(country.name, armyName)
+  return (
+    <>
+      <TableModifierList
+        selections={country.selections[SelectionType.Invention]}
+        columns={4}
+        usePercentPadding
+        type={SelectionType.Invention}
+        onClick={handleOnClick}
+        items={traitsIR.byParent(filterNonCombat)[parent]}
+      />
+    </>
+  )
+}
+
+type RenderGeneralProps = {
+  country: Country
+  armyName: ArmyName
+  general: GeneralDefinition
+  filterNonCombat: boolean
+}
+
+const RenderGeneral = ({ country, armyName, general, filterNonCombat }: RenderGeneralProps) => {
+  const panes = toArr(traitsIR.byParent(), (_, key) => ({
+    menuItem: key,
+    render: () => (
+      <RenderTraitGroup country={country} armyName={armyName} parent={key} filterNonCombat={filterNonCombat} />
+    )
+  })).sort((a, b) =>
+    a.menuItem === Tech.Martial ? -1 : b.menuItem === Tech.Martial ? 1 : a.menuItem.localeCompare(b.menuItem)
+  )
+
+  const dispatch = useDispatch()
+  const handleToggleGeneral = () => {
+    dispatch(setHasGeneral(country.name, armyName, !general.enabled))
+  }
+  const handleChange = (value: string) => {
+    dispatch(setGeneralAttribute(country.name, armyName, GeneralAttribute.Martial, Number(value)))
+  }
+
+  return (
+    <Grid.Row columns='1'>
+      <Grid.Column>
+        <AccordionToggle title='General' identifier='countriesTraits'>
+          <Checkbox
+            toggle
+            label='General'
+            checked={general.enabled}
+            onChange={handleToggleGeneral}
+            style={{ float: 'right' }}
+          />
+          Base martial:{' '}
+          <Input
+            disabled={!general.enabled}
+            type='number'
+            value={general.baseValues[GeneralAttribute.Martial]}
+            onChange={(_, { value }) => handleChange(value)}
+          />{' '}
+          with <StyledNumber value={general.extraValues[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from
+          traits
+          <Tab panes={panes} />
+          <RenderAbilities country={country} armyName={armyName} filter={filterNonCombat} />
+        </AccordionToggle>
+      </Grid.Column>
+    </Grid.Row>
+  )
+}
+
+const getTopTraditionTree = (country: Country, filterNonCombat: boolean) => {
+  const traditions = getSelections(country.selections, SelectionType.Tradition)
+  const counts = groupBy(traditions.map(traditionsIR.get), item => item.parent)
+  const countArray = toArr(counts, (value, key) => ({ key, value }))
+  const max = maxBy(countArray, item => item.value)
+  return max?.key ?? Object.keys(traditionsIR.byParent())[0]
+}
+
+const RenderTraditions = ({ country, filterNonCombat }: TableProps) => {
+  const [selectedTradition, selectTradition] = useState(getTopTraditionTree(country, filterNonCombat))
+  const handleOnClick = useCountrySelection(country.name)
+  useEffect(() => {
+    selectTradition(getTopTraditionTree(country, filterNonCombat))
+  }, [country, filterNonCombat])
+  return (
+    <Grid.Row columns='1'>
+      <Grid.Column>
+        <AccordionToggle title='Traditions' identifier='countriesTradition'>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width='4'>
+                <SimpleDropdown
+                  values={Object.keys(traditionsIR).map(name => ({ value: name, text: name }))}
+                  value={selectedTradition}
+                  style={{ width: 200 }}
+                  onChange={selectTradition}
+                />
+              </Grid.Column>
+              <Grid.Column width='8'>
+                <div style={{ padding: '0.785714em' }}>
+                  Military experience:{' '}
+                  <CountryValueInput
+                    attribute={CountryAttribute.MilitaryExperience}
+                    country={country.name}
+                    showEffect
+                  />
+                </div>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          <TableModifierList
+            selections={country.selections[SelectionType.Tradition]}
+            columns={4}
+            usePercentPadding
+            type={SelectionType.Tradition}
+            onClick={handleOnClick}
+            items={traditionsIR.byParent(filterNonCombat)[selectedTradition]}
+          />
+        </AccordionToggle>
+      </Grid.Column>
+    </Grid.Row>
+  )
+}
+
+type RenderAbilitiesProps = {
+  country: Country
+  armyName: ArmyName
+  filter: boolean
+}
+
+const RenderAbilities = ({ country, armyName, filter }: RenderAbilitiesProps) => {
+  const handleClick = useGeneralSelection(country.name, armyName)
+  return (
+    <DataEntriesByParent
+      selections={country.selections[SelectionType.Ability]}
+      type={SelectionType.Ability}
+      entries={abilitiesIR.byParent(filter)}
+      onClick={handleClick}
+      padding={PERCENT_PADDING}
+      disabled={false}
+    />
+  )
+}
+
 export default connect(mapStateToProps, actions)(CountriesIR)

@@ -435,8 +435,8 @@
         "value": 1
       },
       {
-        "target": "Text",
-        "attribute": "Levy Size Multiplier",
+        "target": "Country",
+        "attribute": "Levy Size",
         "type": "Base",
         "negative": true,
         "value": -0.025
@@ -839,8 +839,8 @@
         "value": 0.1
       },
       {
-        "target": "Text",
-        "attribute": "Levy Size Multiplier",
+        "target": "Country",
+        "attribute": "Levy Size",
         "type": "Base",
         "value": 0.025
       },
@@ -1718,8 +1718,8 @@
         "value": -0.1
       },
       {
-        "target": "Text",
-        "attribute": "Levy Size Multiplier",
+        "target": "Country",
+        "attribute": "Levy Size",
         "type": "Base",
         "negative": true,
         "value": -0.025
@@ -1985,8 +1985,8 @@
     "key": "roman_heritage",
     "modifiers": [
       {
-        "target": "Text",
-        "attribute": "Levy Size Multiplier",
+        "target": "Country",
+        "attribute": "Levy Size",
         "type": "Base",
         "value": 0.025
       },
@@ -2085,8 +2085,8 @@
     "key": "spartan_heritage",
     "modifiers": [
       {
-        "target": "Text",
-        "attribute": "Levy Size Multiplier",
+        "target": "Country",
+        "attribute": "Levy Size",
         "type": "Base",
         "value": 0.025
       },

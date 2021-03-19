@@ -6,16 +6,23 @@ import {
   UnitAttribute,
   Selections,
   CountryDefinitions,
-  CountryDefinition
+  CountryDefinition,
+  SelectionType
 } from 'types'
 import { getDefaultArmies } from 'data'
 import { getDefaultUnits } from './units'
+import { ObjSet } from 'utils'
 
 export const getDefaultCountry = (name: CountryName): CountryDefinition => ({
   name,
   modifiers: {
-    selections: {} as Selections,
-    selectedTradition: 'Roman',
+    selections: {
+      [SelectionType.Policy]: {
+        // All army expense policies include the same levy size.
+        // So better just select it by default even though it's only used for importing.
+        expense_army_default: true
+      } as ObjSet
+    } as Selections,
     government: GovermentType.Republic,
     culture: 'Western' as CultureType,
     baseValues: {

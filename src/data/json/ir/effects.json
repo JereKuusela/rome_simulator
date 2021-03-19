@@ -89,6 +89,18 @@
       }
     ]
   },
+  "antagonist_ai": {
+    "name": "Antagonist Nation",
+    "key": "antagonist_ai",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
   "ant_2_11_umod": {
     "name": "Antigonid Royalty",
     "key": "ant_2_11_umod",
@@ -558,6 +570,30 @@
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.04
+      }
+    ]
+  },
+  "nation_rank_1": {
+    "name": "City State",
+    "key": "nation_rank_1",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.12
+      }
+    ]
+  },
+  "civil_war": {
+    "name": "Civil War",
+    "key": "civil_war",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.025
       }
     ]
   },
@@ -1259,6 +1295,18 @@
       }
     ]
   },
+  "syr_foreign_levy_cmod": {
+    "name": "Foreign Support",
+    "key": "syr_foreign_levy_cmod",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
   "seleukid_mission_borders_egypt_completed_modifier": {
     "name": "Great Conqueror",
     "key": "seleukid_mission_borders_egypt_completed_modifier",
@@ -1460,6 +1508,18 @@
         "attribute": "Maintenance",
         "type": "Modifier",
         "value": -0.2
+      }
+    ]
+  },
+  "defensive_war": {
+    "name": "In Defensive War",
+    "key": "defensive_war",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.01
       }
     ]
   },
@@ -2428,6 +2488,13 @@
     "key": "negative_centralization",
     "modifiers": [
       {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      },
+      {
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
@@ -2586,6 +2653,12 @@
         "attribute": "Maintenance",
         "type": "Modifier",
         "value": -0.5
+      },
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.2
       }
     ]
   },
@@ -2725,6 +2798,30 @@
         "type": "Base",
         "noPercent": true,
         "value": 30
+      }
+    ]
+  },
+  "country_improvement_tarentum_war": {
+    "name": "Preparing for War",
+    "key": "country_improvement_tarentum_war",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  "country_improvement_samnite_war": {
+    "name": "Preparing for War",
+    "key": "country_improvement_samnite_war",
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.1
       }
     ]
   },

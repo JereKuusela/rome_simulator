@@ -17,7 +17,7 @@ const parseFiles = (directoryPath, parser, directory) => {
 }
 
 exports.readFiles = (directoryPath, handlers) => {
-  Object.keys(handlers).map(key => parseFiles(directoryPath, handlers[key], key))
+  Object.keys(handlers).forEach(key => parseFiles(directoryPath, handlers[key], key))
 }
 
 exports.sort = results => {

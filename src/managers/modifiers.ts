@@ -9,7 +9,9 @@ import {
   SelectionType,
   ListDefinitions,
   DeityDefinitions,
-  CountryModifiers
+  CountryModifiers,
+  Selections,
+  ListDefinition2
 } from 'types'
 import { getRootParent } from './units'
 import { ObjSet, keys } from 'utils'
@@ -17,19 +19,20 @@ import { calculateValue } from 'definition_values'
 import {
   techEU4,
   inventionsIR,
-  traditionsIR,
   heritagesIR,
   tradesIR,
   ideasIR,
-  lawsIR,
   religionsIR,
   factionsIR,
   effectsIR,
-  policiesIR,
   deitiesIR,
   traitsIR,
+  policiesEU4,
   abilitiesIR,
-  policiesEU4
+  policiesIR,
+  traditionsIR,
+  lawsIR,
+  distinctionsIR
 } from 'data'
 import { applyCountryModifiers } from './countries'
 
@@ -96,30 +99,11 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryModifier
     })
   }
   if (process.env.REACT_APP_GAME === 'IR') {
-    getModifiersFromArray(modifiers, selections, inventionsIR)
+    getModifiers(modifiers, selections, inventionsIR.get)
   }
   return modifiers
 }
 
-const getTraditionModifiers = (modifiers: ModifierWithKey[], country: CountryModifiers) => {
-  const selections = country.selections[SelectionType.Tradition] ?? {}
-  if (process.env.REACT_APP_GAME === 'IR') {
-    Object.values(traditionsIR).forEach(tree => {
-      getModifiersFromArray(modifiers, selections, tree)
-    })
-  }
-  return modifiers
-}
-
-const getModifiersFromArray = (
-  modifiers: ModifierWithKey[],
-  selections: ObjSet,
-  entities: { name: string; key: string; modifiers: Modifier[] }[]
-) => {
-  entities.forEach(entity => {
-    if (selections && selections[entity.key]) modifiers.push(...mapModifiers(entity.name, entity.modifiers))
-  })
-}
 const getDeityModifiers = (
   modifiers: ModifierWithKey[],
   selections: ObjSet,
@@ -149,6 +133,16 @@ const getModifiersFromObject = (
   })
 }
 
+const getModifiers = (
+  modifiers: ModifierWithKey[],
+  selections: ObjSet | undefined,
+  items: (key: string[]) => ListDefinition2[]
+) => {
+  const selectedItems = items(keys(selections))
+  selectedItems.forEach(item => {
+    modifiers.push(...mapModifiers(item.name, item.modifiers))
+  })
+}
 const getCountryAttribute = (country: CountryModifiers, attribute: CountryAttribute, key: string) => {
   const value = calculateValue(country, attribute)
   return value ? getDynamicEffect(key, value) : []
@@ -169,13 +163,13 @@ const getPrimaryCountryModifiers = (country: CountryModifiers) => {
   if (process.env.REACT_APP_GAME === 'IR') {
     getModifiersFromObject(modifiers, country.selections[SelectionType.Heritage], heritagesIR)
     getModifiersFromObject(modifiers, country.selections[SelectionType.Trade], tradesIR)
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Idea], ideasIR)
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Law], lawsIR)
+    getModifiers(modifiers, country.selections[SelectionType.Idea], ideasIR.get)
+    getModifiers(modifiers, country.selections[SelectionType.Law], lawsIR.get)
     getModifiersFromObject(modifiers, country.selections[SelectionType.Religion], religionsIR)
     getModifiersFromObject(modifiers, country.selections[SelectionType.Faction], factionsIR)
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Modifier], effectsIR)
-    policiesIR.forEach(policy => getModifiersFromArray(modifiers, country.selections[SelectionType.Policy], policy))
-    getTraditionModifiers(modifiers, country)
+    getModifiersFromObject(modifiers, country.selections[SelectionType.Effect], effectsIR)
+    getModifiers(modifiers, country.selections[SelectionType.Policy], policiesIR.get)
+    getModifiers(modifiers, country.selections[SelectionType.Tradition], traditionsIR.get)
   }
   return modifiers
 }
@@ -207,10 +201,9 @@ export const getGeneralModifiers = (general: GeneralData): ModifierWithKey[] => 
   const modifiers: ModifierWithKey[] = []
   if (general.enabled) {
     if (process.env.REACT_APP_GAME === 'IR') {
-      getModifiersFromObject(modifiers, general.selections[SelectionType.Trait], traitsIR)
-      abilitiesIR.forEach(abilities =>
-        getModifiersFromArray(modifiers, general.selections[SelectionType.Ability], abilities)
-      )
+      getModifiers(modifiers, general.selections[SelectionType.Trait], traitsIR.get)
+      getModifiers(modifiers, general.selections[SelectionType.Ability], abilitiesIR.get)
+      getModifiers(modifiers, general.selections[SelectionType.Distinction], distinctionsIR.get)
       const martial = calculateValue(general, GeneralAttribute.Martial)
       if (martial) modifiers.push(...getDynamicEffect('unit_martial_mod', martial))
     }
@@ -220,3 +213,6 @@ export const getGeneralModifiers = (general: GeneralData): ModifierWithKey[] => 
   }
   return modifiers
 }
+
+export const getSelections = (selections: Selections, type: SelectionType) =>
+  selections[type] ? Object.keys(selections[type]) : []

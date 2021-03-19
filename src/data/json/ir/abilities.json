@@ -1,38 +1,40 @@
 [
-  [
-    {
-      "name": "Boarding Tactics",
-      "key": "boarding_tactics",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Capture Chance",
-          "value": 0.1
-        },
-        {
-          "target": "Naval",
-          "attribute": "Damage done",
-          "negative": true,
-          "value": -0.1
-        }
-      ]
-    },
-    {
-      "name": "Ramming Tactics",
-      "key": "ramming_speed",
-      "modifiers": [
-        {
-          "target": "Naval",
-          "attribute": "Damage done",
-          "value": 0.1
-        },
-        {
-          "target": "Naval",
-          "attribute": "Damage taken",
-          "negative": true,
-          "value": 0.1
-        }
-      ]
-    }
-  ]
+  {
+    "name": "Boarding Tactics",
+    "key": "boarding_tactics",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Capture Chance",
+        "value": 0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage done",
+        "negative": true,
+        "value": -0.1
+      }
+    ],
+    "parent": "naval"
+  },
+  {
+    "name": "Ramming Tactics",
+    "key": "ramming_speed",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Naval",
+        "attribute": "Damage done",
+        "value": 0.1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage taken",
+        "negative": true,
+        "value": 0.1
+      }
+    ],
+    "parent": "naval"
+  }
 ]

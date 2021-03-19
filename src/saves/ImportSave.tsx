@@ -108,7 +108,7 @@ const convertCountry = (country: SaveCountry, armies: SaveArmy[]) => {
   enableCountrySelections(countryData, SelectionType.Law, country.laws)
   enableCountrySelections(countryData, SelectionType.Deity, country.deities)
   if (country.omen) enableCountrySelection(countryData, SelectionType.Deity, 'omen' + country.omen)
-  enableCountrySelections(countryData, SelectionType.Modifier, country.modifiers)
+  enableCountrySelections(countryData, SelectionType.Effect, country.modifiers)
   enableCountrySelection(countryData, SelectionType.Policy, country.armyMaintenance)
   enableCountrySelection(countryData, SelectionType.Policy, country.navalMaintenance)
   enableCountrySelection(countryData, SelectionType.Religion, country.religion)

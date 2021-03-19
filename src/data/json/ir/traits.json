@@ -1,61 +1,15 @@
-{
-  "abrasive": {
-    "name": "Abrasive",
-    "key": "abrasive",
-    "modifiers": []
-  },
-  "aggressive": {
-    "name": "Aggressive",
-    "key": "aggressive",
+[
+  {
+    "name": "Hunchback",
+    "key": "hunchback",
+    "relevant": true,
     "modifiers": [
       {
-        "target": "General",
-        "attribute": "Martial",
+        "target": "Text",
+        "attribute": "Congenital",
         "type": "Base",
-        "noPercent": true,
-        "value": 1
+        "value": 0
       },
-      {
-        "target": "Light Cavalry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Camel Cavalry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "ambitious": {
-    "name": "Ambitious",
-    "key": "ambitious",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
-  },
-  "arbitrary": {
-    "name": "Arbitrary",
-    "key": "arbitrary",
-    "modifiers": []
-  },
-  "arrogant": {
-    "name": "Arrogant",
-    "key": "arrogant",
-    "modifiers": []
-  },
-  "arthritis": {
-    "name": "Arthritis",
-    "key": "arthritis",
-    "modifiers": [
       {
         "target": "General",
         "attribute": "Martial",
@@ -64,27 +18,170 @@
         "noPercent": true,
         "value": -1
       }
-    ]
+    ],
+    "parent": "health"
   },
-  "assertive": {
-    "name": "Assertive",
-    "key": "assertive",
-    "modifiers": []
-  },
-  "barren": {
-    "name": "Barren",
-    "key": "barren",
-    "modifiers": []
-  },
-  "benefactor": {
-    "name": "Benefactor",
-    "key": "benefactor",
-    "modifiers": []
-  },
-  "blind": {
-    "name": "Blind",
-    "key": "blind",
+  {
+    "name": "Lisp",
+    "key": "lisp",
+    "relevant": false,
     "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Congenital",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Stutter",
+    "key": "stutter",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Congenital",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Fair",
+    "key": "fair",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Congenital",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Max Friends",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Inbred",
+    "key": "inbred",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Congenital",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Fertility",
+        "type": "Base",
+        "negative": true,
+        "value": -0.3
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Limp",
+    "key": "limp",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Congenital",
+        "type": "Base",
+        "value": 0
+      },
       {
         "target": "General",
         "attribute": "Martial",
@@ -93,89 +190,147 @@
         "noPercent": true,
         "value": -2
       }
-    ]
+    ],
+    "parent": "health"
   },
-  "aeacidae": {
-    "name": "Blood of Aiakos",
-    "key": "aeacidae",
+  {
+    "name": "Ugly",
+    "key": "ugly",
+    "relevant": false,
     "modifiers": [
       {
-        "target": "General",
-        "attribute": "Martial",
+        "target": "Text",
+        "attribute": "Congenital",
         "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Fertility",
+        "type": "Base",
+        "negative": true,
+        "value": -0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
         "noPercent": true,
-        "value": 1
+        "value": -1
       }
-    ]
+    ],
+    "parent": "health"
   },
-  "antigonids": {
-    "name": "Blood of Antigonos",
-    "key": "antigonids",
-    "modifiers": []
-  },
-  "antipatrid": {
-    "name": "Blood of Antipatros",
-    "key": "antipatrid",
-    "modifiers": []
-  },
-  "alcimachid": {
-    "name": "Blood of Lysimachos",
-    "key": "alcimachid",
+  {
+    "name": "Lunatic",
+    "key": "lunatic",
+    "relevant": true,
     "modifiers": [
       {
-        "target": "General",
-        "attribute": "Martial",
+        "target": "Text",
+        "attribute": "Congenital",
         "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
-  },
-  "seleucids": {
-    "name": "Blood of Seleukos",
-    "key": "seleucids",
-    "modifiers": []
-  },
-  "argeads": {
-    "name": "Blood of the Argeads",
-    "key": "argeads",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
-  },
-  "lagids": {
-    "name": "Blood of the Lagidai",
-    "key": "lagids",
-    "modifiers": []
-  },
-  "hemorrhagic_fever": {
-    "name": "Bloody Flux",
-    "key": "hemorrhagic_fever",
-    "modifiers": [
+        "value": 0
+      },
       {
         "target": "General",
         "attribute": "Martial",
         "type": "Base",
         "negative": true,
         "noPercent": true,
-        "value": -4
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.2
       }
-    ]
+    ],
+    "parent": "health"
   },
-  "blunt": {
-    "name": "Blunt",
-    "key": "blunt",
-    "modifiers": []
+  {
+    "name": "Stressed",
+    "key": "stressed",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      }
+    ],
+    "parent": "health"
   },
-  "brain_damaged": {
-    "name": "Brain Damaged",
-    "key": "brain_damaged",
+  {
+    "name": "Maniac",
+    "key": "schizophrenic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Congenital",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Invalid",
+    "key": "invalid",
+    "relevant": true,
     "modifiers": [
       {
         "target": "General",
@@ -185,30 +340,481 @@
         "noPercent": true,
         "value": -3
       }
-    ]
+    ],
+    "parent": "health"
   },
-  "brave": {
-    "name": "Brave",
-    "key": "brave",
+  {
+    "name": "Epileptic",
+    "key": "epileptic",
+    "relevant": false,
     "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Congenital",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.2
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "diplomatic_reputation": -1
+        }
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Bloody Flux",
+    "key": "hemorrhagic_fever",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "noPercent": true,
+        "value": -2
+      },
       {
         "target": "General",
         "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -4
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -4
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
         "type": "Base",
         "noPercent": true,
         "value": 1
       },
       {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "value": 0.05
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -1
       }
-    ]
+    ],
+    "parent": "health"
   },
-  "cancer": {
-    "name": "Cancer",
-    "key": "cancer",
+  {
+    "name": "Plague",
+    "key": "plague",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Mentagra",
+    "key": "mentagra",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Arthritis",
+    "key": "arthritis",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Pox",
+    "key": "pox",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Fertility",
+        "type": "Base",
+        "negative": true,
+        "value": -0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Dysentery",
+    "key": "dysentery",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.5
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Infection",
+    "key": "infection",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.2
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Inflammation",
+    "key": "inflammation",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Wounded",
+    "key": "wounded",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.1
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Lung Disease",
+    "key": "pneumonia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Gangrene",
+    "key": "gangrene",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -3
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -3
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -3
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Leper",
+    "key": "leper",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.5
+      },
+      {
+        "target": "Text",
+        "attribute": "Fertility",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Popularity",
+        "type": "Base",
+        "negative": true,
+        "value": -0.2
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Barren",
+    "key": "barren",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fertility",
+        "type": "Base",
+        "negative": true,
+        "value": -10
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -5
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Castrated",
+    "key": "castrated",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fertility",
+        "type": "Base",
+        "negative": true,
+        "value": -10
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -10
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Blind",
+    "key": "blind",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -3
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "accessory": {
+            "mode": "replace",
+            "gene": "eye_accessory",
+            "template": "blindfold_1",
+            "value": 1
+          }
+        }
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Maimed",
+    "key": "maimed",
+    "relevant": true,
     "modifiers": [
       {
         "target": "General",
@@ -218,16 +824,13 @@
         "noPercent": true,
         "value": -2
       }
-    ]
+    ],
+    "parent": "health"
   },
-  "castrated": {
-    "name": "Castrated",
-    "key": "castrated",
-    "modifiers": []
-  },
-  "cautious": {
-    "name": "Cautious",
-    "key": "cautious",
+  {
+    "name": "One-Eyed",
+    "key": "one_eyed",
+    "relevant": true,
     "modifiers": [
       {
         "target": "General",
@@ -236,41 +839,426 @@
         "negative": true,
         "noPercent": true,
         "value": -1
-      }
-    ]
-  },
-  "chaste": {
-    "name": "Chaste",
-    "key": "chaste",
-    "modifiers": []
-  },
-  "coastal_raider": {
-    "name": "Coastal Raider",
-    "key": "coastal_raider",
-    "modifiers": [
-      {
-        "target": "Liburnian",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
       },
       {
-        "target": "Trireme",
-        "attribute": "Discipline",
+        "target": "Text",
         "type": "Base",
+        "value": {
+          "accessory": {
+            "mode": "replace",
+            "gene": "eye_accessory",
+            "template": "eyepatch_1",
+            "value": 1
+          }
+        }
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Frail",
+    "key": "frail",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Paralysis",
+    "key": "paralysis",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -4
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.3
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Brain Damaged",
+    "key": "brain_damaged",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -3
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -3
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -3
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -3
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.3
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -10
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.5
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Seeking Treatment",
+    "key": "seeking_treatment_trait",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "noPercent": true,
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "health"
   },
-  "cold": {
-    "name": "Cold",
-    "key": "cold",
-    "modifiers": []
+  {
+    "name": "In Mourning",
+    "key": "mourning",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.2
+      }
+    ],
+    "parent": "health"
   },
-  "confident": {
+  {
+    "name": "Depressed",
+    "key": "depressed",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -0.1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Dementia",
+    "key": "dementia",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -5
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Cancer",
+    "key": "cancer",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Diphtheria",
+    "key": "diphtheria",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Gout",
+    "key": "gout",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      }
+    ],
+    "parent": "health"
+  },
+  {
+    "name": "Original Thinker",
+    "key": "original_thinker",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Siege Ability",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Tactically Inflexible",
+    "key": "tactically_inflexible",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Reinforcement Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ],
+    "parent": "military"
+  },
+  {
     "name": "Confident",
     "key": "confident",
+    "relevant": true,
     "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
       {
         "target": "General",
         "attribute": "Martial",
@@ -290,805 +1278,13 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "military"
   },
-  "conqueror": {
-    "name": "Conqueror",
-    "key": "conqueror",
-    "modifiers": []
-  },
-  "content": {
-    "name": "Content",
-    "key": "content",
-    "modifiers": []
-  },
-  "corrupt": {
-    "name": "Corrupt",
-    "key": "corrupt",
-    "modifiers": []
-  },
-  "coward": {
-    "name": "Coward",
-    "key": "coward",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      },
-      {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.05
-      },
-      {
-        "target": "Naval",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.05
-      }
-    ]
-  },
-  "crafty": {
-    "name": "Crafty",
-    "key": "crafty",
-    "modifiers": []
-  },
-  "cruel": {
-    "name": "Cruel",
-    "key": "cruel",
-    "modifiers": []
-  },
-  "daring": {
-    "name": "Daring",
-    "key": "daring",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Damage Done",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "deceitful": {
-    "name": "Deceitful",
-    "key": "deceitful",
-    "modifiers": []
-  },
-  "dementia": {
-    "name": "Dementia",
-    "key": "dementia",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -2
-      }
-    ]
-  },
-  "depressed": {
-    "name": "Depressed",
-    "key": "depressed",
-    "modifiers": []
-  },
-  "devout": {
-    "name": "Devout",
-    "key": "devout",
-    "modifiers": []
-  },
-  "diphtheria": {
-    "name": "Diphtheria",
-    "key": "diphtheria",
-    "modifiers": []
-  },
-  "disciplined": {
-    "name": "Disciplined",
-    "key": "disciplined",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      },
-      {
-        "target": "Global",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "dumb": {
-    "name": "Dumb",
-    "key": "dumb",
-    "modifiers": []
-  },
-  "dysentery": {
-    "name": "Dysentery",
-    "key": "dysentery",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "energetic": {
-    "name": "Energetic",
-    "key": "energetic",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
-  },
-  "epileptic": {
-    "name": "Epileptic",
-    "key": "epileptic",
-    "modifiers": []
-  },
-  "fair": {
-    "name": "Fair",
-    "key": "fair",
-    "modifiers": []
-  },
-  "squadron_leader": {
-    "name": "Fleet Commander",
-    "key": "squadron_leader",
-    "modifiers": [
-      {
-        "target": "Tetrere",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Hexere",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "foolish": {
-    "name": "Foolish",
-    "key": "foolish",
-    "modifiers": []
-  },
-  "forgiving": {
-    "name": "Forgiving",
-    "key": "forgiving",
-    "modifiers": []
-  },
-  "founder": {
-    "name": "Founder",
-    "key": "founder",
-    "modifiers": []
-  },
-  "frail": {
-    "name": "Frail",
-    "key": "frail",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "gangrene": {
-    "name": "Gangrene",
-    "key": "gangrene",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -3
-      }
-    ]
-  },
-  "generous": {
-    "name": "Generous",
-    "key": "generous",
-    "modifiers": []
-  },
-  "good_natured": {
-    "name": "Good Natured",
-    "key": "good_natured",
-    "modifiers": []
-  },
-  "gout": {
-    "name": "Gout",
-    "key": "gout",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "gluttonous": {
-    "name": "Greedy",
-    "key": "gluttonous",
-    "modifiers": []
-  },
-  "guileless": {
-    "name": "Guileless",
-    "key": "guileless",
-    "modifiers": []
-  },
-  "harsh": {
-    "name": "Harsh",
-    "key": "harsh",
-    "modifiers": []
-  },
-  "honest": {
-    "name": "Honest",
-    "key": "honest",
-    "modifiers": []
-  },
-  "humble": {
-    "name": "Humble",
-    "key": "humble",
-    "modifiers": []
-  },
-  "hunchback": {
-    "name": "Hunchback",
-    "key": "hunchback",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "improviser": {
-    "name": "Improviser",
-    "key": "improviser",
-    "modifiers": []
-  },
-  "mourning": {
-    "name": "In Mourning",
-    "key": "mourning",
-    "modifiers": []
-  },
-  "inbred": {
-    "name": "Inbred",
-    "key": "inbred",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "incapable": {
-    "name": "Incapable",
-    "key": "incapable",
-    "modifiers": []
-  },
-  "infection": {
-    "name": "Infection",
-    "key": "infection",
-    "modifiers": []
-  },
-  "inflammation": {
-    "name": "Inflammation",
-    "key": "inflammation",
-    "modifiers": []
-  },
-  "intelligent": {
-    "name": "Intelligent",
-    "key": "intelligent",
-    "modifiers": []
-  },
-  "invalid": {
-    "name": "Invalid",
-    "key": "invalid",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -3
-      }
-    ]
-  },
-  "jealous": {
-    "name": "Jealous",
-    "key": "jealous",
-    "modifiers": []
-  },
-  "just": {
-    "name": "Just",
-    "key": "just",
-    "modifiers": []
-  },
-  "kindly": {
-    "name": "Kindly",
-    "key": "kindly",
-    "modifiers": []
-  },
-  "lapsed": {
-    "name": "Lapsed",
-    "key": "lapsed",
-    "modifiers": []
-  },
-  "lazy": {
-    "name": "Lazy",
-    "key": "lazy",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "leper": {
-    "name": "Leper",
-    "key": "leper",
-    "modifiers": []
-  },
-  "limp": {
-    "name": "Limp",
-    "key": "limp",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -2
-      }
-    ]
-  },
-  "lisp": {
-    "name": "Lisp",
-    "key": "lisp",
-    "modifiers": []
-  },
-  "loving": {
-    "name": "Loving",
-    "key": "loving",
-    "modifiers": []
-  },
-  "lunatic": {
-    "name": "Lunatic",
-    "key": "lunatic",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -2
-      }
-    ]
-  },
-  "pneumonia": {
-    "name": "Lung Disease",
-    "key": "pneumonia",
-    "modifiers": []
-  },
-  "lustful": {
-    "name": "Lustful",
-    "key": "lustful",
-    "modifiers": []
-  },
-  "maimed": {
-    "name": "Maimed",
-    "key": "maimed",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -2
-      }
-    ]
-  },
-  "schizophrenic": {
-    "name": "Maniac",
-    "key": "schizophrenic",
-    "modifiers": []
-  },
-  "mentagra": {
-    "name": "Mentagra",
-    "key": "mentagra",
-    "modifiers": []
-  },
-  "mercenary_trait": {
-    "name": "Mercenary",
-    "key": "mercenary_trait",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 5
-      }
-    ]
-  },
-  "merciful": {
-    "name": "Merciful",
-    "key": "merciful",
-    "modifiers": []
-  },
-  "miserly": {
-    "name": "Miserly",
-    "key": "miserly",
-    "modifiers": []
-  },
-  "modest": {
-    "name": "Modest",
-    "key": "modest",
-    "modifiers": []
-  },
-  "monotonous": {
-    "name": "Monotonous",
-    "key": "monotonous",
-    "modifiers": []
-  },
-  "narrowminded": {
-    "name": "Narrow-minded",
-    "key": "narrowminded",
-    "modifiers": []
-  },
-  "oarmaster": {
-    "name": "Oarmaster",
-    "key": "oarmaster",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
-  },
-  "obsessive": {
-    "name": "Obsessive",
-    "key": "obsessive",
-    "modifiers": []
-  },
-  "olympic_competitor": {
-    "name": "Olympic Competitor",
-    "key": "olympic_competitor",
-    "modifiers": []
-  },
-  "one_eyed": {
-    "name": "One-Eyed",
-    "key": "one_eyed",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "orator": {
-    "name": "Orator",
-    "key": "orator",
-    "modifiers": []
-  },
-  "original_thinker": {
-    "name": "Original Thinker",
-    "key": "original_thinker",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
-  },
-  "paralysis": {
-    "name": "Paralysis",
-    "key": "paralysis",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -4
-      }
-    ]
-  },
-  "pious": {
-    "name": "Pious",
-    "key": "pious",
-    "modifiers": []
-  },
-  "plague": {
-    "name": "Plague",
-    "key": "plague",
-    "modifiers": []
-  },
-  "plain_speaking": {
-    "name": "Plain-speaking",
-    "key": "plain_speaking",
-    "modifiers": []
-  },
-  "poet": {
-    "name": "Poet",
-    "key": "poet",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "polymath": {
-    "name": "Polymath",
-    "key": "polymath",
-    "modifiers": []
-  },
-  "pox": {
-    "name": "Pox",
-    "key": "pox",
-    "modifiers": []
-  },
-  "princeps": {
-    "name": "Princeps",
-    "key": "princeps",
-    "modifiers": [
-      {
-        "target": "Octere",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "Mega-Polyreme",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "prominent": {
-    "name": "Prominent",
-    "key": "prominent",
-    "modifiers": []
-  },
-  "proud": {
-    "name": "Proud",
-    "key": "proud",
-    "modifiers": []
-  },
-  "rash": {
-    "name": "Rash",
-    "key": "rash",
-    "modifiers": []
-  },
-  "reckless": {
-    "name": "Reckless",
-    "key": "reckless",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      }
-    ]
-  },
-  "righteous": {
-    "name": "Righteous",
-    "key": "righteous",
-    "modifiers": []
-  },
-  "sarcastic": {
-    "name": "Sarcastic",
-    "key": "sarcastic",
-    "modifiers": []
-  },
-  "scholar": {
-    "name": "Scholar",
-    "key": "scholar",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "seadog": {
-    "name": "Sea Dog",
-    "key": "seadog",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      },
-      {
-        "target": "Naval",
-        "attribute": "Capture Chance",
-        "type": "Base",
-        "value": 0.1
-      }
-    ]
-  },
-  "secure": {
-    "name": "Secure",
-    "key": "secure",
-    "modifiers": []
-  },
-  "seeking_treatment_trait": {
-    "name": "Seeking Treatment",
-    "key": "seeking_treatment_trait",
-    "modifiers": []
-  },
-  "self_controlled": {
-    "name": "Self-controlled",
-    "key": "self_controlled",
-    "modifiers": []
-  },
-  "selfish": {
-    "name": "Selfish",
-    "key": "selfish",
-    "modifiers": []
-  },
-  "shrewd": {
-    "name": "Shrewd",
-    "key": "shrewd",
-    "modifiers": []
-  },
-  "silver_tongued": {
-    "name": "Silver Tongued",
-    "key": "silver_tongued",
-    "modifiers": []
-  },
-  "sceptical": {
-    "name": "Skeptical",
-    "key": "sceptical",
-    "modifiers": []
-  },
-  "steadfast": {
-    "name": "Steadfast",
-    "key": "steadfast",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "noPercent": true,
-        "value": 1
-      },
-      {
-        "target": "Heavy Infantry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      },
-      {
-        "target": "War Elephants",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.05
-      }
-    ]
-  },
-  "stressed": {
-    "name": "Stressed",
-    "key": "stressed",
-    "modifiers": []
-  },
-  "stubborn": {
-    "name": "Stubborn",
-    "key": "stubborn",
-    "modifiers": []
-  },
-  "stutter": {
-    "name": "Stutter",
-    "key": "stutter",
-    "modifiers": []
-  },
-  "submissive": {
-    "name": "Submissive",
-    "key": "submissive",
-    "modifiers": []
-  },
-  "suspicious": {
-    "name": "Suspicious",
-    "key": "suspicious",
-    "modifiers": []
-  },
-  "tactically_inflexible": {
-    "name": "Tactically Inflexible",
-    "key": "tactically_inflexible",
-    "modifiers": [
-      {
-        "target": "General",
-        "attribute": "Martial",
-        "type": "Base",
-        "negative": true,
-        "noPercent": true,
-        "value": -1
-      }
-    ]
-  },
-  "tactician": {
+  {
     "name": "Tactician",
     "key": "tactician",
+    "relevant": true,
     "modifiers": [
       {
         "target": "General",
@@ -1115,68 +1311,1370 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "military"
   },
-  "tolerant": {
-    "name": "Tolerant",
-    "key": "tolerant",
-    "modifiers": []
+  {
+    "name": "Disciplined",
+    "key": "disciplined",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "military"
   },
-  "tough": {
+  {
+    "name": "Steadfast",
+    "key": "steadfast",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Heavy Infantry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "War Elephants",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Aggressive",
+    "key": "aggressive",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Light Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Brave",
+    "key": "brave",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Cohort Loyalty Gain Chance",
+        "type": "Base",
+        "negative": true,
+        "value": 0.02
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Coward",
+    "key": "coward",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Naval",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Cohort Loyalty Gain Chance",
+        "type": "Base",
+        "value": -0.02
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Coastal Raider",
+    "key": "coastal_raider",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Wealth",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Liburnian",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Trireme",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Fleet Commander",
+    "key": "squadron_leader",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Tetrere",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Hexere",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Princeps",
+    "key": "princeps",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Octere",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Mega-Polyreme",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Oarmaster",
+    "key": "oarmaster",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Naval Movement Speed",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Sea Dog",
+    "key": "seadog",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Capture Chance",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "military"
+  },
+  {
+    "name": "Daring",
+    "key": "daring",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "military"
+  },
+  {
     "name": "Tough",
     "key": "tough",
+    "relevant": true,
     "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Health",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.01
+      },
       {
         "target": "Naval",
         "attribute": "Damage Taken",
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "military"
   },
-  "trusting": {
-    "name": "Trusting",
-    "key": "trusting",
-    "modifiers": []
+  {
+    "name": "Improviser",
+    "key": "improviser",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Ship Repair at Sea",
+        "type": "Base",
+        "value": 0.01
+      }
+    ],
+    "parent": "military"
   },
-  "ugly": {
-    "name": "Ugly",
-    "key": "ugly",
-    "modifiers": []
+  {
+    "name": "Abrasive",
+    "key": "abrasive",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Max Rivals",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -0.02
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "subject_opinions": -5
+        }
+      }
+    ],
+    "parent": "personality"
   },
-  "uncaring": {
-    "name": "Uncaring",
-    "key": "uncaring",
-    "modifiers": []
+  {
+    "name": "Good Natured",
+    "key": "good_natured",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Max Friends",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "subject_opinions": 5
+        }
+      }
+    ],
+    "parent": "personality"
   },
-  "unnoticeable": {
-    "name": "Unnoticeable",
-    "key": "unnoticeable",
-    "modifiers": []
+  {
+    "name": "Silver Tongued",
+    "key": "silver_tongued",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "improve_relation_impact": 0.25
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
   },
-  "vengeful": {
-    "name": "Vengeful",
-    "key": "vengeful",
-    "modifiers": []
+  {
+    "name": "Blunt",
+    "key": "blunt",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "improve_relation_impact": -0.25
+        }
+      }
+    ],
+    "parent": "personality"
   },
-  "victorious": {
-    "name": "Victorious",
-    "key": "victorious",
-    "modifiers": []
+  {
+    "name": "Crafty",
+    "key": "crafty",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Corruption",
+        "type": "Base",
+        "value": 20
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Enslavement Efficiency",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "personality"
   },
-  "weak_willed": {
-    "name": "Weak-willed",
-    "key": "weak_willed",
-    "modifiers": []
+  {
+    "name": "Guileless",
+    "key": "guileless",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Holdings Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.01
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      }
+    ],
+    "parent": "personality"
   },
-  "wise": {
-    "name": "Wise",
-    "key": "wise",
-    "modifiers": []
+  {
+    "name": "Skeptical",
+    "key": "sceptical",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "omen_power": -0.05,
+          "global_tax_modifier": 0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -0.02
+      }
+    ],
+    "parent": "personality"
   },
-  "wounded": {
-    "name": "Wounded",
-    "key": "wounded",
+  {
+    "name": "Pious",
+    "key": "pious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "omen_power": 0.025,
+          "global_tax_modifier": -0.1
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Zealous",
+    "key": "zealous",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_happiness_for_same_religion_modifier": 0.025
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "happiness_for_wrong_culture_group_modifier": "negative_wrong_culture_group_large"
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Tolerant",
+    "key": "tolerant",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "happiness_for_wrong_culture_group_modifier": "wrong_culture_group_large"
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Devout",
+    "key": "devout",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "omen_power": 0.05,
+          "inspire_devotio_cost_modifier": -0.1
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Lapsed",
+    "key": "lapsed",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "omen_power": -0.1
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Just",
+    "key": "just",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_monthly_civilization": 0.01
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "stability_monthly_change": 0.02
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Arbitrary",
+    "key": "arbitrary",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Holdings Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "stability_monthly_change": -0.05
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Cruel",
+    "key": "cruel",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_slaves_output": "output_large_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "monthly_tyranny": 0.02
+        }
+      },
+      {
+        "target": "Text",
+        "attribute": "Enslavement Efficiency",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Merciful",
+    "key": "merciful",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_freemen_happyness": "happiness_large_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "monthly_tyranny": -0.05
+        }
+      },
+      {
+        "target": "Text",
+        "attribute": "Enslavement Efficiency",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Righteous",
+    "key": "righteous",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Corruption",
+        "type": "Base",
+        "negative": true,
+        "value": -10
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "agressive_expansion_monthly_decay": 0.002
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Corrupt",
+    "key": "corrupt",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Corruption",
+        "type": "Base",
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_tax_modifier": 0.1
+        }
+      },
+      {
+        "target": "Text",
+        "attribute": "Enslavement Efficiency",
+        "type": "Base",
+        "value": 0.01
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Founder",
+    "key": "founder",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_citizen_output": "output_large_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "build_cost": -0.05,
+          "stability_monthly_change": 0.025
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Incapable",
+    "key": "incapable",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Holdings Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_citizen_output": -0.05
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "ruler_popularity_gain": -0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -0.1
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Benefactor",
+    "key": "benefactor",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Popularity",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_slaves_happyness": "happiness_large_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_slaves_happyness": "happiness_large_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Harsh",
+    "key": "harsh",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Popularity",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_slaves_output": "output_large_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_slaves_output": "output_small_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Scholar",
+    "key": "scholar",
+    "relevant": true,
     "modifiers": [
       {
         "target": "General",
@@ -1185,12 +2683,2309 @@
         "negative": true,
         "noPercent": true,
         "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_research_points_modifier": 0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "technology_investment": 0.05
+        }
       }
-    ]
+    ],
+    "parent": "personality"
   },
-  "zealous": {
-    "name": "Zealous",
-    "key": "zealous",
-    "modifiers": []
+  {
+    "name": "Narrow-minded",
+    "key": "narrowminded",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_tribesmen_happyness": "happiness_huge_svalue",
+          "technology_investment": -0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Lustful",
+    "key": "lustful",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Fertility",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Chaste",
+    "key": "chaste",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Fertility",
+        "type": "Base",
+        "negative": true,
+        "value": -0.2
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Proud",
+    "key": "proud",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_defensive": 0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "tribute_income_modifier": 0.1
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Humble",
+    "key": "humble",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_freemen_output": "output_small_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "tribute_income_modifier": -0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Vengeful",
+    "key": "vengeful",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "assassinate_attempt_cost_modifier": -0.2
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Forgiving",
+    "key": "forgiving",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "monthly_tyranny": -0.05
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Assertive",
+    "key": "assertive",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Character Prominence",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "state_commerce_modifier": 0.05
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_commerce_modifier": 0.05
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Submissive",
+    "key": "submissive",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "state_commerce_modifier": -0.05
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_commerce_modifier": -0.05
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Intelligent",
+    "key": "intelligent",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "governor_loyalty": 5,
+          "research_points_modifier": 0.025
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Dumb",
+    "key": "dumb",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -0.05
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Generous",
+    "key": "generous",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Popularity",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Holdings Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_freemen_happyness": "happiness_small_svalue",
+          "local_citizen_happyness": "happiness_small_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_citizen_happyness": "happiness_large_svalue"
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Selfish",
+    "key": "selfish",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Popularity",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_tax_modifier": -0.05
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Miserly",
+    "key": "miserly",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Holdings Income",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_tax_modifier": -0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_tax_modifier": -0.1
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Honest",
+    "key": "honest",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_tribesmen_output": "output_small_svalue"
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Deceitful",
+    "key": "deceitful",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "negative": true,
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Energetic",
+    "key": "energetic",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Lazy",
+    "key": "lazy",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -0.05
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Cautious",
+    "key": "cautious",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Reinforcement Speed",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Army Morale Recovery",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Reckless",
+    "key": "reckless",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "agressive_expansion_impact": 0.1,
+          "war_score_cost": -0.05
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Shrewd",
+    "key": "shrewd",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Holdings Income",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "mercenary_land_maintenance_cost": -0.05
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Foolish",
+    "key": "foolish",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Holdings Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Greedy",
+    "key": "gluttonous",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_population_growth": 0.02
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Self-controlled",
+    "key": "self_controlled",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_population_growth": -0.02
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Arrogant",
+    "key": "arrogant",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "monthly_political_influence": -0.25
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Modest",
+    "key": "modest",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Popularity",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Prominent",
+    "key": "prominent",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 30
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "state_commerce_modifier": 0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Unnoticeable",
+    "key": "unnoticeable",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "negative": true,
+        "value": -2
+      },
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "negative": true,
+        "value": -30
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "state_commerce_modifier": -0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Loving",
+    "key": "loving",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Max Friends",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "diplomatic_relations": 1
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Cold",
+    "key": "cold",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Max Friends",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "assassinate_attempt_cost_modifier": -0.25
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Ambitious",
+    "key": "ambitious",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 20
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Cohort Loyalty Gain Chance",
+        "type": "Base",
+        "negative": true,
+        "value": 0.25
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -0.02
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 3
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Content",
+    "key": "content",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "negative": true,
+        "value": -10
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Suspicious",
+    "key": "suspicious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Max Rivals",
+        "type": "Base",
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "price_imprison_cost_modifier": -0.25
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Trusting",
+    "key": "trusting",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Max Rivals",
+        "type": "Base",
+        "negative": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "monthly_tyranny": -0.05
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Wise",
+    "key": "wise",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_citizen_output": "output_small_svalue"
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Rash",
+    "key": "rash",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_citizen_happyness": "negative_happiness_small_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": -3
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Jealous",
+    "key": "jealous",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "smear_character_cost_modifier": -0.25
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Secure",
+    "key": "secure",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Boni Conviction",
+        "type": "Base",
+        "value": 0.12
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Traditionalist Conviction",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "general_loyalty": 5
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Sarcastic",
+    "key": "sarcastic",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "diplomatic_reputation": -3
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Plain-speaking",
+    "key": "plain_speaking",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "diplomatic_reputation": 3
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Stubborn",
+    "key": "stubborn",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Popularity",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_defensive": 0.1
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Weak-willed",
+    "key": "weak_willed",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "Holdings Income",
+        "type": "Base",
+        "negative": true,
+        "value": -0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Conviction towards Head of Family's Faction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_defensive": -0.1
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Monotonous",
+    "key": "monotonous",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "ruler_popularity_gain": -0.2
+        }
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Kindly",
+    "key": "kindly",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Democratic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_freemen_output": "output_small_svalue"
+        }
+      },
+      {
+        "target": "Text",
+        "attribute": "Cohort Loyalty Gain Chance",
+        "type": "Base",
+        "negative": true,
+        "value": 0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Uncaring",
+    "key": "uncaring",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Optimates Conviction",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "global_freemen_output": -0.05
+        }
+      },
+      {
+        "target": "Text",
+        "attribute": "Cohort Loyalty Gain Chance",
+        "type": "Base",
+        "value": -0.02
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Polymath",
+    "key": "polymath",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_research_points_modifier": 0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "research_points_modifier": 0.025
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 3
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Obsessive",
+    "key": "obsessive",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Statesmanship",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Province",
+        "type": "Base",
+        "value": {
+          "local_research_points_modifier": -0.1
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "research_points_modifier": 0.025
+        }
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "personality"
+  },
+  {
+    "name": "Victorious",
+    "key": "victorious",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.025
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Popularity",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "stability_monthly_change": 0.08
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Conqueror",
+    "key": "conqueror",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Oligarchic Conviction",
+        "type": "Base",
+        "value": 0.025
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Populares Conviction",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "subject_opinions": 5
+        }
+      },
+      {
+        "target": "Text",
+        "attribute": "Assault Ability",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Orator",
+    "key": "orator",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Senate Influence",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "monthly_legitimacy": 0.05,
+          "ruler_popularity_gain": 0.05,
+          "stability_monthly_change": 0.1
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Poet",
+    "key": "poet",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "improve_relation_impact": 0.1,
+          "stability_monthly_change": 0.05
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Olympic Competitor",
+    "key": "olympic_competitor",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "noPercent": true,
+        "value": 100
+      },
+      {
+        "target": "Text",
+        "attribute": "Disallow job",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Disallow office",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Disallow command",
+        "type": "Base",
+        "value": 0
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Blood of Lysimachos",
+    "key": "alcimachid",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 20
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "diplomatic_reputation": 1,
+          "price_execute_cost_modifier": -0.25
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Blood of Antigonos",
+    "key": "antigonids",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 20
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "agressive_expansion_monthly_change": -0.01,
+          "global_defensive": 0.1
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Blood of Antipatros",
+    "key": "antipatrid",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      },
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 20
+      },
+      {
+        "target": "Text",
+        "attribute": "Charisma",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "build_cost": -0.05,
+          "monthly_legitimacy": 0.1
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Blood of the Argeads",
+    "key": "argeads",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 20
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Attraction as Heir",
+        "type": "Base",
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "agressive_expansion_impact": -0.1,
+          "monthly_legitimacy": 0.05,
+          "stability_monthly_change": 0.05
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Blood of the Lagidai",
+    "key": "lagids",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 20
+      },
+      {
+        "target": "Text",
+        "attribute": "Zeal",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "happiness_for_wrong_culture_group_modifier": "wrong_culture_group_large",
+          "research_points_modifier": 0.05
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Blood of Seleukos",
+    "key": "seleucids",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 20
+      },
+      {
+        "target": "Text",
+        "attribute": "Finesse",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "change_governor_policy_cost_modifier": -0.25,
+          "global_monthly_state_loyalty": 0.05
+        }
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Mercenary",
+    "key": "mercenary_trait",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ],
+    "parent": "status"
+  },
+  {
+    "name": "Blood of Aiakos",
+    "key": "aeacidae",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Prominence",
+        "type": "Base",
+        "value": 10
+      },
+      {
+        "target": "General",
+        "attribute": "Martial",
+        "type": "Base",
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": {
+          "ruler_popularity_gain": 0.2,
+          "land_morale_modifier": 0.05
+        }
+      }
+    ],
+    "parent": "status"
   }
-}
+]

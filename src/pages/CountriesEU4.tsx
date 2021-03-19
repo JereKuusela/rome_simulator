@@ -63,7 +63,7 @@ class CountriesEU4 extends Component<IProps> {
         <Grid>
           <Grid.Row columns='3'>
             <Grid.Column>
-              <SimpleDropdown values={getCultures()} value={country.selectedTradition} onChange={item => item} />
+              <SimpleDropdown values={getCultures()} value={country.culture} onChange={item => item} />
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns='1'>

@@ -2,7 +2,6 @@
   {
     "name": "Standardized Measures",
     "key": "commerce_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -11,12 +10,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Logistics Bureau",
     "key": "capital_trade_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -26,12 +25,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Property Tax",
     "key": "global_tax_modifier_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -40,12 +39,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Advanced Mechanics",
     "key": "greek_advanced_mechanics_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -60,12 +59,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Pythagorean Mathematics",
     "key": "research_points_modifier_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -74,12 +73,12 @@
         "type": "Base",
         "value": -0.025
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Opus Caementicium",
     "key": "build_time_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -88,12 +87,12 @@
         "type": "Base",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Movement of Water",
     "key": "civic_tech_investment_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -102,12 +101,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "The Father of Geometry",
     "key": "research_points_modifier_inv_4",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -116,12 +115,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "State Harbor Fees",
     "key": "commerce_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -130,12 +129,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "River Barges",
     "key": "capital_trade_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -157,12 +156,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Eisphora",
     "key": "global_tax_modifier_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -171,12 +170,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Expanded Financial Remit",
     "key": "monthly_wage_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -185,12 +184,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Ius Honorarium",
     "key": "enact_law_cost_modifier_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -199,12 +198,12 @@
         "type": "Base",
         "value": -0.15
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Lighthouses",
     "key": "commerce_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -213,12 +212,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Maritime Patrols",
     "key": "state_trade_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -234,12 +233,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Liturgies",
     "key": "global_tax_modifier_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -248,12 +247,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Pedagoguery",
     "key": "research_points_modifier_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -262,19 +261,19 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "School of Civic Duty",
     "key": "gw_effect_finesse_education_inv",
-    "tech": "Civic",
     "relevant": false,
-    "modifiers": []
+    "modifiers": [],
+    "parent": "Civic"
   },
   {
     "name": "Gromatici",
     "key": "civic_roads_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -283,12 +282,12 @@
         "type": "Base",
         "value": -0.25
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Regulated Money Lenders",
     "key": "commerce_inv_4",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -297,12 +296,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "River Outposts",
     "key": "state_trade_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -312,12 +311,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Use of State Land",
     "key": "global_tax_modifier_inv_4",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -326,12 +325,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Limited Governship",
     "key": "monthly_governor_wage_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -340,12 +339,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Temporary Office",
     "key": "monthly_wage_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -366,12 +365,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Encourage Exploration",
     "key": "state_trade_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -381,12 +380,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Mandated Record Keeping",
     "key": "commerce_inv_5",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -395,12 +394,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Prestigious Trade Goods",
     "key": "create_trade_route_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -409,12 +408,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Import Tax",
     "key": "global_tax_modifier_inv_5",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -423,12 +422,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Embracing Philosophy",
     "key": "research_points_modifier_inv_5",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -443,12 +442,12 @@
         "type": "Base",
         "value": 0.25
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Trade Ports",
     "key": "capital_trade_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -458,12 +457,12 @@
         "noPercent": true,
         "value": 2
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Etruscan Pottery",
     "key": "italic_etruscan_pottery_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -472,12 +471,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Pilum and Scutum",
     "key": "italic_pilum_scutum_inv",
-    "tech": "Civic",
     "relevant": true,
     "modifiers": [
       {
@@ -504,12 +503,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Arches",
     "key": "italic_arches_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -518,12 +517,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Lituus",
     "key": "italic_lituus_inv",
-    "tech": "Civic",
     "relevant": true,
     "modifiers": [
       {
@@ -532,12 +531,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Cursus Publicus",
     "key": "italic_cursuspublicus_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -552,12 +551,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Julian Calendar",
     "key": "italic_julian_calendar_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -566,12 +565,12 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Insulae",
     "key": "italic_insulae_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -580,12 +579,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Bacon",
     "key": "italic_bacon_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -594,12 +593,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Lex Frumentaria",
     "key": "italic_lex_frumentaria_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -614,12 +613,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Right to be Heard",
     "key": "global_citizen_output_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -628,12 +627,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Rights of Man",
     "key": "global_slaves_output_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -642,12 +641,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Tribal Reserve",
     "key": "global_tribesmen_output_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -656,12 +655,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Code of Rights",
     "key": "global_freemen_output_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -670,12 +669,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Black Polished Ware",
     "key": "polished_ceramics_invention",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -684,12 +683,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Tallow Soap",
     "key": "soap_invention",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -698,12 +697,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Slave Latifundia",
     "key": "global_goods_from_slaves_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -713,12 +712,12 @@
         "noPercent": true,
         "value": -1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Granted Manumission",
     "key": "freemen_promotion_cost_modifier_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -727,12 +726,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Devolved Responsibility",
     "key": "global_tribesmen_output_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -741,12 +740,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Curb the Tax Collectors",
     "key": "global_freemen_output_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -755,12 +754,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Overseers",
     "key": "global_slaves_output_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -769,12 +768,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Hypocaust",
     "key": "global_citizen_output_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -789,12 +788,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Coloniae",
     "key": "move_pop_cost_modifier_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -803,12 +802,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Cultural Judiciary",
     "key": "happiness_for_wrong_culture_modifier_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -817,12 +816,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Advanced Wall Construction",
     "key": "civic_tech_investment_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -831,12 +830,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Gradated Citizenship",
     "key": "citizen_promotion_cost_modifier_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -845,19 +844,19 @@
         "type": "Base",
         "value": 0.2
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Dominance Through Enlightenment",
     "key": "gw_effect_culture_expansion_inv",
-    "tech": "Civic",
     "relevant": false,
-    "modifiers": []
+    "modifiers": [],
+    "parent": "Civic"
   },
   {
     "name": "Land Tithe",
     "key": "global_tribesmen_output_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -872,12 +871,12 @@
         "type": "Base",
         "value": 0.2
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Petition of Minorities",
     "key": "happiness_for_wrong_culture_modifier_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -898,12 +897,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Peregrini",
     "key": "happiness_for_wrong_culture_modifier_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -912,12 +911,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Moral Education",
     "key": "research_points_modifier_inv_2",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -926,12 +925,12 @@
         "type": "Base",
         "value": -0.025
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Urban Planning",
     "key": "global_building_slot_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -965,12 +964,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Rural Planning",
     "key": "global_settlement_building_slot_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -980,12 +979,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "De Architectura",
     "key": "build_cost_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -994,12 +993,12 @@
         "type": "Base",
         "value": -0.15
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Public Slavery",
     "key": "global_slaves_output_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1008,19 +1007,19 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "A Monument to Efficiency",
     "key": "gw_effect_slave_work_inv",
-    "tech": "Civic",
     "relevant": false,
-    "modifiers": []
+    "modifiers": [],
+    "parent": "Civic"
   },
   {
     "name": "Waste Disposal Infrastructure",
     "key": "global_citizen_output_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1029,12 +1028,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Water Pumps",
     "key": "global_freemen_output_inv_3",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1043,12 +1042,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Religious Assimilation",
     "key": "convert_pop_cost_modifier_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1057,12 +1056,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Cultural Administration",
     "key": "assimilate_pop_cost_modifier_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1083,12 +1082,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Earned Manumission",
     "key": "global_slaves_output_inv_4",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1097,12 +1096,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Tribal Advocates",
     "key": "global_tribesmen_output_inv_4",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1111,12 +1110,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Clean Water",
     "key": "global_citizen_output_inv_4",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1125,12 +1124,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "State Fire Brigade",
     "key": "global_freemen_output_inv_4",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1139,12 +1138,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Crucifixion",
     "key": "global_slaves_output_inv_5",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1159,12 +1158,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Servile Bondage",
     "key": "global_citizen_output_inv_5",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1179,12 +1178,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Triumviri Capitales",
     "key": "global_freemen_output_inv_5",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1199,12 +1198,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Right to Religious Observance",
     "key": "global_tribesmen_output_inv_5",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1213,12 +1212,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Mercenary Benefits",
     "key": "recruit_mercenary_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1233,12 +1232,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Divinely Guided",
     "key": "loyalty_gain_chance_modifier_inv",
-    "tech": "Civic",
     "relevant": true,
     "modifiers": [
       {
@@ -1254,12 +1253,12 @@
         "noPercent": true,
         "value": 0.25
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Fire Hose",
     "key": "greek_fire_hose_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1268,12 +1267,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Odometer",
     "key": "greek_odometer_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1282,12 +1281,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Pyoulkos",
     "key": "greek_pyoulkos_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1296,12 +1295,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Cartography",
     "key": "greek_cartography_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1316,12 +1315,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Astrolabe",
     "key": "greek_advanced_astronomy_inv_1",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1330,12 +1329,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Stoicism",
     "key": "greek_stoicism_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1356,12 +1355,12 @@
         "type": "Base",
         "value": 0.25
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Advanced Astronomy",
     "key": "greek_advanced_astronomy_inv_2",
-    "tech": "Civic",
     "relevant": true,
     "modifiers": [
       {
@@ -1376,12 +1375,12 @@
         "type": "Modifier",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Epicureanism",
     "key": "greek_epicureanism_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1396,12 +1395,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Clock Mechanics",
     "key": "greek_clock_mechanics_inv",
-    "tech": "Civic",
     "relevant": false,
     "modifiers": [
       {
@@ -1411,12 +1410,12 @@
         "noPercent": true,
         "value": 5
       }
-    ]
+    ],
+    "parent": "Civic"
   },
   {
     "name": "Military Artisans",
     "key": "military_tech_investment_inv_1",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1425,12 +1424,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Learning on the Job",
     "key": "global_start_experience_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1439,12 +1438,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Basic Training",
     "key": "global_start_experience_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1453,12 +1452,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Logistics Division",
     "key": "global_supply_limit_modifier_inv_3",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1467,12 +1466,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Fustuarium",
     "key": "heavy_infantry_discipline_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1481,12 +1480,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Recruitment Standards",
     "key": "global_start_experience_inv_3",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1495,12 +1494,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Active Drill",
     "key": "experience_decay_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1509,12 +1508,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Standardized Provisioning",
     "key": "fort_maintenance_cost_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1523,12 +1522,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Supernumerarii",
     "key": "global_supply_limit_modifier_inv_1",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1537,12 +1536,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Military Sponsors",
     "key": "general_loyalty_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1552,12 +1551,12 @@
         "noPercent": true,
         "value": 5
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Fighting Season",
     "key": "global_supply_limit_modifier_inv_2",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1566,12 +1565,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Promotion Through Valor",
     "key": "discipline_inv_4",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1586,12 +1585,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Retirement Opportunities",
     "key": "army_maintenance_cost_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1600,12 +1599,12 @@
         "type": "Modifier",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Enhanced Training Grounds",
     "key": "cohort_reinforcement_speed_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1614,12 +1613,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Professional Training",
     "key": "global_cohort_recruit_speed_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1634,19 +1633,19 @@
         "type": "Base",
         "value": -0.005
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Strategic Academy",
     "key": "gw_effect_martial_education_inv",
-    "tech": "Martial",
     "relevant": false,
-    "modifiers": []
+    "modifiers": [],
+    "parent": "Martial"
   },
   {
     "name": "Manipular Legion",
     "key": "discipline_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1655,12 +1654,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Quick March",
     "key": "army_movement_speed_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1669,12 +1668,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Praefectus Fabrum",
     "key": "military_tech_investment_inv_2",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1683,12 +1682,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Delayed Baggage Train",
     "key": "global_supply_limit_modifier_inv_4",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1697,12 +1696,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Veteran Enticements",
     "key": "discipline_inv_3",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1711,12 +1710,12 @@
         "type": "Base",
         "value": 0.04
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Elite Recruitment Standards",
     "key": "global_start_experience_inv_4",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1731,12 +1730,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Multi-Discipline Training",
     "key": "global_start_experience_inv_5",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1745,12 +1744,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Cohorts",
     "key": "discipline_inv_5",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1759,12 +1758,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Scorched Earth",
     "key": "hostile_attrition_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1774,12 +1773,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Central Reserve",
     "key": "global_supply_limit_modifier_inv_5",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1788,12 +1787,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Paymasters",
     "key": "army_maintenance_cost_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1802,12 +1801,12 @@
         "type": "Modifier",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Veteran Reassignment",
     "key": "experience_decay_inv_2",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1816,12 +1815,12 @@
         "type": "Base",
         "value": -0.005
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Tactical Withdrawal",
     "key": "retreat_delay_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1831,12 +1830,12 @@
         "noPercent": true,
         "value": -2
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Army Surgeons",
     "key": "land_unit_attrition_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1851,12 +1850,12 @@
         "type": "Base",
         "value": 0.15
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Material Science",
     "key": "buy_military_tradition_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1865,12 +1864,12 @@
         "type": "Modifier",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Boeotian Helmet",
     "key": "discipline_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1879,12 +1878,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Pentaspastos",
     "key": "global_defensive_inv_1",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1893,12 +1892,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Sapping",
     "key": "siege_engineers_inv_1",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1908,12 +1907,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Scythian Saddles",
     "key": "heavy_cavalry_discipline_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -1922,12 +1921,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Vault and Dome",
     "key": "global_defensive_inv_2",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1936,12 +1935,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Entrenchment",
     "key": "global_defensive_inv_4",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1962,12 +1961,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Siege Ladders",
     "key": "assault_ability_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1976,12 +1975,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Scorpio",
     "key": "siege_engineers_inv_3",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -1990,12 +1989,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Blacksmith Apprentices",
     "key": "heavy_infantry_cost_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2004,12 +2003,12 @@
         "type": "Modifier",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Fortified Camps",
     "key": "global_defensive_inv_3",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2018,12 +2017,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Investment",
     "key": "siege_speed_inv_3",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2032,12 +2031,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Siege Towers",
     "key": "siege_speed_inv_2",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2046,12 +2045,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Contravallation",
     "key": "siege_speed_inv_4",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2060,12 +2059,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Siege Ramps",
     "key": "siege_engineers_inv_5",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2086,12 +2085,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Ballistae",
     "key": "siege_speed_inv_5",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2100,12 +2099,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Polyspaston",
     "key": "global_defensive_inv_5",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2114,12 +2113,12 @@
         "type": "Base",
         "value": 0.2
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Tormenta",
     "key": "siege_engineers_inv_4",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2129,12 +2128,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Extraordinary Ordnance",
     "key": "siege_speed_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2143,12 +2142,12 @@
         "type": "Modifier",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Mangonel",
     "key": "siege_engineers_inv_6",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2171,12 +2170,12 @@
         "negative": true,
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Oppidum",
     "key": "gallic_oppidum_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2198,12 +2197,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Noric Steel",
     "key": "gallic_noric_steel_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2218,12 +2217,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Celtic Calendar",
     "key": "gallic_celtic_calendar_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2232,12 +2231,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Celtic Plough",
     "key": "gallic_celtic_plough_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2252,12 +2251,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Chainmail",
     "key": "gallic_chainmail_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2278,12 +2277,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Four-Horned Saddle",
     "key": "gallic_four_horned_saddle_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2304,12 +2303,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Montefortino Helmet",
     "key": "gallic_montefortino_helmet_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2324,12 +2323,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Trimarcisia",
     "key": "gallic_trimarcisia_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2350,12 +2349,12 @@
         "type": "Modifier",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Timbered Roads",
     "key": "gallic_timbered_roads_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2370,12 +2369,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Astral Navigation",
     "key": "pirate_spawn_chance_inv_1",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2384,12 +2383,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Dière Configuration",
     "key": "liburnian_invention_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2398,12 +2397,12 @@
         "type": "Modifier",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Kataphract Decks",
     "key": "katapharct_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2418,12 +2417,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Archimedes Principle",
     "key": "archimedes_principle",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2432,12 +2431,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Kuklos Tactic",
     "key": "naval_tactic_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2446,12 +2445,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Catapult Platform",
     "key": "naval_weapon_platform_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2460,12 +2459,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Piracy Amnesty",
     "key": "navy_maintenance_cost_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2474,12 +2473,12 @@
         "type": "Modifier",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Lemboi Scouts",
     "key": "liburnian_invention_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2488,12 +2487,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Wooden Rostra",
     "key": "naval_rostra_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2508,12 +2507,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Centuria",
     "key": "trireme_discipline_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2522,12 +2521,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Tacking",
     "key": "pirate_spawn_chance_inv_2",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2536,12 +2535,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Reinforced Rostra",
     "key": "trireme_discipline_inv_4",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2568,12 +2567,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Diekplous Tactic",
     "key": "naval_tactic_inv_3",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2582,12 +2581,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Professional Sailors",
     "key": "trireme_discipline_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2609,12 +2608,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Squadrons",
     "key": "trireme_discipline_inv_3",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2623,12 +2622,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Oxybels",
     "key": "naval_weapon_platform_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2637,12 +2636,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Catapult Deck",
     "key": "naval_weapon_platform_inv_3",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2658,12 +2657,12 @@
         "negative": true,
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Double Bow",
     "key": "double_bow_and_stern_inv_1",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2678,12 +2677,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Lateen Sails",
     "key": "navy_movement_speed_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2692,12 +2691,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Rostra Casting",
     "key": "naval_rostra_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2706,12 +2705,12 @@
         "type": "Modifier",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Experienced Seafarers",
     "key": "blockade_efficiency_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2720,12 +2719,12 @@
         "type": "Base",
         "value": 0.2
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Periplous Tactic",
     "key": "naval_tactic_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2734,12 +2733,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Naval Supply Lines",
     "key": "siege_engineers_inv_2",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2749,12 +2748,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Harpax",
     "key": "trireme_discipline_inv_5",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2763,12 +2762,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Counterbalanced Oars",
     "key": "counterbalanced_oars_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2777,12 +2776,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Honesta Missio",
     "key": "navy_maintenance_cost_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2791,12 +2790,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Corvus",
     "key": "corvus_invention",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2805,12 +2804,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Advanced Rostra Design",
     "key": "naval_rostra_inv_3",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2831,12 +2830,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Ship's Surgeon",
     "key": "naval_unit_attrition_inv",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2851,12 +2850,12 @@
         "type": "Modifier",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Patterned Construction",
     "key": "global_ship_recruit_speed_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2865,12 +2864,12 @@
         "type": "Base",
         "value": 0.25
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Double Stern",
     "key": "double_bow_and_stern_inv_2",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2885,12 +2884,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Catamaran Bow",
     "key": "mega_catamaran_inv",
-    "tech": "Martial",
     "relevant": false,
     "modifiers": [
       {
@@ -2899,12 +2898,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Heavy Rostras",
     "key": "naval_rostra_inv_4",
-    "tech": "Martial",
     "relevant": true,
     "modifiers": [
       {
@@ -2919,12 +2918,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Martial"
   },
   {
     "name": "Fetiales",
     "key": "agressive_expansion_impact_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -2933,12 +2932,12 @@
         "type": "Base",
         "value": -0.025
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Divine Mandate",
     "key": "agressive_expansion_impact_inv_5",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -2947,12 +2946,12 @@
         "type": "Base",
         "value": -0.025
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Equal Integration",
     "key": "agressive_expansion_monthly_decay_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -2962,12 +2961,12 @@
         "noPercent": true,
         "value": -0.02
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Triumphal Coins",
     "key": "hold_triumph_cost_modifier_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -2976,12 +2975,12 @@
         "type": "Base",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Tributary Administration",
     "key": "tribute_income_modifier_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -2990,12 +2989,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Transferred Citizenship",
     "key": "subject_opinions_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3005,12 +3004,12 @@
         "noPercent": true,
         "value": 10
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Defending Liberty",
     "key": "agressive_expansion_impact_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3026,12 +3025,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Power Diplomacy",
     "key": "intervene_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3040,12 +3039,12 @@
         "type": "Base",
         "value": 0
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Aggressive Protection",
     "key": "fabricate_claim_cost_modifier_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3067,12 +3066,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Tributary Concessions",
     "key": "loosened_tributaries_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3082,12 +3081,12 @@
         "noPercent": true,
         "value": 5
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Local Embassies",
     "key": "subject_loyalty_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3097,12 +3096,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Proxenoi",
     "key": "relation_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3111,19 +3110,19 @@
         "type": "Base",
         "value": 0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Diplomatic Scholasticism",
     "key": "gw_effect_charisma_education_inv",
-    "tech": "Oratory",
     "relevant": false,
-    "modifiers": []
+    "modifiers": [],
+    "parent": "Oratory"
   },
   {
     "name": "Book Binding",
     "key": "book_binding_invention",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3132,12 +3131,12 @@
         "type": "Base",
         "value": 0.25
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Acta Diurna",
     "key": "acta_diurna_invention",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3146,12 +3145,12 @@
         "type": "Base",
         "value": 0.06
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Imperial Calendar",
     "key": "imperial_calendar_invention",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3160,12 +3159,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Brahmi Script",
     "key": "brahmi_script_invention",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3174,12 +3173,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Complex Irrigation Systems",
     "key": "channeled_irrigation_invention",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3189,12 +3188,12 @@
         "noPercent": true,
         "value": -1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Casus Belli",
     "key": "war_score_cost_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3203,12 +3202,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Gradual Economic Integration",
     "key": "agressive_expansion_monthly_decay_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3218,12 +3217,12 @@
         "noPercent": true,
         "value": -0.02
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Military Ambassadors",
     "key": "agressive_expansion_impact_inv_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3232,12 +3231,12 @@
         "type": "Base",
         "value": -0.025
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "War Propaganda",
     "key": "war_score_cost_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3246,12 +3245,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Rerum Repetitio",
     "key": "agressive_expansion_impact_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3260,12 +3259,12 @@
         "type": "Base",
         "value": -0.025
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Formalized Dependencies",
     "key": "subject_opinions_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3275,12 +3274,12 @@
         "noPercent": true,
         "value": 5
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Mercenary Reliance",
     "key": "mercenary_maintenance_cost_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3303,12 +3302,12 @@
         "negative": true,
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "National Seal",
     "key": "relation_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3317,12 +3316,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Proportional Agreements",
     "key": "tribute_income_modifier_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3338,12 +3337,12 @@
         "noPercent": true,
         "value": 3
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Permanent Ambassadors",
     "key": "relation_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3352,12 +3351,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Experienced Raiders",
     "key": "assemble_raiding_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3366,12 +3365,12 @@
         "type": "Base",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Command Incentives",
     "key": "recruit_general_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3386,12 +3385,12 @@
         "type": "Base",
         "value": 0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Mandate Local Governance",
     "key": "agressive_expansion_monthly_decay_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3401,12 +3400,12 @@
         "noPercent": true,
         "value": -0.02
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Lawful Treaties",
     "key": "relation_inv_5",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3415,12 +3414,12 @@
         "type": "Base",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Hereditary Ambassadorship",
     "key": "relation_inv_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3429,12 +3428,12 @@
         "type": "Base",
         "value": 0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Tributary Legates",
     "key": "tribute_income_modifier_inv_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3443,12 +3442,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Grand Triumph",
     "key": "monthly_general_loyalty_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3458,12 +3457,12 @@
         "noPercent": true,
         "value": 5
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Yearly Installments",
     "key": "tribute_income_modifier_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3480,12 +3479,12 @@
         "noPercent": true,
         "value": 50
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Oaths of Fealty",
     "key": "agressive_expansion_monthly_decay_inv_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3495,12 +3494,12 @@
         "noPercent": true,
         "value": -0.02
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Diplomatic Apologetics",
     "key": "agressive_expansion_monthly_decay_inv_5",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3510,12 +3509,12 @@
         "noPercent": true,
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Satellite Status",
     "key": "tribute_income_modifier_inv_5",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3531,12 +3530,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Symbolic Victory",
     "key": "war_score_cost_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3558,12 +3557,12 @@
         "type": "Base",
         "value": -0.02
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Allied Representatives",
     "key": "subject_opinions_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3592,19 +3591,19 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Winning Land by the Spear",
     "key": "land_won_by_the_spear",
-    "tech": "Oratory",
     "relevant": false,
-    "modifiers": []
+    "modifiers": [],
+    "parent": "Oratory"
   },
   {
     "name": "Wootz Steel",
     "key": "indian_wootz_steel_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3619,12 +3618,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Toe Stirrup",
     "key": "indian_toe_stirrup_inv",
-    "tech": "Oratory",
     "relevant": true,
     "modifiers": [
       {
@@ -3645,12 +3644,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Cataract Surgery",
     "key": "indian_cataract_surgery_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3659,12 +3658,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Cashmere Wool",
     "key": "indian_cashmere_wool_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3673,12 +3672,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Crucible Steel",
     "key": "indian_crucible_steel_inv",
-    "tech": "Oratory",
     "relevant": true,
     "modifiers": [
       {
@@ -3693,12 +3692,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Hindu Number System",
     "key": "indian_hindu_number_system_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3713,12 +3712,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Indigo Dye",
     "key": "indian_indigo_dye_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3734,12 +3733,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Glass Beads",
     "key": "indian_tube_drawn_technology_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3748,12 +3747,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Trigonometry",
     "key": "indian_trigonometric_functions_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3768,12 +3767,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Legal Patronage",
     "key": "monthly_character_loyalty_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3783,12 +3782,12 @@
         "noPercent": true,
         "value": 2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Humane Conduct",
     "key": "diplomatic_reputation_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3798,12 +3797,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Centralized Comites",
     "key": "change_governor_policy_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3812,12 +3811,12 @@
         "type": "Base",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Official Orators",
     "key": "tyranny_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3826,19 +3825,19 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Avatar of Glory",
     "key": "gw_effect_fantastic_ruler_inv",
-    "tech": "Oratory",
     "relevant": false,
-    "modifiers": []
+    "modifiers": [],
+    "parent": "Oratory"
   },
   {
     "name": "Shady Connections",
     "key": "assassinate_attempt_cost_modifier_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3847,12 +3846,12 @@
         "type": "Base",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Rewrite the Constitution",
     "key": "dictatorship_step_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3868,12 +3867,12 @@
         "type": "Base",
         "value": -0.25
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Ensure National Stability",
     "key": "dictatorship_step_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3883,12 +3882,12 @@
         "negative": true,
         "value": -0.03
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Demand a Line of Succession",
     "key": "dictatorship_step_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3897,12 +3896,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Request Line of Succession",
     "key": "dictatorship_step_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3911,12 +3910,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Census Data",
     "key": "oratory_tech_investment_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3931,12 +3930,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Town Criers",
     "key": "smear_character_cost_modifier_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3951,12 +3950,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Regular Senate Hours",
     "key": "endorse_party_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3965,12 +3964,12 @@
         "type": "Base",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Summitry",
     "key": "diplomatic_relations_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3980,12 +3979,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Open Negotiations",
     "key": "diplomatic_reputation_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -3995,12 +3994,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Coding",
     "key": "diplo_range_inv_1",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4009,12 +4008,12 @@
         "type": "Base",
         "value": 0.15
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Extended Diplomacy",
     "key": "control_range_modifier_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4023,12 +4022,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Steganography",
     "key": "diplo_range_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4037,12 +4036,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Espionage",
     "key": "inspire_disloyalty_cost_modifier_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4051,12 +4050,12 @@
         "type": "Base",
         "value": -0.25
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Hierarchy of Responsibility",
     "key": "tyranny_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4077,12 +4076,12 @@
         "type": "Base",
         "value": 0.15
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Seeded Acclamation",
     "key": "tyranny_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4091,12 +4090,12 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Foreign Network",
     "key": "diplomatic_relations_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4106,12 +4105,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Shift Cipher",
     "key": "diplo_range_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4120,12 +4119,12 @@
         "type": "Base",
         "value": 0.15
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Diplomatic Immunity",
     "key": "diplomatic_reputation_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4135,12 +4134,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Propraetors and Proconsuls",
     "key": "monthly_governor_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4150,12 +4149,12 @@
         "noPercent": true,
         "value": 5
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Provincial Census",
     "key": "oratory_tech_investment_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4164,12 +4163,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Selective Immunity",
     "key": "bribe_character_cost_modifier_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4178,12 +4177,12 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Administrative Patronage",
     "key": "monthly_character_loyalty_inv_3",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4192,12 +4191,12 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Approved Familia",
     "key": "monthly_character_loyalty_inv_2",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4207,12 +4206,12 @@
         "noPercent": true,
         "value": 4
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Military Patronage",
     "key": "monthly_character_loyalty_inv_5",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4227,12 +4226,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Adventus",
     "key": "tyranny_inv_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4241,12 +4240,12 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Codified Succession",
     "key": "oaths_of_allegiance_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4255,12 +4254,12 @@
         "type": "Base",
         "value": -0.2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Noble Envoys",
     "key": "diplomatic_reputation_inv_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4270,12 +4269,12 @@
         "noPercent": true,
         "value": 2
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Scientific Patronage",
     "key": "scientific_patronage_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4284,12 +4283,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Chironomia",
     "key": "tyranny_inv_5",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4298,12 +4297,12 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Career Negotiators",
     "key": "diplomatic_reputation_inv_5",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4313,12 +4312,12 @@
         "noPercent": true,
         "value": 1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Sponsored Research",
     "key": "scientific_patronage_2_inv",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4327,12 +4326,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Patrocinium",
     "key": "monthly_character_loyalty_inv_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4348,12 +4347,12 @@
         "type": "Base",
         "value": 0.25
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Polybius Square",
     "key": "diplo_range_inv_4",
-    "tech": "Oratory",
     "relevant": false,
     "modifiers": [
       {
@@ -4369,12 +4368,12 @@
         "noPercent": true,
         "value": 3
       }
-    ]
+    ],
+    "parent": "Oratory"
   },
   {
     "name": "Due Process",
     "key": "ruler_popularity_gain_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4384,12 +4383,12 @@
         "noPercent": true,
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Accepted Rites",
     "key": "happiness_for_wrong_group_modifier_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4398,12 +4397,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "FUG",
     "key": "global_unrest_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4412,12 +4411,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Open Religion",
     "key": "global_unrest_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4426,12 +4425,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Theological Colleges",
     "key": "gw_effect_zeal_education_inv",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4440,12 +4439,12 @@
         "type": "Base",
         "value": 0.25
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Sponsored Games",
     "key": "ruler_popularity_gain_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4455,12 +4454,12 @@
         "noPercent": true,
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Reduced Governship",
     "key": "global_monthly_state_loyalty_inv",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4469,12 +4468,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Herbalism",
     "key": "technology_cost_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4483,12 +4482,12 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Hierarchical Haruspication",
     "key": "omen_power_inv_1",
-    "tech": "Religious",
     "relevant": true,
     "modifiers": [
       {
@@ -4498,12 +4497,12 @@
         "noPercent": true,
         "value": 2.5
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Minor Syncretism",
     "key": "happiness_for_wrong_group_modifier_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4512,12 +4511,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Disciplined Civilians",
     "key": "war_exhaustion_inv",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4527,12 +4526,12 @@
         "noPercent": true,
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Libertini",
     "key": "global_slaves_happyness_inv",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4541,12 +4540,12 @@
         "type": "Base",
         "value": 0.04
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Grain Rations",
     "key": "global_population_growth_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4561,12 +4560,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Alumen",
     "key": "technology_cost_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4575,12 +4574,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Contractual Obligation",
     "key": "stability_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4589,12 +4588,12 @@
         "type": "Base",
         "value": -0.025
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Tolerated Cults",
     "key": "stability_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4603,12 +4602,12 @@
         "type": "Base",
         "value": -0.025
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "State Burials",
     "key": "stability_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4630,12 +4629,12 @@
         "noPercent": true,
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Reinterpreted Prodigies",
     "key": "call_omen_cost_modifier_inv",
-    "tech": "Religious",
     "relevant": true,
     "modifiers": [
       {
@@ -4645,12 +4644,12 @@
         "noPercent": true,
         "value": 2.5
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Mass Pewter Production",
     "key": "technology_cost_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4659,12 +4658,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Tannery Districts",
     "key": "global_tribesmen_happyness_inv",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4673,12 +4672,12 @@
         "type": "Base",
         "value": 0.04
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Recording Tradition",
     "key": "religious_tech_investment_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4687,12 +4686,12 @@
         "type": "Base",
         "value": 0.01
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Proscribed Canon",
     "key": "omen_power_inv_4",
-    "tech": "Religious",
     "relevant": true,
     "modifiers": [
       {
@@ -4708,12 +4707,12 @@
         "type": "Base",
         "value": 0.03
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Militant Epicureanism",
     "key": "god_is_dead",
-    "tech": "Religious",
     "relevant": true,
     "modifiers": [
       {
@@ -4724,12 +4723,12 @@
         "noPercent": true,
         "value": -90
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Stoicism",
     "key": "global_unrest_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4738,12 +4737,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Public Works Department",
     "key": "ruler_popularity_gain_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4753,12 +4752,12 @@
         "noPercent": true,
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Hand Abacus",
     "key": "global_freemen_happyness_inv",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4767,12 +4766,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Obstetrics",
     "key": "global_population_growth_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4781,12 +4780,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Grand Temples",
     "key": "omen_duration_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4795,12 +4794,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Encouragement of Migration",
     "key": "global_population_growth_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4809,12 +4808,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Collegiality",
     "key": "ruler_popularity_gain_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4824,12 +4823,12 @@
         "noPercent": true,
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Bread Stamp",
     "key": "global_population_growth_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4844,12 +4843,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Shorthand Writing",
     "key": "technology_cost_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4864,12 +4863,12 @@
         "type": "Base",
         "value": 0.04
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Legendary Foundation",
     "key": "omen_power_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4878,12 +4877,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Private Cults",
     "key": "omen_duration_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4892,12 +4891,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Expanded Religious Holidays",
     "key": "omen_power_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4906,12 +4905,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Translated Symbology",
     "key": "omen_power_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4920,12 +4919,12 @@
         "type": "Base",
         "value": -0.25
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Oath of Brotherhood",
     "key": "land_morale_recovery_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4934,12 +4933,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Household Gods",
     "key": "omen_duration_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4948,12 +4947,12 @@
         "type": "Base",
         "value": -0.1
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Constitution",
     "key": "ruler_popularity_gain_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4963,12 +4962,12 @@
         "noPercent": true,
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Guilt by Association",
     "key": "monthly_corruption_inv",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4977,12 +4976,12 @@
         "type": "Base",
         "value": -0.01
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Glass Blowing",
     "key": "global_citizen_happyness_inv",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -4991,12 +4990,12 @@
         "type": "Base",
         "value": 0.04
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Regimental Standards",
     "key": "land_morale_recovery_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5005,12 +5004,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Soothsayers",
     "key": "land_morale_recovery_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5019,12 +5018,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Household Priests",
     "key": "stability_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5033,12 +5032,12 @@
         "type": "Base",
         "value": -0.05
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Ban Witchcraft",
     "key": "omen_duration_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5047,12 +5046,12 @@
         "type": "Base",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Punishment Roster",
     "key": "naval_morale_recovery_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5061,13 +5060,13 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Auxiliary Recruitment",
     "key": "global_manpower_modifier_inv_1",
-    "tech": "Religious",
-    "relevant": false,
+    "relevant": true,
     "modifiers": [
       {
         "target": "Text",
@@ -5083,17 +5082,17 @@
         "value": 1
       },
       {
-        "target": "Text",
-        "attribute": "Levy Size Multiplier",
+        "target": "Country",
+        "attribute": "Levy Size",
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Major Syncretism",
     "key": "happiness_for_wrong_group_modifier_inv_3",
-    "tech": "Religious",
     "relevant": true,
     "modifiers": [
       {
@@ -5116,12 +5115,12 @@
         "negative": true,
         "value": -0.9
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Assemblies",
     "key": "global_unrest_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5130,12 +5129,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Exported Drama",
     "key": "global_unrest_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5157,12 +5156,12 @@
         "noPercent": true,
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Medical Auxilia",
     "key": "global_manpower_modifier_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5171,12 +5170,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Military Decorations",
     "key": "land_morale_recovery_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5185,12 +5184,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Scribae",
     "key": "religious_tech_investment_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5205,12 +5204,12 @@
         "type": "Base",
         "value": 0.25
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "War Dedication",
     "key": "omen_duration_inv_5",
-    "tech": "Religious",
     "relevant": true,
     "modifiers": [
       {
@@ -5232,12 +5231,12 @@
         "type": "Modifier",
         "value": 0.05
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Formulaic Worship",
     "key": "stability_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5252,12 +5251,12 @@
         "type": "Base",
         "value": 0.15
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Bow Ornamentation",
     "key": "naval_morale_recovery_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5266,12 +5265,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Water Mill",
     "key": "global_population_growth_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5280,12 +5279,12 @@
         "type": "Base",
         "value": 0.15
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Double Pay",
     "key": "global_manpower_modifier_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5294,12 +5293,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Marine Auxilia",
     "key": "naval_morale_recovery_inv_1",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5308,12 +5307,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Fleet Hierarchy",
     "key": "naval_morale_recovery_inv_3",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5322,12 +5321,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Expanded Naval Hierarchy",
     "key": "naval_morale_recovery_inv_2",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5336,12 +5335,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Severe Strictures",
     "key": "land_morale_recovery_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5350,12 +5349,12 @@
         "type": "Base",
         "value": 0.02
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Religious Board",
     "key": "global_manpower_modifier_inv_4",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5364,12 +5363,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Service for Life",
     "key": "global_manpower_modifier_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5378,12 +5377,12 @@
         "type": "Base",
         "value": 0.025
       }
-    ]
+    ],
+    "parent": "Religious"
   },
   {
     "name": "Zero",
     "key": "technology_cost_inv_5",
-    "tech": "Religious",
     "relevant": false,
     "modifiers": [
       {
@@ -5404,6 +5403,7 @@
         "type": "Base",
         "value": 0.1
       }
-    ]
+    ],
+    "parent": "Religious"
   }
 ]

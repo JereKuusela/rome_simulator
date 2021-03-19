@@ -1,13 +1,17 @@
 import ListModifier from 'components/Utils/ListModifier'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
-import { SelectionType, ListDefinition, Modifier } from 'types'
+import { SelectionType, Modifier } from 'types'
 import { mapRange, ObjSet } from 'utils'
 
 type Props = {
   selections: ObjSet<string> | undefined
   type: SelectionType
-  items: ListDefinition[]
+  items: {
+    key: string
+    name: string
+    modifiers: Modifier[]
+  }[]
   columns: number
   onClick: (enabled: boolean) => (type: SelectionType, key: string) => void
   disabled?: boolean
@@ -23,7 +27,6 @@ export const TableModifierList = ({
   type,
   usePercentPadding
 }: Props) => {
-  items = items.filter(entity => entity.modifiers.length)
   const rows = Math.ceil(items.length / columns)
   return (
     <Table celled unstackable fixed style={{ margin: 0 }}>

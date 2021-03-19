@@ -1,1 +1,1973 @@
-{}
+[
+  {
+    "name": "Agnatic Primogeniture",
+    "key": "agnatic_succession_law",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "succession_law"
+  },
+  {
+    "name": "Agnatic-Cognatic",
+    "key": "cognatic_succession_law",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "succession_law"
+  },
+  {
+    "name": "Agnatic Seniority",
+    "key": "agnatic_seniority_succession_law",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "succession_law"
+  },
+  {
+    "name": "Elective Succession",
+    "key": "elective_succession_law",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "succession_law"
+  },
+  {
+    "name": "Familial Marriage",
+    "key": "egyption_succession_law",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "succession_law"
+  },
+  {
+    "name": "Noble Retinues",
+    "key": "relaxed_recruiting_standards",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Land",
+        "attribute": "Experience",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "monarchy_military_reforms"
+  },
+  {
+    "name": "Military Service",
+    "key": "recruit_from_nobles",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Happiness",
+        "type": "Base",
+        "negative": true,
+        "value": -0.04
+      }
+    ],
+    "parent": "monarchy_military_reforms"
+  },
+  {
+    "name": "Mercenary Contract Law",
+    "key": "mercenary_reliance",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Mercenary Army Maintenance",
+        "type": "Base",
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Recruit Mercenary Cost",
+        "type": "Base",
+        "value": -0.25
+      }
+    ],
+    "parent": "monarchy_military_reforms"
+  },
+  {
+    "name": "Royal Guard",
+    "key": "work_for_the_best",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.025
+      }
+    ],
+    "parent": "monarchy_military_reforms"
+  },
+  {
+    "name": "Royal Army",
+    "key": "standing_army_law",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.15
+      }
+    ],
+    "parent": "monarchy_military_reforms"
+  },
+  {
+    "name": "Merchant Shipping",
+    "key": "slave_oarsmen",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Oratory Provincial Investment Cost",
+        "type": "Base",
+        "value": -0.1
+      }
+    ],
+    "parent": "monarchy_maritime_laws"
+  },
+  {
+    "name": "Non-Interference Edict",
+    "key": "free_ports_monarchy_law",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      }
+    ],
+    "parent": "monarchy_maritime_laws"
+  },
+  {
+    "name": "Anti-Piracy Edict",
+    "key": "antipiracy_edict",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Anti-Piracy Casus Belli",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ],
+    "parent": "monarchy_maritime_laws"
+  },
+  {
+    "name": "No Taxation Laws",
+    "key": "land_tithe",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "monarchy_economic_law"
+  },
+  {
+    "name": "Infrastructure Policy",
+    "key": "local_investment_policy",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Population Growth",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "negative": true,
+        "value": -0.15
+      }
+    ],
+    "parent": "monarchy_economic_law"
+  },
+  {
+    "name": "Exemption for Nobility",
+    "key": "heritage_tax_exemption",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Noble Happiness",
+        "type": "Base",
+        "value": 0.06
+      },
+      {
+        "target": "Text",
+        "attribute": "National Noble Output",
+        "type": "Base",
+        "negative": true,
+        "value": -0.03
+      }
+    ],
+    "parent": "monarchy_economic_law"
+  },
+  {
+    "name": "No Domestic Laws",
+    "key": "foreign_law_for_minorities",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "monarchy_citizen_law"
+  },
+  {
+    "name": "Relax Citizenship Status",
+    "key": "increased_citizenship_quotas",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Citizen Ratio in Cities",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "monarchy_citizen_law"
+  },
+  {
+    "name": "Courts for Landowners",
+    "key": "established_courts_for_landholders",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Freemen Ratio in Cities",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "monarchy_citizen_law"
+  },
+  {
+    "name": "No Conversion Policy",
+    "key": "religious_tolerance_monarchy",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "monarchy_religious_laws"
+  },
+  {
+    "name": "Religious Conversion",
+    "key": "religious_integration_efforts",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.3
+      }
+    ],
+    "parent": "monarchy_religious_laws"
+  },
+  {
+    "name": "Cultural Dissemination",
+    "key": "monarchy_religious_mandate_military",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "value": 0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "value": 0.3
+      }
+    ],
+    "parent": "monarchy_religious_laws"
+  },
+  {
+    "name": "No Authority Laws",
+    "key": "renowned_lineage",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "monarchy_legitimacy_laws"
+  },
+  {
+    "name": "Sponsored Scholars",
+    "key": "scholarly_pursuits_law",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.06
+      }
+    ],
+    "parent": "monarchy_legitimacy_laws"
+  },
+  {
+    "name": "Might of Majesty",
+    "key": "royal_bureaucracy",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Legitimacy",
+        "type": "Base",
+        "value": 0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "National Noble Happiness",
+        "type": "Base",
+        "value": 0.06
+      }
+    ],
+    "parent": "monarchy_legitimacy_laws"
+  },
+  {
+    "name": "No Contract Laws",
+    "key": "no_contract_law",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "monarchy_contract_law"
+  },
+  {
+    "name": "Public Notaries",
+    "key": "public_notaries_law",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Wages for Characters",
+        "type": "Base",
+        "value": -0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -5
+      }
+    ],
+    "parent": "monarchy_contract_law"
+  },
+  {
+    "name": "Military Oversight",
+    "key": "vast_bureaucracy",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Governor Wage",
+        "type": "Base",
+        "value": -0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Governors",
+        "type": "Base",
+        "negative": true,
+        "noPercent": true,
+        "value": -10
+      }
+    ],
+    "parent": "monarchy_contract_law"
+  },
+  {
+    "name": "Royal Humility",
+    "key": "humility_status_law",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.08
+      }
+    ],
+    "parent": "monarchy_divinity_statutes"
+  },
+  {
+    "name": "Divinity Statute",
+    "key": "elevate_monarch_monarchy",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "value": -0.2
+      }
+    ],
+    "parent": "monarchy_divinity_statutes"
+  },
+  {
+    "name": "Institutional Benevolence",
+    "key": "trusted_beyond_measure",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Subject Opinion of Us",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      }
+    ],
+    "parent": "monarchy_subject_laws"
+  },
+  {
+    "name": "King of Kings",
+    "key": "king_of_kings",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integration Speed",
+        "type": "Base",
+        "value": 0.3
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Relations",
+        "type": "Base",
+        "noPercent": true,
+        "value": 2
+      }
+    ],
+    "parent": "monarchy_subject_laws"
+  },
+  {
+    "name": "Citizen Militia",
+    "key": "republican_recruitment_3",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republic_military_recruitment_laws"
+  },
+  {
+    "name": "Noble Elite",
+    "key": "republican_recruitment_1",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.025
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly War Exhaustion",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.04
+      }
+    ],
+    "parent": "republic_military_recruitment_laws"
+  },
+  {
+    "name": "Provisioning Act",
+    "key": "republican_recruitment_2",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.025
+      }
+    ],
+    "parent": "republic_military_recruitment_laws"
+  },
+  {
+    "name": "Military Modernization",
+    "key": "republican_recruitment_4",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republic_military_recruitment_laws"
+  },
+  {
+    "name": "Electoral Model",
+    "key": "republican_election_1",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Divine Sacrifice Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ],
+    "parent": "republic_election_reforms"
+  },
+  {
+    "name": "Extended Terms",
+    "key": "republican_election_2",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Election Term Duration",
+        "type": "Base",
+        "value": 5
+      }
+    ],
+    "parent": "republic_election_reforms"
+  },
+  {
+    "name": "Shortened Terms",
+    "key": "republican_election_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Election Term Duration",
+        "type": "Base",
+        "negative": true,
+        "value": -3
+      }
+    ],
+    "parent": "republic_election_reforms"
+  },
+  {
+    "name": "Lifetime Elections",
+    "key": "republican_election_4",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Election Term Duration",
+        "type": "Base",
+        "value": 45
+      }
+    ],
+    "parent": "republic_election_reforms"
+  },
+  {
+    "name": "Assembly of Residents",
+    "key": "republic_corruption_2",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.1
+      }
+    ],
+    "parent": "corruption_laws"
+  },
+  {
+    "name": "Assembly of Soldiers",
+    "key": "republic_corruption_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fabricate Claim Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.5
+      }
+    ],
+    "parent": "corruption_laws"
+  },
+  {
+    "name": "Assembly of Citizens",
+    "key": "republic_corruption_1",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.02
+      }
+    ],
+    "parent": "corruption_laws"
+  },
+  {
+    "name": "Abolish Assemblies",
+    "key": "republic_corruption_4",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "corruption_laws"
+  },
+  {
+    "name": "Grain Shipment Law",
+    "key": "republican_mediterranean_1",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republican_mediterranean_laws"
+  },
+  {
+    "name": "Lowered Import Tariffs",
+    "key": "republican_mediterranean_2",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Import Value",
+        "type": "Base",
+        "value": 0.25
+      }
+    ],
+    "parent": "republican_mediterranean_laws"
+  },
+  {
+    "name": "Institute Wealth Levy",
+    "key": "republican_mediterranean_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Export Value",
+        "type": "Base",
+        "value": 0.25
+      }
+    ],
+    "parent": "republican_mediterranean_laws"
+  },
+  {
+    "name": "Anti-Piracy Statutes",
+    "key": "republican_mediterranean_4",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Anti-Piracy Casus Belli",
+        "type": "Base",
+        "value": 0
+      },
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republican_mediterranean_laws"
+  },
+  {
+    "name": "Traditional Observance",
+    "key": "republican_religious_1",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ],
+    "parent": "republican_religious_laws"
+  },
+  {
+    "name": "Priestly Status",
+    "key": "republican_religious_2",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      }
+    ],
+    "parent": "republican_religious_laws"
+  },
+  {
+    "name": "Deny Priests in Senate",
+    "key": "republican_religious_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "republican_religious_laws"
+  },
+  {
+    "name": "Senatorial Veto",
+    "key": "republican_religious_4",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Divine Sacrifice Cost",
+        "type": "Base",
+        "value": -0.33
+      }
+    ],
+    "parent": "republican_religious_laws"
+  },
+  {
+    "name": "Occupation Rights",
+    "key": "republican_integration_1",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ],
+    "parent": "republic_integration_laws"
+  },
+  {
+    "name": "Relocation Policy",
+    "key": "republican_integration_2",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Noble Happiness",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Demotion Speed",
+        "type": "Base",
+        "value": 6
+      }
+    ],
+    "parent": "republic_integration_laws"
+  },
+  {
+    "name": "Rights of Nobility",
+    "key": "republican_integration_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "republic_integration_laws"
+  },
+  {
+    "name": "Devolved Administration",
+    "key": "republican_integration_4",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republic_integration_laws"
+  },
+  {
+    "name": "Status Quo",
+    "key": "republican_citizen_1",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republic_citizen_laws"
+  },
+  {
+    "name": "Slave Treatment Sanctions",
+    "key": "republican_citizen_2",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Slaves Ratio in Cities",
+        "type": "Base",
+        "value": 0.15
+      }
+    ],
+    "parent": "republic_citizen_laws"
+  },
+  {
+    "name": "Cultural Primacy",
+    "key": "republican_citizen_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Citizen Ratio in Cities",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "republic_citizen_laws"
+  },
+  {
+    "name": "Manumittance Policy",
+    "key": "republican_citizen_4",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Freemen Ratio in Cities",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "republic_citizen_laws"
+  },
+  {
+    "name": "Interference Policy",
+    "key": "republican_land_reform_1",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "value": -0.1
+      }
+    ],
+    "parent": "republican_land_reforms"
+  },
+  {
+    "name": "Military Settlement Policy",
+    "key": "republican_land_reform_2",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Migration Speed",
+        "type": "Base",
+        "value": 1.5
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 6
+      }
+    ],
+    "parent": "republican_land_reforms"
+  },
+  {
+    "name": "Land Seizure Protocol",
+    "key": "republican_land_reform_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Slaves needed for Surplus",
+        "type": "Base",
+        "noPercent": true,
+        "value": -2
+      }
+    ],
+    "parent": "republican_land_reforms"
+  },
+  {
+    "name": "Seizure Amendments",
+    "key": "republican_land_reform_4",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.25
+      }
+    ],
+    "parent": "republican_land_reforms"
+  },
+  {
+    "name": "Servian Levy",
+    "key": "testamentum_militis",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republic_military_recruitment_laws_rom"
+  },
+  {
+    "name": "Republican Levy",
+    "key": "lex_porcia",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.075
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly War Exhaustion",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.04
+      }
+    ],
+    "parent": "republic_military_recruitment_laws_rom"
+  },
+  {
+    "name": "Punic Reforms",
+    "key": "punic_reforms",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Manpower",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Country",
+        "attribute": "Levy Size",
+        "type": "Base",
+        "value": 0.025
+      }
+    ],
+    "parent": "republic_military_recruitment_laws_rom"
+  },
+  {
+    "name": "Marian Reforms",
+    "key": "marian_reforms",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Global",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republic_military_recruitment_laws_rom"
+  },
+  {
+    "name": "Leges Genuciae",
+    "key": "leges_genuciae",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Divine Sacrifice Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ],
+    "parent": "republic_election_reforms_rom"
+  },
+  {
+    "name": "Consultum Ultimum",
+    "key": "senatus_consultum_ultimum",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Election Term Duration",
+        "type": "Base",
+        "value": 5
+      }
+    ],
+    "parent": "republic_election_reforms_rom"
+  },
+  {
+    "name": "Lex Antonia",
+    "key": "lex_antonia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Election Term Duration",
+        "type": "Base",
+        "negative": true,
+        "value": -3
+      }
+    ],
+    "parent": "republic_election_reforms_rom"
+  },
+  {
+    "name": "Princeps Civitatis",
+    "key": "princeps_civitatis",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Election Term Duration",
+        "type": "Base",
+        "value": 45
+      }
+    ],
+    "parent": "republic_election_reforms_rom"
+  },
+  {
+    "name": "Tribal Assembly",
+    "key": "lex_acilia_repetundarum",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Corruption",
+        "type": "Base",
+        "value": -0.1
+      }
+    ],
+    "parent": "corruption_laws_rom"
+  },
+  {
+    "name": "Centuriate Assembly",
+    "key": "lex_cassia_de_senatu",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Fabricate Claim Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.5
+      }
+    ],
+    "parent": "corruption_laws_rom"
+  },
+  {
+    "name": "Curiate Assembly",
+    "key": "no_laws_on_corruption",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.02
+      }
+    ],
+    "parent": "corruption_laws_rom"
+  },
+  {
+    "name": "Senatorial Endorsement",
+    "key": "lex_calpurnia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "corruption_laws_rom"
+  },
+  {
+    "name": "Merchant Exemptions",
+    "key": "lex_terentia_cassia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republican_mediterranean_laws_rom"
+  },
+  {
+    "name": "Lex Gabinia",
+    "key": "lex_gabinia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Export Value",
+        "type": "Base",
+        "value": 0.25
+      }
+    ],
+    "parent": "republican_mediterranean_laws_rom"
+  },
+  {
+    "name": "Lex Caec de Vectigalibus",
+    "key": "lex_caecilia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Import Value",
+        "type": "Base",
+        "value": 0.25
+      }
+    ],
+    "parent": "republican_mediterranean_laws_rom"
+  },
+  {
+    "name": "Lex Claudia",
+    "key": "lex_claudia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Anti-Piracy Casus Belli",
+        "type": "Base",
+        "value": 0
+      }
+    ],
+    "parent": "republican_mediterranean_laws_rom"
+  },
+  {
+    "name": "Avoid Religious Mandates",
+    "key": "grant_religious_freedoms",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ],
+    "parent": "republican_religious_laws_rom"
+  },
+  {
+    "name": "Lex Ogulnia",
+    "key": "lex_ogulnia",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 15
+      }
+    ],
+    "parent": "republican_religious_laws_rom"
+  },
+  {
+    "name": "Lex Aelia Et Fufia",
+    "key": "lex_aelia_et_fufia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Conversion Speed",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "republican_religious_laws_rom"
+  },
+  {
+    "name": "Lex Domitia de Sacerdotiis",
+    "key": "lex_domitia_de_sacerdotiis",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Divine Sacrifice Cost",
+        "type": "Base",
+        "value": -0.33
+      }
+    ],
+    "parent": "republican_religious_laws_rom"
+  },
+  {
+    "name": "Lex Canuleia",
+    "key": "lex_canuleia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ],
+    "parent": "republic_integration_laws_rom"
+  },
+  {
+    "name": "Lex Papia de Peregrinis",
+    "key": "lex_papia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Noble Happiness",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Demotion Speed",
+        "type": "Base",
+        "value": 6
+      }
+    ],
+    "parent": "republic_integration_laws_rom"
+  },
+  {
+    "name": "Lex Licinia Mucia",
+    "key": "lex_licinia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "republic_integration_laws_rom"
+  },
+  {
+    "name": "Lex Hortensia",
+    "key": "lex_hortensia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republic_integration_laws_rom"
+  },
+  {
+    "name": "Lex Aternia Tarpeia",
+    "key": "lex_aternia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "republic_citizen_laws_rom"
+  },
+  {
+    "name": "Lex Fufia Caninia",
+    "key": "lex_fufia_caninia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Slaves Ratio in Cities",
+        "type": "Base",
+        "value": 0.15
+      }
+    ],
+    "parent": "republic_citizen_laws_rom"
+  },
+  {
+    "name": "Lex Plautia Papiria",
+    "key": "lex_plautia_papiria",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Citizen Ratio in Cities",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "republic_citizen_laws_rom"
+  },
+  {
+    "name": "Lex Aelia Sentia",
+    "key": "lex_aelia_sentia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Freemen Ratio in Cities",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "republic_citizen_laws_rom"
+  },
+  {
+    "name": "Cassian Reform",
+    "key": "cassian_reform",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
+        "type": "Base",
+        "value": -0.1
+      }
+    ],
+    "parent": "republican_land_reforms_rom"
+  },
+  {
+    "name": "Lex Servilia Glaucia",
+    "key": "lex_servilia_glaucia",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Migration Speed",
+        "type": "Base",
+        "value": 1.5
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 6
+      }
+    ],
+    "parent": "republican_land_reforms_rom"
+  },
+  {
+    "name": "Lex Sempronia Agraria",
+    "key": "lex_sempronia_agraria",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Slaves needed for Surplus",
+        "type": "Base",
+        "noPercent": true,
+        "value": -2
+      }
+    ],
+    "parent": "republican_land_reforms_rom"
+  },
+  {
+    "name": "Gracchus Reforms",
+    "key": "gracchus_reforms",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.25
+      }
+    ],
+    "parent": "republican_land_reforms_rom"
+  },
+  {
+    "name": "Religious Freedom",
+    "key": "tribal_religious_freedom_law",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ],
+    "parent": "tribal_religious_law"
+  },
+  {
+    "name": "Encourage Syncretism",
+    "key": "syncretization_law_tribal",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Unintegrated Culture Group Happiness",
+        "type": "Base",
+        "value": 0.12
+      }
+    ],
+    "parent": "tribal_religious_law"
+  },
+  {
+    "name": "Adopt Human Sacrifices",
+    "key": "adopt_human_sacrifice_law_tribal",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Country",
+        "attribute": "Omen Power",
+        "type": "Base",
+        "noPercent": true,
+        "value": 10
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ],
+    "parent": "tribal_religious_law"
+  },
+  {
+    "name": "No Exchange Laws",
+    "key": "no_exchange_laws",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "tribal_currency_laws"
+  },
+  {
+    "name": "Barter Economy Statutes",
+    "key": "barter_economy_law",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "tribal_currency_laws"
+  },
+  {
+    "name": "Coin Minting Initiative",
+    "key": "coin_minting_law",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Civilization Change",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "tribal_currency_laws"
+  },
+  {
+    "name": "Anarchic Society",
+    "key": "anarchic_society_law_tribal",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "tribal_centralization_law"
+  },
+  {
+    "name": "Property Ownership",
+    "key": "property_ownership_law_tribal",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Output",
+        "type": "Base",
+        "value": 0.12
+      }
+    ],
+    "parent": "tribal_centralization_law"
+  },
+  {
+    "name": "For the Common Good",
+    "key": "right_of_might_law_tribal",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "tribal_centralization_law"
+  },
+  {
+    "name": "Fragmented Clans",
+    "key": "personal_loyalty_law",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "tribal_authority_laws"
+  },
+  {
+    "name": "Council Legal Authority",
+    "key": "increased_council_powers",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "tribal_authority_laws"
+  },
+  {
+    "name": "Absolute Authority",
+    "key": "absolute_authority",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.15
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "tribal_authority_laws"
+  },
+  {
+    "name": "Insular Clans",
+    "key": "clan_cohesion",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "tribal_autonomy_laws"
+  },
+  {
+    "name": "Local Dynasties",
+    "key": "local_hierarchs",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Stability Change",
+        "type": "Base",
+        "value": 0.15
+      }
+    ],
+    "parent": "tribal_autonomy_laws"
+  },
+  {
+    "name": "Power to the Mighty",
+    "key": "follow_the_strong_law",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Loyalty of Clan Chiefs",
+        "type": "Base",
+        "value": 10
+      }
+    ],
+    "parent": "tribal_autonomy_laws"
+  },
+  {
+    "name": "Nomadic Lifestyle",
+    "key": "nomadic_law_tribal",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Found City Cost Modifier",
+        "type": "Base",
+        "negative": true,
+        "value": 0.5
+      }
+    ],
+    "parent": "tribal_domestic_laws"
+  },
+  {
+    "name": "Formalized Agriculture",
+    "key": "formalized_industry_law_tribal",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Slaves needed for Surplus",
+        "type": "Base",
+        "noPercent": true,
+        "value": -1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "tribal_domestic_laws"
+  },
+  {
+    "name": "Hill-Fort Initiative",
+    "key": "oppidi_law_tribal",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Output",
+        "type": "Base",
+        "value": 0.12
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "tribal_domestic_laws"
+  },
+  {
+    "name": "Open Hearths",
+    "key": "tribal_decentralized_laws_1",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "tribal_decentralized_laws"
+  },
+  {
+    "name": "Oral Tradition",
+    "key": "tribal_decentralized_laws_2",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Assimilation Speed",
+        "type": "Base",
+        "value": 0.3
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "negative": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "tribal_decentralized_laws"
+  },
+  {
+    "name": "Closed Society",
+    "key": "tribal_decentralized_laws_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Integrated Culture Happiness",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
+      }
+    ],
+    "parent": "tribal_decentralized_laws"
+  },
+  {
+    "name": "Word of Mouth",
+    "key": "tribal_centralized_laws_1",
+    "relevant": false,
+    "modifiers": [],
+    "parent": "tribal_centralized_laws"
+  },
+  {
+    "name": "Tribal Representatives",
+    "key": "tribal_centralized_laws_2",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Monthly Political Influence",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "tribal_centralized_laws"
+  },
+  {
+    "name": "Sedentary Bureaucracy",
+    "key": "tribal_centralized_laws_3",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 2
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Centralization",
+        "type": "Base",
+        "value": 0.1
+      }
+    ],
+    "parent": "tribal_centralized_laws"
+  },
+  {
+    "name": "Roving Warbands",
+    "key": "super_decentralized_law_one",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Manpower Recovery Speed",
+        "type": "Base",
+        "value": 0.05
+      }
+    ],
+    "parent": "tribal_super_decentralized_laws"
+  },
+  {
+    "name": "Rightful Dominion",
+    "key": "super_decentralized_law_two",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Enslavement Efficiency",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "National Slave Output",
+        "type": "Base",
+        "value": 0.12
+      }
+    ],
+    "parent": "tribal_super_decentralized_laws"
+  },
+  {
+    "name": "Honor in Battle",
+    "key": "super_decentralized_law_three",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly War Exhaustion",
+        "type": "Base",
+        "noPercent": true,
+        "value": -0.05
+      }
+    ],
+    "parent": "tribal_super_decentralized_laws"
+  },
+  {
+    "name": "Ad-Hoc Justice System",
+    "key": "super_centralized_law_one",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Happiness",
+        "type": "Base",
+        "value": 0.04
+      }
+    ],
+    "parent": "tribal_super_centralized_laws"
+  },
+  {
+    "name": "Rights of Man",
+    "key": "super_centralized_law_two",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Desired Freemen Ratio in Cities",
+        "type": "Base",
+        "value": 0.2
+      },
+      {
+        "target": "Text",
+        "attribute": "Country Civilization Level",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ],
+    "parent": "tribal_super_centralized_laws"
+  },
+  {
+    "name": "Rights of Birth",
+    "key": "super_centralized_law_three",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Country Civilization Level",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "Desired Citizen Ratio in Cities",
+        "type": "Base",
+        "value": 0.2
+      }
+    ],
+    "parent": "tribal_super_centralized_laws"
+  }
+]
