@@ -1,68 +1,54 @@
-{
-  "base_metals": {
-    "name": "Base Metals",
-    "key": "base_metals",
+[
+  {
+    "name": "Grain",
+    "key": "grain",
+    "relevant": false,
     "modifiers": [
       {
-        "target": "Light Infantry",
-        "attribute": "Offense",
+        "target": "Text",
+        "attribute": "Local Monthly Food",
         "type": "Base",
-        "value": 0.1
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "Global Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.05
       }
     ]
   },
-  "camel": {
-    "name": "Camels",
-    "key": "camel",
+  {
+    "name": "Salt",
+    "key": "salt",
+    "relevant": true,
     "modifiers": [
       {
-        "target": "Camel Cavalry",
-        "attribute": "Discipline",
+        "target": "Text",
+        "attribute": "Local Monthly Food Modifier",
         "type": "Base",
-        "value": 0.1
+        "value": 0.03
+      },
+      {
+        "target": "Land",
+        "attribute": "Maintenance",
+        "type": "Modifier",
+        "value": -0.05
       }
     ]
   },
-  "elephants": {
-    "name": "Elephants",
-    "key": "elephants",
-    "modifiers": [
-      {
-        "target": "War Elephants",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.1
-      }
-    ]
-  },
-  "hemp": {
-    "name": "Hemp",
-    "key": "hemp",
-    "modifiers": [
-      {
-        "target": "Naval",
-        "attribute": "Damage Done",
-        "type": "Base",
-        "value": 0.1
-      }
-    ]
-  },
-  "horses": {
-    "name": "Horses",
-    "key": "horses",
-    "modifiers": [
-      {
-        "target": "Heavy Cavalry",
-        "attribute": "Discipline",
-        "type": "Base",
-        "value": 0.1
-      }
-    ]
-  },
-  "iron": {
+  {
     "name": "Iron",
     "key": "iron",
+    "relevant": true,
     "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Tax",
+        "type": "Base",
+        "value": 0.02
+      },
       {
         "target": "Heavy Infantry",
         "attribute": "Discipline",
@@ -71,22 +57,36 @@
       }
     ]
   },
-  "leather": {
-    "name": "Leather",
-    "key": "leather",
+  {
+    "name": "Horses",
+    "key": "horses",
+    "relevant": true,
     "modifiers": [
       {
-        "target": "Light Infantry",
-        "attribute": "Defense",
+        "target": "Text",
+        "attribute": "Population Output",
+        "type": "Base",
+        "value": 0.01
+      },
+      {
+        "target": "Heavy Cavalry",
+        "attribute": "Discipline",
         "type": "Base",
         "value": 0.1
       }
     ]
   },
-  "salt": {
-    "name": "Salt",
-    "key": "salt",
+  {
+    "name": "Wine",
+    "key": "wine",
+    "relevant": true,
     "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Freeman Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
       {
         "target": "Land",
         "attribute": "Maintenance",
@@ -95,22 +95,171 @@
       }
     ]
   },
-  "steppe_horses": {
-    "name": "Steppe Horses",
-    "key": "steppe_horses",
+  {
+    "name": "Wood",
+    "key": "wood",
+    "relevant": false,
     "modifiers": [
       {
-        "target": "Horse Archers",
+        "target": "Text",
+        "attribute": "Local Manpower",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Text",
+        "attribute": "Ship Recruit Speed",
+        "type": "Base",
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "Amber",
+    "key": "amber",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Stone",
+    "key": "stone",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Slave Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Build Cost",
+        "type": "Base",
+        "value": -0.05
+      }
+    ]
+  },
+  {
+    "name": "Fish",
+    "key": "fish",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Monthly Food",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      },
+      {
+        "target": "Text",
+        "attribute": "National Freeman Happiness",
+        "type": "Base",
+        "value": 0.08
+      }
+    ]
+  },
+  {
+    "name": "Spices",
+    "key": "spices",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Elephants",
+    "key": "elephants",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Output",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "War Elephants",
         "attribute": "Discipline",
         "type": "Base",
         "value": 0.1
       }
     ]
   },
-  "wild_game": {
+  {
+    "name": "Papyrus",
+    "key": "papyrus",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Noble Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Civic Tech Investment",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Cloth",
+    "key": "cloth",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Noble Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Oratory Tech Investment",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
     "name": "Wild Game",
     "key": "wild_game",
+    "relevant": true,
     "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Tribesman Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
       {
         "target": "Archers",
         "attribute": "Discipline",
@@ -119,16 +268,388 @@
       }
     ]
   },
-  "wine": {
-    "name": "Wine",
-    "key": "wine",
+  {
+    "name": "Precious Metals",
+    "key": "precious_metals",
+    "relevant": false,
     "modifiers": [
       {
-        "target": "Land",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.05
+        "target": "Text",
+        "attribute": "Local Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.08
+      }
+    ]
+  },
+  {
+    "name": "Steppe Horses",
+    "key": "steppe_horses",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Population Output",
+        "type": "Base",
+        "value": 0.01
+      },
+      {
+        "target": "Horse Archers",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Livestock",
+    "key": "cattle",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Monthly Food",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      },
+      {
+        "target": "Text",
+        "attribute": "Pop Promotion Speed",
+        "type": "Base",
+        "value": 0.25
+      }
+    ]
+  },
+  {
+    "name": "Earthenware",
+    "key": "earthware",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Freeman Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Dyes",
+    "key": "dye",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Noble Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Noble Happiness",
+        "type": "Base",
+        "value": 0.08
+      }
+    ]
+  },
+  {
+    "name": "Furs",
+    "key": "fur",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Tribesman Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Experience Decay",
+        "type": "Base",
+        "value": -0.005
+      }
+    ]
+  },
+  {
+    "name": "Olives",
+    "key": "olive",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Slave Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Slave Happiness",
+        "type": "Base",
+        "value": 0.08
+      }
+    ]
+  },
+  {
+    "name": "Leather",
+    "key": "leather",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Freeman Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Light Infantry",
+        "attribute": "Defense",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Base Metals",
+    "key": "base_metals",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Freeman Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Light Infantry",
+        "attribute": "Offense",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Woad",
+    "key": "woad",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Tribesman Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tribesman Happiness",
+        "type": "Base",
+        "value": 0.08
+      }
+    ]
+  },
+  {
+    "name": "Marble",
+    "key": "marble",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Noble Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Tyranny",
+        "type": "Base",
+        "value": -0.015
+      }
+    ]
+  },
+  {
+    "name": "Honey",
+    "key": "honey",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "Diplomatic Reputation",
+        "type": "Base",
+        "noPercent": true,
+        "value": 3
+      }
+    ]
+  },
+  {
+    "name": "Incense",
+    "key": "incense",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Noble Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "State Religion Happiness",
+        "type": "Base",
+        "value": 0.05
+      }
+    ]
+  },
+  {
+    "name": "Hemp",
+    "key": "hemp",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Freeman Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Naval",
+        "attribute": "Damage Done",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Vegetables",
+    "key": "vegetables",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Monthly Food Modifier",
+        "type": "Base",
+        "value": 0.03
+      },
+      {
+        "target": "Text",
+        "attribute": "Move Slaves Cost",
+        "type": "Base",
+        "value": -0.25
+      }
+    ]
+  },
+  {
+    "name": "Gemstones",
+    "key": "gems",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Country Civilization Level",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  {
+    "name": "Camels",
+    "key": "camel",
+    "relevant": true,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Province Commerce",
+        "type": "Base",
+        "value": 0.02
+      },
+      {
+        "target": "Camel Cavalry",
+        "attribute": "Discipline",
+        "type": "Base",
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Glass",
+    "key": "glass",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Citizen Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "Country Civilization Level",
+        "type": "Base",
+        "noPercent": true,
+        "value": 5
+      }
+    ]
+  },
+  {
+    "name": "Silk",
+    "key": "silk",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Noble Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Noble Output",
+        "type": "Base",
+        "value": 0.03
+      }
+    ]
+  },
+  {
+    "name": "Dates",
+    "key": "dates",
+    "relevant": false,
+    "modifiers": [
+      {
+        "target": "Text",
+        "attribute": "Local Freeman Happiness",
+        "type": "Base",
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Commerce Income",
+        "type": "Base",
+        "value": 0.05
       }
     ]
   }
-}
+]

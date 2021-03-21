@@ -17,10 +17,10 @@ import {
   CombatPhase,
   GeneralValueType,
   filterAttributes,
-  ListDefinition,
   CountryName,
   ArmyName,
-  SelectionType
+  SelectionType,
+  DataEntryEU4
 } from 'types'
 import {
   clearGeneralSelections,
@@ -131,7 +131,7 @@ class CountriesEU4 extends Component<IProps> {
     )
   }
 
-  renderTech = (tech: ListDefinition[], techLevel: number) => {
+  renderTech = (tech: DataEntryEU4[], techLevel: number) => {
     const rows = Math.ceil(tech.length / TECH_COLUMNS)
     return (
       <Table celled unstackable fixed>

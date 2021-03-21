@@ -19,7 +19,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Lisp",
@@ -48,7 +48,7 @@
         "value": -0.05
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Stutter",
@@ -81,10 +81,11 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Fair",
@@ -101,6 +102,7 @@
         "target": "Text",
         "attribute": "Max Friends",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
@@ -113,10 +115,11 @@
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Inbred",
@@ -169,7 +172,7 @@
         "value": -0.1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Limp",
@@ -191,7 +194,7 @@
         "value": -2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Ugly",
@@ -220,7 +223,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Lunatic",
@@ -272,7 +275,7 @@
         "value": -0.2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Stressed",
@@ -288,7 +291,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Maniac",
@@ -325,7 +328,7 @@
         "value": 2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Invalid",
@@ -341,7 +344,7 @@
         "value": -3
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Epileptic",
@@ -379,13 +382,14 @@
       },
       {
         "target": "Text",
+        "attribute": "Diplomatic Reputation",
         "type": "Base",
-        "value": {
-          "diplomatic_reputation": -1
-        }
+        "negative": true,
+        "noPercent": true,
+        "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Bloody Flux",
@@ -396,6 +400,7 @@
         "target": "Text",
         "attribute": "Health",
         "type": "Base",
+        "negative": true,
         "noPercent": true,
         "value": -2
       },
@@ -430,7 +435,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Plague",
@@ -446,7 +451,7 @@
         "value": -2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Mentagra",
@@ -470,7 +475,7 @@
         "value": -0.05
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Arthritis",
@@ -502,7 +507,7 @@
         "value": -0.05
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Pox",
@@ -533,7 +538,7 @@
         "value": -0.1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Dysentery",
@@ -572,7 +577,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Infection",
@@ -588,7 +593,7 @@
         "value": -0.2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Inflammation",
@@ -620,7 +625,7 @@
         "value": -0.05
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Wounded",
@@ -644,7 +649,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Lung Disease",
@@ -660,7 +665,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Gangrene",
@@ -692,7 +697,7 @@
         "value": -3
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Leper",
@@ -722,7 +727,7 @@
         "value": -0.2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Barren",
@@ -741,10 +746,11 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -5
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Castrated",
@@ -763,10 +769,11 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -10
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Blind",
@@ -794,22 +801,11 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -5
-      },
-      {
-        "target": "Text",
-        "type": "Base",
-        "value": {
-          "accessory": {
-            "mode": "replace",
-            "gene": "eye_accessory",
-            "template": "blindfold_1",
-            "value": 1
-          }
-        }
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Maimed",
@@ -825,7 +821,7 @@
         "value": -2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "One-Eyed",
@@ -839,21 +835,9 @@
         "negative": true,
         "noPercent": true,
         "value": -1
-      },
-      {
-        "target": "Text",
-        "type": "Base",
-        "value": {
-          "accessory": {
-            "mode": "replace",
-            "gene": "eye_accessory",
-            "template": "eyepatch_1",
-            "value": 1
-          }
-        }
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Frail",
@@ -877,7 +861,7 @@
         "value": -0.05
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Paralysis",
@@ -905,10 +889,11 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Brain Damaged",
@@ -960,6 +945,7 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -10
       },
       {
@@ -970,7 +956,7 @@
         "value": -0.5
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Seeking Treatment",
@@ -985,7 +971,7 @@
         "value": 0.05
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "In Mourning",
@@ -1017,7 +1003,7 @@
         "value": -0.2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Depressed",
@@ -1049,7 +1035,7 @@
         "value": -0.1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Dementia",
@@ -1101,10 +1087,11 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -5
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Cancer",
@@ -1152,7 +1139,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Diphtheria",
@@ -1168,7 +1155,7 @@
         "value": -2
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Gout",
@@ -1200,7 +1187,7 @@
         "value": -1
       }
     ],
-    "parent": "health"
+    "parent": "Health"
   },
   {
     "name": "Original Thinker",
@@ -1221,7 +1208,7 @@
         "value": 0.1
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Tactically Inflexible",
@@ -1244,7 +1231,7 @@
         "value": -0.1
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Confident",
@@ -1279,7 +1266,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Tactician",
@@ -1312,7 +1299,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Disciplined",
@@ -1333,7 +1320,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Steadfast",
@@ -1367,7 +1354,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Aggressive",
@@ -1394,7 +1381,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Brave",
@@ -1412,6 +1399,7 @@
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
@@ -1428,7 +1416,7 @@
         "value": 0.02
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Coward",
@@ -1440,6 +1428,7 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -1
       },
       {
@@ -1458,14 +1447,7 @@
         "value": -1
       },
       {
-        "target": "Land",
-        "attribute": "Morale",
-        "type": "Modifier",
-        "negative": true,
-        "value": -0.05
-      },
-      {
-        "target": "Naval",
+        "target": "Global",
         "attribute": "Morale",
         "type": "Modifier",
         "negative": true,
@@ -1478,7 +1460,7 @@
         "value": -0.02
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Coastal Raider",
@@ -1505,7 +1487,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Fleet Commander",
@@ -1532,7 +1514,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Princeps",
@@ -1559,7 +1541,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Oarmaster",
@@ -1580,7 +1562,7 @@
         "value": 0.1
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Sea Dog",
@@ -1601,7 +1583,7 @@
         "value": 0.1
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Daring",
@@ -1630,7 +1612,7 @@
         "value": 0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Tough",
@@ -1651,7 +1633,7 @@
         "value": -0.05
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Improviser",
@@ -1672,7 +1654,7 @@
         "value": 0.01
       }
     ],
-    "parent": "military"
+    "parent": "Military"
   },
   {
     "name": "Abrasive",
@@ -1698,22 +1680,25 @@
         "target": "Text",
         "attribute": "Max Rivals",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": -0.02
       },
       {
         "target": "Text",
+        "attribute": "Subject Opinion of Us",
         "type": "Base",
-        "value": {
-          "subject_opinions": -5
-        }
+        "negative": true,
+        "noPercent": true,
+        "value": -5
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Good Natured",
@@ -1724,6 +1709,7 @@
         "target": "Text",
         "attribute": "Max Friends",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
@@ -1747,13 +1733,13 @@
       },
       {
         "target": "Text",
+        "attribute": "Subject Opinion of Us",
         "type": "Base",
-        "value": {
-          "subject_opinions": 5
-        }
+        "noPercent": true,
+        "value": 5
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Silver Tongued",
@@ -1775,10 +1761,9 @@
       },
       {
         "target": "Text",
+        "attribute": "Improve Opinion Maximum",
         "type": "Base",
-        "value": {
-          "improve_relation_impact": 0.25
-        }
+        "value": 0.25
       },
       {
         "target": "Text",
@@ -1786,7 +1771,7 @@
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Blunt",
@@ -1810,13 +1795,13 @@
       },
       {
         "target": "Text",
+        "attribute": "Improve Opinion Maximum",
         "type": "Base",
-        "value": {
-          "improve_relation_impact": -0.25
-        }
+        "negative": true,
+        "value": -0.25
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Crafty",
@@ -1827,6 +1812,8 @@
         "target": "Text",
         "attribute": "Corruption",
         "type": "Base",
+        "negative": true,
+        "noPercent": true,
         "value": 20
       },
       {
@@ -1868,11 +1855,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": 0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Guileless",
@@ -1913,12 +1901,12 @@
         "value": -2
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Skeptical",
     "key": "sceptical",
-    "relevant": false,
+    "relevant": true,
     "modifiers": [
       {
         "target": "Text",
@@ -1956,25 +1944,32 @@
         "value": -5
       },
       {
-        "target": "Text",
+        "target": "Country",
+        "attribute": "Omen Power",
         "type": "Base",
-        "value": {
-          "omen_power": -0.05,
-          "global_tax_modifier": 0.1
-        }
+        "negative": true,
+        "noPercent": true,
+        "value": -5
       },
       {
         "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": -0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Pious",
     "key": "pious",
-    "relevant": false,
+    "relevant": true,
     "modifiers": [
       {
         "target": "Text",
@@ -1990,15 +1985,21 @@
         "value": 1
       },
       {
-        "target": "Text",
+        "target": "Country",
+        "attribute": "Omen Power",
         "type": "Base",
-        "value": {
-          "omen_power": 0.025,
-          "global_tax_modifier": -0.1
-        }
+        "noPercent": true,
+        "value": 2.5
+      },
+      {
+        "target": "Text",
+        "attribute": "National Tax",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Zealous",
@@ -2026,21 +2027,18 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "State Religion Happiness",
         "type": "Base",
-        "value": {
-          "local_happiness_for_same_religion_modifier": 0.025
-        }
+        "value": 0.025
       },
       {
         "target": "Text",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": {
-          "happiness_for_wrong_culture_group_modifier": "negative_wrong_culture_group_large"
-        }
+        "value": -0.06
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Tolerant",
@@ -2083,18 +2081,17 @@
       },
       {
         "target": "Text",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": {
-          "happiness_for_wrong_culture_group_modifier": "wrong_culture_group_large"
-        }
+        "value": 0.06
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Devout",
     "key": "devout",
-    "relevant": false,
+    "relevant": true,
     "modifiers": [
       {
         "target": "Text",
@@ -2116,20 +2113,26 @@
         "value": 5
       },
       {
-        "target": "Text",
+        "target": "Country",
+        "attribute": "Omen Power",
         "type": "Base",
-        "value": {
-          "omen_power": 0.05,
-          "inspire_devotio_cost_modifier": -0.1
-        }
+        "noPercent": true,
+        "value": 5
+      },
+      {
+        "target": "Text",
+        "attribute": "Invoke Devotio Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Lapsed",
     "key": "lapsed",
-    "relevant": false,
+    "relevant": true,
     "modifiers": [
       {
         "target": "Text",
@@ -2166,14 +2169,15 @@
         "value": -5
       },
       {
-        "target": "Text",
+        "target": "Country",
+        "attribute": "Omen Power",
         "type": "Base",
-        "value": {
-          "omen_power": -0.1
-        }
+        "negative": true,
+        "noPercent": true,
+        "value": -10
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Just",
@@ -2201,21 +2205,18 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Monthly Civilization Change",
         "type": "Base",
-        "value": {
-          "local_monthly_civilization": 0.01
-        }
+        "value": 0.01
       },
       {
         "target": "Text",
+        "attribute": "Monthly Stability Change",
         "type": "Base",
-        "value": {
-          "stability_monthly_change": 0.02
-        }
+        "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Arbitrary",
@@ -2258,13 +2259,13 @@
       },
       {
         "target": "Text",
+        "attribute": "Monthly Stability Change",
         "type": "Base",
-        "value": {
-          "stability_monthly_change": -0.05
-        }
+        "negative": true,
+        "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Cruel",
@@ -2294,18 +2295,16 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Slave Output",
         "type": "Base",
-        "value": {
-          "local_slaves_output": "output_large_svalue"
-        }
+        "value": 0.06
       },
       {
         "target": "Text",
+        "attribute": "Monthly Tyranny",
         "type": "Base",
-        "value": {
-          "monthly_tyranny": 0.02
-        }
+        "negative": true,
+        "value": 0.02
       },
       {
         "target": "Text",
@@ -2315,11 +2314,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": 0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Merciful",
@@ -2347,18 +2347,15 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Freeman Happiness",
         "type": "Base",
-        "value": {
-          "local_freemen_happyness": "happiness_large_svalue"
-        }
+        "value": 0.08
       },
       {
         "target": "Text",
+        "attribute": "Monthly Tyranny",
         "type": "Base",
-        "value": {
-          "monthly_tyranny": -0.05
-        }
+        "value": -0.05
       },
       {
         "target": "Text",
@@ -2368,7 +2365,7 @@
         "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Righteous",
@@ -2391,24 +2388,24 @@
         "target": "Text",
         "attribute": "Corruption",
         "type": "Base",
-        "negative": true,
+        "noPercent": true,
         "value": -10
       },
       {
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
         "target": "Text",
+        "attribute": "Aggressive Expansion Decay",
         "type": "Base",
-        "value": {
-          "agressive_expansion_monthly_decay": 0.002
-        }
+        "value": 0.002
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Corrupt",
@@ -2444,14 +2441,15 @@
         "target": "Text",
         "attribute": "Corruption",
         "type": "Base",
+        "negative": true,
+        "noPercent": true,
         "value": 10
       },
       {
         "target": "Text",
+        "attribute": "National Tax",
         "type": "Base",
-        "value": {
-          "global_tax_modifier": 0.1
-        }
+        "value": 0.1
       },
       {
         "target": "Text",
@@ -2460,7 +2458,7 @@
         "value": 0.01
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Founder",
@@ -2489,31 +2487,35 @@
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Citizen Output",
         "type": "Base",
-        "value": {
-          "local_citizen_output": "output_large_svalue"
-        }
+        "value": 0.06
       },
       {
         "target": "Text",
+        "attribute": "Build Cost",
         "type": "Base",
-        "value": {
-          "build_cost": -0.05,
-          "stability_monthly_change": 0.025
-        }
+        "value": -0.05
       },
       {
         "target": "Text",
+        "attribute": "Monthly Stability Change",
+        "type": "Base",
+        "value": 0.025
+      },
+      {
+        "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": 0.1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Incapable",
@@ -2544,26 +2546,27 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Citizen Output",
         "type": "Base",
-        "value": {
-          "local_citizen_output": -0.05
-        }
+        "negative": true,
+        "value": -0.05
       },
       {
         "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "value": {
-          "ruler_popularity_gain": -0.1
-        }
+        "negative": true,
+        "noPercent": true,
+        "value": -0.1
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": -0.1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Benefactor",
@@ -2592,22 +2595,20 @@
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Slave Happiness",
         "type": "Base",
-        "value": {
-          "local_slaves_happyness": "happiness_large_svalue"
-        }
+        "value": 0.08
       },
       {
         "target": "Text",
+        "attribute": "National Slave Happiness",
         "type": "Base",
-        "value": {
-          "global_slaves_happyness": "happiness_large_svalue"
-        }
+        "value": 0.08
       },
       {
         "target": "Text",
@@ -2615,7 +2616,7 @@
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Harsh",
@@ -2650,18 +2651,15 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Slave Output",
         "type": "Base",
-        "value": {
-          "local_slaves_output": "output_large_svalue"
-        }
+        "value": 0.06
       },
       {
         "target": "Text",
+        "attribute": "National Slave Output",
         "type": "Base",
-        "value": {
-          "global_slaves_output": "output_small_svalue"
-        }
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -2669,7 +2667,7 @@
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Scholar",
@@ -2704,21 +2702,18 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Research Points",
         "type": "Base",
-        "value": {
-          "local_research_points_modifier": 0.1
-        }
+        "value": 0.1
       },
       {
         "target": "Text",
+        "attribute": "Technology Speed",
         "type": "Base",
-        "value": {
-          "technology_investment": 0.05
-        }
+        "value": 0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Narrow-minded",
@@ -2746,11 +2741,16 @@
       },
       {
         "target": "Text",
+        "attribute": "National Tribesman Happiness",
         "type": "Base",
-        "value": {
-          "global_tribesmen_happyness": "happiness_huge_svalue",
-          "technology_investment": -0.1
-        }
+        "value": 0.12
+      },
+      {
+        "target": "Text",
+        "attribute": "Technology Speed",
+        "type": "Base",
+        "negative": true,
+        "value": -0.1
       },
       {
         "target": "Text",
@@ -2758,7 +2758,7 @@
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Lustful",
@@ -2779,7 +2779,7 @@
         "value": 0.2
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Chaste",
@@ -2800,7 +2800,7 @@
         "value": -0.2
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Proud",
@@ -2835,21 +2835,18 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Fort Defense",
         "type": "Base",
-        "value": {
-          "local_defensive": 0.1
-        }
+        "value": 0.1
       },
       {
         "target": "Text",
+        "attribute": "Tribute Income",
         "type": "Base",
-        "value": {
-          "tribute_income_modifier": 0.1
-        }
+        "value": 0.1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Humble",
@@ -2880,22 +2877,21 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -1
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Freeman Output",
         "type": "Base",
-        "value": {
-          "local_freemen_output": "output_small_svalue"
-        }
+        "value": 0.03
       },
       {
         "target": "Text",
+        "attribute": "Tribute Income",
         "type": "Base",
-        "value": {
-          "tribute_income_modifier": -0.1
-        }
+        "negative": true,
+        "value": -0.1
       },
       {
         "target": "Text",
@@ -2903,7 +2899,7 @@
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Vengeful",
@@ -2933,13 +2929,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Assassinate Cost",
         "type": "Base",
-        "value": {
-          "assassinate_attempt_cost_modifier": -0.2
-        }
+        "value": -0.2
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Forgiving",
@@ -2976,13 +2971,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Monthly Tyranny",
         "type": "Base",
-        "value": {
-          "monthly_tyranny": -0.05
-        }
+        "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Assertive",
@@ -3010,26 +3004,24 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Province Commerce",
         "type": "Base",
-        "value": {
-          "state_commerce_modifier": 0.05
-        }
+        "value": 0.05
       },
       {
         "target": "Text",
+        "attribute": "National Commerce Income",
         "type": "Base",
-        "value": {
-          "global_commerce_modifier": 0.05
-        }
+        "value": 0.05
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Submissive",
@@ -3048,6 +3040,7 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -1
       },
       {
@@ -3065,21 +3058,20 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Province Commerce",
         "type": "Base",
-        "value": {
-          "state_commerce_modifier": -0.05
-        }
+        "negative": true,
+        "value": -0.05
       },
       {
         "target": "Text",
+        "attribute": "National Commerce Income",
         "type": "Base",
-        "value": {
-          "global_commerce_modifier": -0.05
-        }
+        "negative": true,
+        "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Intelligent",
@@ -3101,19 +3093,25 @@
       },
       {
         "target": "Text",
+        "attribute": "Loyalty of Governors",
         "type": "Base",
-        "value": {
-          "governor_loyalty": 5,
-          "research_points_modifier": 0.025
-        }
+        "noPercent": true,
+        "value": 5
       },
       {
         "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.025
+      },
+      {
+        "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Dumb",
@@ -3150,11 +3148,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Generous",
@@ -3194,22 +3193,24 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Freeman Happiness",
         "type": "Base",
-        "value": {
-          "local_freemen_happyness": "happiness_small_svalue",
-          "local_citizen_happyness": "happiness_small_svalue"
-        }
+        "value": 0.04
       },
       {
         "target": "Text",
+        "attribute": "Local Citizen Happiness",
         "type": "Base",
-        "value": {
-          "global_citizen_happyness": "happiness_large_svalue"
-        }
+        "value": 0.04
+      },
+      {
+        "target": "Text",
+        "attribute": "National Citizen Happiness",
+        "type": "Base",
+        "value": 0.08
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Selfish",
@@ -3251,13 +3252,13 @@
       },
       {
         "target": "Text",
+        "attribute": "National Tax",
         "type": "Base",
-        "value": {
-          "global_tax_modifier": -0.05
-        }
+        "negative": true,
+        "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Miserly",
@@ -3306,21 +3307,20 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Tax",
         "type": "Base",
-        "value": {
-          "local_tax_modifier": -0.1
-        }
+        "negative": true,
+        "value": -0.1
       },
       {
         "target": "Text",
+        "attribute": "National Tax",
         "type": "Base",
-        "value": {
-          "global_tax_modifier": -0.1
-        }
+        "negative": true,
+        "value": -0.1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Honest",
@@ -3347,13 +3347,12 @@
       },
       {
         "target": "Text",
+        "attribute": "National Tribesman Output",
         "type": "Base",
-        "value": {
-          "global_tribesmen_output": "output_small_svalue"
-        }
+        "value": 0.03
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Deceitful",
@@ -3383,7 +3382,7 @@
         "value": 1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Energetic",
@@ -3411,7 +3410,7 @@
         "value": 1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Lazy",
@@ -3448,11 +3447,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Cautious",
@@ -3488,11 +3488,6 @@
       },
       {
         "target": "Text",
-        "type": "Base",
-        "value": -0.02
-      },
-      {
-        "target": "Text",
         "attribute": "Reinforcement Speed",
         "type": "Base",
         "value": 0.05
@@ -3502,9 +3497,15 @@
         "attribute": "Army Morale Recovery",
         "type": "Base",
         "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Great Work Workrate",
+        "type": "Base",
+        "value": -0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Reckless",
@@ -3539,14 +3540,19 @@
       },
       {
         "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
         "type": "Base",
-        "value": {
-          "agressive_expansion_impact": 0.1,
-          "war_score_cost": -0.05
-        }
+        "negative": true,
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "War score Cost",
+        "type": "Base",
+        "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Shrewd",
@@ -3582,13 +3588,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Mercenary Army Maintenance",
         "type": "Base",
-        "value": {
-          "mercenary_land_maintenance_cost": -0.05
-        }
+        "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Foolish",
@@ -3611,7 +3616,7 @@
         "value": -1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Greedy",
@@ -3648,14 +3653,12 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Population Growth",
         "type": "Base",
-        "value": {
-          "local_population_growth": 0.02
-        }
+        "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Self-controlled",
@@ -3683,14 +3686,13 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Population Growth",
         "type": "Base",
-        "value": {
-          "local_population_growth": -0.02
-        }
+        "negative": true,
+        "value": -0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Arrogant",
@@ -3727,6 +3729,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 10
       },
       {
@@ -3747,13 +3750,13 @@
       },
       {
         "target": "Text",
+        "attribute": "Monthly Political Influence",
         "type": "Base",
-        "value": {
-          "monthly_political_influence": -0.25
-        }
+        "negative": true,
+        "value": -0.25
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Modest",
@@ -3780,7 +3783,7 @@
         "value": 1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Prominent",
@@ -3809,29 +3812,30 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 30
       },
       {
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 2
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Province Commerce",
         "type": "Base",
-        "value": {
-          "state_commerce_modifier": 0.1
-        }
+        "value": 0.1
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": 0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Unnoticeable",
@@ -3843,6 +3847,7 @@
         "attribute": "Attraction as Heir",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -2
       },
       {
@@ -3850,23 +3855,24 @@
         "attribute": "Prominence",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -30
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Province Commerce",
         "type": "Base",
-        "value": {
-          "state_commerce_modifier": -0.1
-        }
+        "negative": true,
+        "value": -0.1
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": -0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Loving",
@@ -3877,6 +3883,7 @@
         "target": "Text",
         "attribute": "Max Friends",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
@@ -3888,13 +3895,13 @@
       },
       {
         "target": "Text",
+        "attribute": "Diplomatic Relations",
         "type": "Base",
-        "value": {
-          "diplomatic_relations": 1
-        }
+        "noPercent": true,
+        "value": 1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Cold",
@@ -3912,6 +3919,7 @@
         "attribute": "Max Friends",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -1
       },
       {
@@ -3924,13 +3932,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Assassinate Cost",
         "type": "Base",
-        "value": {
-          "assassinate_attempt_cost_modifier": -0.25
-        }
+        "value": -0.25
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Ambitious",
@@ -3959,6 +3966,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 20
       },
       {
@@ -4001,6 +4009,7 @@
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
@@ -4018,16 +4027,18 @@
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": -0.02
       },
       {
         "target": "Text",
+        "attribute": "Great Work Fixed Prestige",
         "type": "Base",
         "value": 3
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Content",
@@ -4051,6 +4062,7 @@
         "attribute": "Prominence",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -10
       },
       {
@@ -4061,7 +4073,7 @@
         "value": 10
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Suspicious",
@@ -4084,17 +4096,18 @@
         "target": "Text",
         "attribute": "Max Rivals",
         "type": "Base",
+        "noPercent": true,
         "value": 1
       },
       {
         "target": "Text",
+        "attribute": "Imprison Cost",
         "type": "Base",
-        "value": {
-          "price_imprison_cost_modifier": -0.25
-        }
+        "negative": true,
+        "value": -0.25
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Trusting",
@@ -4112,6 +4125,7 @@
         "attribute": "Max Rivals",
         "type": "Base",
         "negative": true,
+        "noPercent": true,
         "value": -1
       },
       {
@@ -4123,13 +4137,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Monthly Tyranny",
         "type": "Base",
-        "value": {
-          "monthly_tyranny": -0.05
-        }
+        "value": -0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Wise",
@@ -4163,13 +4176,12 @@
       },
       {
         "target": "Text",
+        "attribute": "National Citizen Output",
         "type": "Base",
-        "value": {
-          "global_citizen_output": "output_small_svalue"
-        }
+        "value": 0.03
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Rash",
@@ -4193,18 +4205,18 @@
       },
       {
         "target": "Text",
+        "attribute": "National Citizen Happiness",
         "type": "Base",
-        "value": {
-          "global_citizen_happyness": "negative_happiness_small_svalue"
-        }
+        "value": -0.04
       },
       {
         "target": "Text",
+        "attribute": "Great Work Fixed Prestige",
         "type": "Base",
         "value": -3
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Jealous",
@@ -4235,13 +4247,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Smear Reputation Cost",
         "type": "Base",
-        "value": {
-          "smear_character_cost_modifier": -0.25
-        }
+        "value": -0.25
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Secure",
@@ -4269,18 +4280,19 @@
       },
       {
         "target": "Text",
+        "attribute": "Loyalty of Generals",
         "type": "Base",
-        "value": {
-          "general_loyalty": 5
-        }
+        "noPercent": true,
+        "value": 5
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Sarcastic",
@@ -4289,13 +4301,14 @@
     "modifiers": [
       {
         "target": "Text",
+        "attribute": "Diplomatic Reputation",
         "type": "Base",
-        "value": {
-          "diplomatic_reputation": -3
-        }
+        "negative": true,
+        "noPercent": true,
+        "value": -3
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Plain-speaking",
@@ -4304,10 +4317,10 @@
     "modifiers": [
       {
         "target": "Text",
+        "attribute": "Diplomatic Reputation",
         "type": "Base",
-        "value": {
-          "diplomatic_reputation": 3
-        }
+        "noPercent": true,
+        "value": 3
       },
       {
         "target": "Text",
@@ -4315,7 +4328,7 @@
         "value": 0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Stubborn",
@@ -4346,14 +4359,12 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Fort Defense",
         "type": "Base",
-        "value": {
-          "local_defensive": 0.1
-        }
+        "value": 0.1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Weak-willed",
@@ -4382,14 +4393,13 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Fort Defense",
         "type": "Base",
-        "value": {
-          "local_defensive": -0.1
-        }
+        "negative": true,
+        "value": -0.1
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Monotonous",
@@ -4405,13 +4415,14 @@
       },
       {
         "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "value": {
-          "ruler_popularity_gain": -0.2
-        }
+        "negative": true,
+        "noPercent": true,
+        "value": -0.2
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Kindly",
@@ -4432,10 +4443,9 @@
       },
       {
         "target": "Text",
+        "attribute": "National Freeman Output",
         "type": "Base",
-        "value": {
-          "global_freemen_output": "output_small_svalue"
-        }
+        "value": 0.03
       },
       {
         "target": "Text",
@@ -4445,7 +4455,7 @@
         "value": 0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Uncaring",
@@ -4474,10 +4484,10 @@
       },
       {
         "target": "Text",
+        "attribute": "National Freeman Output",
         "type": "Base",
-        "value": {
-          "global_freemen_output": -0.05
-        }
+        "negative": true,
+        "value": -0.05
       },
       {
         "target": "Text",
@@ -4486,7 +4496,7 @@
         "value": -0.02
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Polymath",
@@ -4509,26 +4519,24 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Research Points",
         "type": "Base",
-        "value": {
-          "local_research_points_modifier": 0.1
-        }
+        "value": 0.1
       },
       {
         "target": "Text",
+        "attribute": "Research Points",
         "type": "Base",
-        "value": {
-          "research_points_modifier": 0.025
-        }
+        "value": 0.025
       },
       {
         "target": "Text",
+        "attribute": "Great Work Fixed Prestige",
         "type": "Base",
         "value": 3
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Obsessive",
@@ -4550,26 +4558,25 @@
       },
       {
         "target": "Text",
-        "attribute": "Province",
+        "attribute": "Local Research Points",
         "type": "Base",
-        "value": {
-          "local_research_points_modifier": -0.1
-        }
+        "negative": true,
+        "value": -0.1
       },
       {
         "target": "Text",
+        "attribute": "Research Points",
         "type": "Base",
-        "value": {
-          "research_points_modifier": 0.025
-        }
+        "value": 0.025
       },
       {
         "target": "Text",
+        "attribute": "Great Work Workrate",
         "type": "Base",
         "value": 0.05
       }
     ],
-    "parent": "personality"
+    "parent": "Personality"
   },
   {
     "name": "Victorious",
@@ -4592,6 +4599,7 @@
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 2
       },
       {
@@ -4608,13 +4616,12 @@
       },
       {
         "target": "Text",
+        "attribute": "Monthly Stability Change",
         "type": "Base",
-        "value": {
-          "stability_monthly_change": 0.08
-        }
+        "value": 0.08
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Conqueror",
@@ -4637,6 +4644,7 @@
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 2
       },
       {
@@ -4647,10 +4655,10 @@
       },
       {
         "target": "Text",
+        "attribute": "Subject Opinion of Us",
         "type": "Base",
-        "value": {
-          "subject_opinions": 5
-        }
+        "noPercent": true,
+        "value": 5
       },
       {
         "target": "Text",
@@ -4659,7 +4667,7 @@
         "value": 0.1
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Orator",
@@ -4681,15 +4689,25 @@
       },
       {
         "target": "Text",
+        "attribute": "Monthly Legitimacy",
         "type": "Base",
-        "value": {
-          "monthly_legitimacy": 0.05,
-          "ruler_popularity_gain": 0.05,
-          "stability_monthly_change": 0.1
-        }
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
+        "type": "Base",
+        "noPercent": true,
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Stability Change",
+        "type": "Base",
+        "value": 0.1
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Poet",
@@ -4713,14 +4731,18 @@
       },
       {
         "target": "Text",
+        "attribute": "Improve Opinion Maximum",
         "type": "Base",
-        "value": {
-          "improve_relation_impact": 0.1,
-          "stability_monthly_change": 0.05
-        }
+        "value": 0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Stability Change",
+        "type": "Base",
+        "value": 0.05
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Olympic Competitor",
@@ -4753,7 +4775,7 @@
         "value": 0
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Blood of Lysimachos",
@@ -4764,6 +4786,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 20
       },
       {
@@ -4775,14 +4798,20 @@
       },
       {
         "target": "Text",
+        "attribute": "Diplomatic Reputation",
         "type": "Base",
-        "value": {
-          "diplomatic_reputation": 1,
-          "price_execute_cost_modifier": -0.25
-        }
+        "noPercent": true,
+        "value": 1
+      },
+      {
+        "target": "Text",
+        "attribute": "Execute Cost",
+        "type": "Base",
+        "negative": true,
+        "value": -0.25
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Blood of Antigonos",
@@ -4793,6 +4822,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 20
       },
       {
@@ -4804,14 +4834,19 @@
       },
       {
         "target": "Text",
+        "attribute": "Aggressive Expansion Change",
         "type": "Base",
-        "value": {
-          "agressive_expansion_monthly_change": -0.01,
-          "global_defensive": 0.1
-        }
+        "noPercent": true,
+        "value": -0.01
+      },
+      {
+        "target": "Text",
+        "attribute": "Fort Defense",
+        "type": "Base",
+        "value": 0.1
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Blood of Antipatros",
@@ -4830,6 +4865,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 20
       },
       {
@@ -4841,14 +4877,18 @@
       },
       {
         "target": "Text",
+        "attribute": "Build Cost",
         "type": "Base",
-        "value": {
-          "build_cost": -0.05,
-          "monthly_legitimacy": 0.1
-        }
+        "value": -0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Legitimacy",
+        "type": "Base",
+        "value": 0.1
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Blood of the Argeads",
@@ -4859,6 +4899,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 20
       },
       {
@@ -4872,19 +4913,29 @@
         "target": "Text",
         "attribute": "Attraction as Heir",
         "type": "Base",
+        "noPercent": true,
         "value": 5
       },
       {
         "target": "Text",
+        "attribute": "Aggressive Expansion Impact",
         "type": "Base",
-        "value": {
-          "agressive_expansion_impact": -0.1,
-          "monthly_legitimacy": 0.05,
-          "stability_monthly_change": 0.05
-        }
+        "value": -0.1
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Legitimacy",
+        "type": "Base",
+        "value": 0.05
+      },
+      {
+        "target": "Text",
+        "attribute": "Monthly Stability Change",
+        "type": "Base",
+        "value": 0.05
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Blood of the Lagidai",
@@ -4895,6 +4946,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 20
       },
       {
@@ -4906,14 +4958,18 @@
       },
       {
         "target": "Text",
+        "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
-        "value": {
-          "happiness_for_wrong_culture_group_modifier": "wrong_culture_group_large",
-          "research_points_modifier": 0.05
-        }
+        "value": 0.06
+      },
+      {
+        "target": "Text",
+        "attribute": "Research Points",
+        "type": "Base",
+        "value": 0.05
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Blood of Seleukos",
@@ -4924,6 +4980,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 20
       },
       {
@@ -4935,14 +4992,18 @@
       },
       {
         "target": "Text",
+        "attribute": "Change Governor Policy Cost",
         "type": "Base",
-        "value": {
-          "change_governor_policy_cost_modifier": -0.25,
-          "global_monthly_state_loyalty": 0.05
-        }
+        "value": -0.25
+      },
+      {
+        "target": "Text",
+        "attribute": "Provincial Loyalty",
+        "type": "Base",
+        "value": 0.05
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Mercenary",
@@ -4957,7 +5018,7 @@
         "value": 5
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   },
   {
     "name": "Blood of Aiakos",
@@ -4968,6 +5029,7 @@
         "target": "Text",
         "attribute": "Prominence",
         "type": "Base",
+        "noPercent": true,
         "value": 10
       },
       {
@@ -4979,13 +5041,18 @@
       },
       {
         "target": "Text",
+        "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
-        "value": {
-          "ruler_popularity_gain": 0.2,
-          "land_morale_modifier": 0.05
-        }
+        "noPercent": true,
+        "value": 0.2
+      },
+      {
+        "target": "Land",
+        "attribute": "Morale",
+        "type": "Modifier",
+        "value": 0.05
       }
     ],
-    "parent": "status"
+    "parent": "Status"
   }
 ]

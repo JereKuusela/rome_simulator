@@ -5,13 +5,28 @@
     "relevant": true,
     "modifiers": [
       {
+        "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
+      {
         "target": "Land",
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Thalassocracy",
@@ -19,13 +34,28 @@
     "relevant": true,
     "modifiers": [
       {
+        "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
         "target": "Naval",
         "attribute": "Morale",
         "type": "Modifier",
         "value": 0.1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Elite Soldiery",
@@ -33,13 +63,28 @@
     "relevant": true,
     "modifiers": [
       {
+        "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
         "target": "Global",
         "attribute": "Discipline",
         "type": "Base",
         "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Permanent Shipyards",
@@ -47,13 +92,34 @@
     "relevant": true,
     "modifiers": [
       {
+        "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
+      {
+        "target": "Text",
+        "attribute": "[COUNTRYGetName] is an AI",
+        "type": "Base",
+        "value": 0
+      },
+      {
         "target": "Naval",
         "attribute": "Cost",
         "type": "Modifier",
         "value": -0.25
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Conscription",
@@ -62,12 +128,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "National Manpower",
         "type": "Base",
         "value": 0.1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Militarized Society",
@@ -75,25 +156,39 @@
     "relevant": true,
     "modifiers": [
       {
-        "target": "Land",
+        "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Global",
         "attribute": "Maintenance",
         "type": "Modifier",
         "value": -0.2
       },
       {
-        "target": "Naval",
-        "attribute": "Maintenance",
-        "type": "Modifier",
-        "value": -0.2
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Ordered Retreat",
     "key": "idea_retreat",
     "relevant": false,
     "modifiers": [
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
       {
         "target": "Text",
         "attribute": "Reinforcement Speed",
@@ -105,9 +200,19 @@
         "attribute": "Army Morale Recovery",
         "type": "Base",
         "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Siege Training",
@@ -116,12 +221,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "Siege Ability",
         "type": "Base",
         "value": 0.15
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Support of the People",
@@ -130,18 +250,38 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Text",
         "attribute": "Experience Decay",
         "type": "Base",
         "value": -0.01
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "military_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_military\""
       }
     ],
-    "parent": "military_ideas"
+    "parent": "Military Ideas"
   },
   {
     "name": "Standardized Construction",
     "key": "idea_standard_construction",
     "relevant": false,
     "modifiers": [
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
       {
         "target": "Text",
         "attribute": "Build Cost",
@@ -153,9 +293,19 @@
         "attribute": "Build Time",
         "type": "Base",
         "value": -0.25
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "City Planning",
@@ -164,12 +314,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "Population Capacity",
         "type": "Base",
         "value": 0.25
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "Central Urban Spaces",
@@ -178,12 +343,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Text",
         "attribute": "Provincial Loyalty",
         "type": "Base",
         "value": 0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "Complex Tariffs",
@@ -192,12 +372,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
+      {
+        "target": "Text",
         "attribute": "National Commerce Income",
         "type": "Base",
         "value": 0.2
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "Patronized Trading Posts",
@@ -206,13 +401,28 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "Capital Import Routes",
         "type": "Base",
         "noPercent": true,
         "value": 3
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "Institute Tariff Exceptions",
@@ -221,12 +431,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Text",
         "attribute": "Province Import Routes",
         "type": "Base",
         "value": 1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "Tax Farming",
@@ -235,12 +460,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
+      {
+        "target": "Text",
         "attribute": "National Slave Output",
         "type": "Base",
         "value": 0.2
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "Land Appropriation Reform",
@@ -249,18 +489,38 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "National Citizen Output",
         "type": "Base",
         "value": 0.12
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "Grain Stockpile",
     "key": "idea_grain_admin",
     "relevant": false,
     "modifiers": [
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
       {
         "target": "Text",
         "attribute": "Global Monthly Food Modifier",
@@ -271,10 +531,21 @@
         "target": "Text",
         "attribute": "Base Food Capacity",
         "type": "Base",
+        "noPercent": true,
         "value": 400
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "civic_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_civic\""
       }
     ],
-    "parent": "civic_ideas"
+    "parent": "Civic Ideas"
   },
   {
     "name": "Sanctioned Privileges",
@@ -283,12 +554,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
+      {
+        "target": "Text",
         "attribute": "Monthly Corruption",
         "type": "Base",
         "value": -0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "Strategic Propaganda",
@@ -297,12 +583,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "Unintegrated Culture Happiness",
         "type": "Base",
         "value": 0.06
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "Legislative Reform",
@@ -311,18 +612,38 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Text",
         "attribute": "Unintegrated Culture Group Happiness",
         "type": "Base",
         "value": 0.06
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "Military Administration",
     "key": "idea_mil_admin",
     "relevant": false,
     "modifiers": [
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
       {
         "target": "Text",
         "attribute": "Loyalty of Generals",
@@ -336,9 +657,19 @@
         "type": "Base",
         "noPercent": true,
         "value": 10
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "Patronized Scholars",
@@ -347,12 +678,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "Research Points",
         "type": "Base",
         "value": 0.2
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "Functional Bureaucracy",
@@ -361,13 +707,28 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Text",
         "attribute": "Loyalty of Governors",
         "type": "Base",
         "noPercent": true,
         "value": 10
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "Hospitium",
@@ -376,12 +737,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
+      {
+        "target": "Text",
         "attribute": "Improve Opinion Maximum",
         "type": "Base",
         "value": 0.33
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "Casus Belli",
@@ -390,12 +766,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "War score Cost",
         "type": "Base",
         "value": -0.1
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "Permanent Ambassadors",
@@ -404,19 +795,39 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Text",
         "attribute": "Diplomatic Relations",
         "type": "Base",
         "noPercent": true,
         "value": 2
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "oratory_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_oratory\""
       }
     ],
-    "parent": "oratory_ideas"
+    "parent": "Oratory Ideas"
   },
   {
     "name": "State Religion",
     "key": "idea_state_religion",
     "relevant": false,
     "modifiers": [
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
       {
         "target": "Text",
         "attribute": "Monthly Civilization Change",
@@ -429,9 +840,19 @@
         "type": "Base",
         "noPercent": true,
         "value": 5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   },
   {
     "name": "Religious Calendar",
@@ -440,13 +861,28 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "Monthly War Exhaustion",
         "type": "Base",
         "noPercent": true,
         "value": -0.05
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   },
   {
     "name": "Mandated Observance",
@@ -454,14 +890,29 @@
     "relevant": true,
     "modifiers": [
       {
+        "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
         "target": "Country",
         "attribute": "Omen Power",
         "type": "Base",
         "noPercent": true,
         "value": 15
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   },
   {
     "name": "Haruspicy",
@@ -470,13 +921,28 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
+      {
+        "target": "Text",
         "attribute": "Loyalty of Subject States",
         "type": "Base",
         "noPercent": true,
         "value": 10
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   },
   {
     "name": "Institutional Proselytism",
@@ -485,12 +951,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "Pop Conversion Speed",
         "type": "Base",
         "value": 0.2
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   },
   {
     "name": "Tolerance of Pagans",
@@ -499,12 +980,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Text",
         "attribute": "Integrated Culture Happiness",
         "type": "Base",
         "value": 0.06
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   },
   {
     "name": "Origin Myth",
@@ -513,13 +1009,28 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": "idea_tier_1"
+      },
+      {
+        "target": "Text",
         "attribute": "Monthly Ruler Popularity Gain",
         "type": "Base",
         "noPercent": true,
         "value": 0.33
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   },
   {
     "name": "Divine Mandate",
@@ -528,12 +1039,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 4
+      },
+      {
+        "target": "Text",
         "attribute": "Monthly Tyranny",
         "type": "Base",
         "value": -0.04
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   },
   {
     "name": "Loyalty to the State",
@@ -542,12 +1068,27 @@
     "modifiers": [
       {
         "target": "Text",
+        "type": "Base",
+        "value": 8
+      },
+      {
+        "target": "Text",
         "attribute": "Loyalty",
         "type": "Base",
         "noPercent": true,
         "value": 5
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "religious_ideas"
+      },
+      {
+        "target": "Text",
+        "type": "Base",
+        "value": "\"event:/SFX/UI/Actions/sfx_ui_action_select_idea_religious\""
       }
     ],
-    "parent": "religious_ideas"
+    "parent": "Religious Ideas"
   }
 ]

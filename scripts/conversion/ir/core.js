@@ -10,7 +10,8 @@ const {
   getNoPercent,
   getValue,
   loadLocalization,
-  loadScriptValue
+  loadScriptValue,
+  mergeModifiers
 } = require('./modifiers')
 const { readFiles, writeFile, sort } = require('./../core')
 const directoryPath = path.join(__dirname, '../../../conversion')
@@ -47,14 +48,21 @@ exports.getModifier = (key, value) => ({
 })
 
 /**
- * Converts modifiers.
+ * Recursively converts a dictionary to a modifier array.
  * @returns {Modifier[]}
  */
 exports.getModifiers = (modifiers, ignoredKeys = []) =>
   modifiers
     ? Object.keys(modifiers)
         .filter(key => !ignoredKeys.includes(key))
-        .map(key => exports.getModifier(key, modifiers[key]))
+        .map(key => {
+          const item = modifiers[key]
+          if (typeof item === 'object') {
+            return exports.getModifiers(item, ignoredKeys)
+          }
+          return [exports.getModifier(key, item)]
+        })
+        .flat()
     : []
 
 /**
@@ -66,32 +74,53 @@ exports.isRelevant = modifiers => modifiers.filter(modifier => modifier.target !
 /**
  * Converts key and raw modifiers.
  * @param key {string}
- * @param value {[]}
+ * @param rawModifiers {[]}
  * @returns {{}}
  */
-exports.convertEntry = (key, rawModifiers, parent = undefined, ignoredKeys = []) => {
-  const modifiers = exports.getModifiers(rawModifiers, ignoredKeys)
+exports.convertEntry = (key, rawModifiers, parent = undefined, convertParentName = false, ignoredKeys = []) => {
+  let modifiers = []
+  if (Array.isArray(rawModifiers)) {
+    modifiers = rawModifiers.map(modifiers => exports.getModifiers(modifiers, ignoredKeys)).flat()
+  } else modifiers = exports.getModifiers(rawModifiers, ignoredKeys)
+  mergeModifiers(modifiers)
   return {
     name: getAttribute(key) || key,
     key,
     relevant: exports.isRelevant(modifiers),
     modifiers,
-    parent
+    parent: (convertParentName && getAttribute(parent)) || parent
   }
 }
 
 /**
  * File handler for nested entries.
  */
-exports.handler2 = (results, data, ignoredKeys, convertName = false) => {
+exports.handler2 = (results, data, ignoredKeys, convertParentName = false) => {
   Object.keys(data).forEach(key => {
     const group = data[key]
-    const parentName = (convertName && getAttribute(key)) || key
+    const parentName = key
     Object.keys(group).forEach(key => {
       if (ignoredKeys.includes(key)) return
       const entry = group[key]
-      results.push(exports.convertEntry(key, entry.modifier, parentName))
+      results.push(exports.convertEntry(key, entry.modifier, parentName, convertParentName))
     })
+  })
+}
+
+/**
+ * File handler for entries.
+ * @param results {[]}
+ * @param data {{}}
+ * @param modifierCallback {(item: {}) => {}}
+ * @param parentCallback {(item: {}) => {}}
+ * @returns {void
+ */
+exports.handler1 = (results, data, modifierCallback = item => item.modifier, parentCallback, ignoredKeys = []) => {
+  Object.keys(data).forEach(key => {
+    const entry = data[key]
+    results.push(
+      exports.convertEntry(key, modifierCallback(entry), parentCallback && parentCallback(entry), false, ignoredKeys)
+    )
   })
 }
 

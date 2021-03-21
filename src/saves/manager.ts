@@ -69,7 +69,7 @@ export const loadCountry = (file: Save, id: number) => {
     inventions: arrayify(data.active_inventions)
       .map((value, index) => (value ? index : -1))
       .filter(index => index > -1)
-      .map(index => inventionsIR.byIndex[index]),
+      .map(index => inventionsIR.get(index)),
     heritage: data.heritage ?? '',
     militaryExperience: data.currency_data?.military_experience ?? 0,
     name: (countriesIR[data.country_name?.name.toLowerCase() ?? ''] ?? '') as CountryName,
@@ -82,7 +82,7 @@ export const loadCountry = (file: Save, id: number) => {
     traditions: arrayify(data.military_bonuses)
       .map((value, index) => (value ? index : -1))
       .filter(index => index > -1)
-      .map(index => traditionsIR.byIndex[index]),
+      .map(index => traditionsIR.get(index)),
     laws: [],
     surplus: [],
     ideas: flatten(arrayify(data.ideas?.idea).map(idea => idea.idea)),

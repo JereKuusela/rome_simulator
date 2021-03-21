@@ -7,11 +7,11 @@ import {
   GeneralData,
   GeneralAttribute,
   SelectionType,
-  ListDefinitions,
-  DeityDefinitions,
   CountryModifiers,
   Selections,
-  ListDefinition2
+  DataEntry,
+  DeityDefinition,
+  DataEntryEU4
 } from 'types'
 import { getRootParent } from './units'
 import { ObjSet, keys } from 'utils'
@@ -39,7 +39,7 @@ import { applyCountryModifiers } from './countries'
 export const TECH_KEY = 'Tech '
 
 export const getDynamicEffect = (key: string, value: number): ModifierWithKey[] => {
-  const effect = effectsIR[key]
+  const effect = effectsIR.get(key)
   if (!effect) return []
   return effect.modifiers.map(modifier => ({
     ...modifier,
@@ -107,25 +107,22 @@ const getTechModifiers = (modifiers: ModifierWithKey[], country: CountryModifier
 const getDeityModifiers = (
   modifiers: ModifierWithKey[],
   selections: ObjSet,
-  items: DeityDefinitions,
+  items: (key: string[]) => DeityDefinition[],
   omenPower: number
 ) => {
-  const selectedKeys = keys(selections ?? {})
-  selectedKeys.forEach(key => {
-    if (items[key]) {
-      const item = items[key]
-      const effects = item.isOmen
-        ? item.modifiers.map(modifier => ({ ...modifier, value: (modifier.value * omenPower) / 100.0 }))
-        : item.modifiers
-      modifiers.push(...mapModifiers(item.name, effects))
-    }
+  const selectedItems = items(keys(selections))
+  selectedItems.forEach(item => {
+    const effects = item.isOmen
+      ? item.modifiers.map(modifier => ({ ...modifier, value: (modifier.value * omenPower) / 100.0 }))
+      : item.modifiers
+    modifiers.push(...mapModifiers(item.name, effects))
   })
 }
 
 const getModifiersFromObject = (
   modifiers: ModifierWithKey[],
   selections: ObjSet | undefined,
-  items: ListDefinitions
+  items: Record<string, DataEntryEU4>
 ) => {
   const selectedKeys = keys(selections ?? {})
   selectedKeys.forEach(key => {
@@ -136,7 +133,7 @@ const getModifiersFromObject = (
 const getModifiers = (
   modifiers: ModifierWithKey[],
   selections: ObjSet | undefined,
-  items: (key: string[]) => ListDefinition2[]
+  items: (key: string[]) => DataEntry[]
 ) => {
   const selectedItems = items(keys(selections))
   selectedItems.forEach(item => {
@@ -161,13 +158,13 @@ const getPrimaryCountryModifiers = (country: CountryModifiers) => {
     getModifiersFromObject(modifiers, country.selections[SelectionType.Policy], policiesEU4)
   }
   if (process.env.REACT_APP_GAME === 'IR') {
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Heritage], heritagesIR)
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Trade], tradesIR)
+    getModifiers(modifiers, country.selections[SelectionType.Heritage], heritagesIR.get)
+    getModifiers(modifiers, country.selections[SelectionType.Trade], tradesIR.get)
     getModifiers(modifiers, country.selections[SelectionType.Idea], ideasIR.get)
     getModifiers(modifiers, country.selections[SelectionType.Law], lawsIR.get)
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Religion], religionsIR)
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Faction], factionsIR)
-    getModifiersFromObject(modifiers, country.selections[SelectionType.Effect], effectsIR)
+    getModifiers(modifiers, country.selections[SelectionType.Religion], religionsIR.get)
+    getModifiers(modifiers, country.selections[SelectionType.Faction], factionsIR.get)
+    getModifiers(modifiers, country.selections[SelectionType.Effect], effectsIR.get)
     getModifiers(modifiers, country.selections[SelectionType.Policy], policiesIR.get)
     getModifiers(modifiers, country.selections[SelectionType.Tradition], traditionsIR.get)
   }
@@ -190,7 +187,7 @@ export const getSecondaryCountryModifiers = (country: CountryModifiers): Modifie
     getDeityModifiers(
       modifiers,
       country.selections[SelectionType.Deity],
-      deitiesIR,
+      deitiesIR.get,
       calculateValue(country, CountryAttribute.OmenPower)
     )
   }

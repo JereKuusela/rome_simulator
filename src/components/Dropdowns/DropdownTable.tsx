@@ -15,7 +15,7 @@ interface IProps<T extends string, E> {
   isActive: (value: E) => boolean
   getValue: (value: E) => T
   onSelect: (type: T) => void
-  settings: SiteSettings
+  settings?: SiteSettings
   clearable?: boolean
   search?: boolean
   placeholder?: string
@@ -98,7 +98,7 @@ const DropdownTable = <T extends string, E>(props: IProps<T, E>): JSX.Element =>
   )
 }
 
-const Header = ({ headers, settings }: { headers: string[]; settings: SiteSettings }) => (
+const Header = ({ headers, settings }: { headers: string[]; settings?: SiteSettings }) => (
   <Table.Header>
     <Table.Row>
       {headers.map(header => (

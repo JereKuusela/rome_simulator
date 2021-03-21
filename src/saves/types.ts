@@ -1,6 +1,6 @@
 import { ArmyName, CountryName, GovermentType, Mode, TacticType, UnitAttribute, UnitPreferences, UnitType } from 'types'
 import { laws } from 'data'
-import { ListDefinition, ListDefinition2 } from '../types/modifiers'
+import { DataEntry } from '../types/modifiers'
 
 export type SaveCountry = {
   id: number
@@ -8,7 +8,7 @@ export type SaveCountry = {
   religion: string
   government: GovermentType
   faction: string
-  traditions: ListDefinition[]
+  traditions: DataEntry[]
   heritage: string
   martialTech: number
   oratoryTech: number
@@ -16,7 +16,7 @@ export type SaveCountry = {
   religiousTech: number
   armies: number[]
   culture: string
-  inventions: ListDefinition2[]
+  inventions: DataEntry[]
   militaryExperience: number
   armyMaintenance: string
   navalMaintenance: string

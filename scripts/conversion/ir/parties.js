@@ -1,29 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { readFiles, writeFile, getModifier, sort } = require('./core')
+const { readFiles, writeFile, handler1 } = require('./core')
 const path = require('path')
-const { getAttribute } = require('./modifiers')
 
-const results = {}
-
-const handler = data => {
-  Object.keys(data).forEach(key => {
-    const name = getAttribute(key)
-    const party = data[key]
-    const entity = {
-      name,
-      key,
-      modifiers: []
-    }
-    Object.keys(party.ruler_modifier).forEach(key => {
-      const attribute = party.ruler_modifier[key]
-      if (getAttribute(key)) {
-        const modifier = getModifier(key, attribute)
-        entity.modifiers.push(modifier)
-      }
-    })
-    results[key] = entity
-  })
-}
+const results = []
+const callback = item => item.ruler_modifier
+const handler = data => handler1(results, data, callback)
 
 const handlers = {
   [path.join('ir', 'party_types')]: handler
@@ -31,5 +12,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(path.join('ir', 'parties.json'), sort(results))
+  writeFile(path.join('ir', 'parties.json'), results)
 }

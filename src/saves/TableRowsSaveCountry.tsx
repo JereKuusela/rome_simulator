@@ -49,13 +49,13 @@ const TableRowsSaveCountry = ({ country }: { country: SaveCountry }) => {
         <Table.Cell>Culture</Table.Cell>
         <Table.Cell>{culturesIR[country.culture]}</Table.Cell>
         <Table.Cell>Heritage</Table.Cell>
-        <Table.Cell>{heritagesIR[country.heritage]?.name}</Table.Cell>
+        <Table.Cell>{heritagesIR.getName(country.heritage)}</Table.Cell>
       </Table.Row>
       <Table.Row>
         <Table.Cell>Army</Table.Cell>
-        <Table.Cell>{policiesIR.get(country.armyMaintenance)}</Table.Cell>
+        <Table.Cell>{policiesIR.getName(country.armyMaintenance)}</Table.Cell>
         <Table.Cell>Navy</Table.Cell>
-        <Table.Cell>{policiesIR.get(country.navalMaintenance)}</Table.Cell>
+        <Table.Cell>{policiesIR.getName(country.navalMaintenance)}</Table.Cell>
       </Table.Row>
       <Table.Row>
         <Table.Cell>Military experience</Table.Cell>
@@ -65,28 +65,13 @@ const TableRowsSaveCountry = ({ country }: { country: SaveCountry }) => {
       </Table.Row>
       <Table.Row>
         <Table.Cell>Capital surplus</Table.Cell>
-        <Table.Cell>
-          {country.surplus
-            .map(key => tradesIR[key]?.name)
-            .filter(value => value)
-            .join(', ')}
-        </Table.Cell>
+        <Table.Cell>{tradesIR.getName(country.surplus).join(', ')}</Table.Cell>
         <Table.Cell>Ideas</Table.Cell>
-        <Table.Cell>
-          {country.ideas
-            .map(key => ideasIR.get(key)?.name)
-            .filter(value => value)
-            .join(', ')}
-        </Table.Cell>
+        <Table.Cell>{ideasIR.getName(country.ideas).join(', ')}</Table.Cell>
       </Table.Row>
       <Table.Row>
         <Table.Cell>Laws</Table.Cell>
-        <Table.Cell>
-          {country.laws
-            .map(key => lawsIR.get(key)?.name)
-            .filter(value => value)
-            .join(', ')}
-        </Table.Cell>
+        <Table.Cell>{lawsIR.getName(country.laws).join(', ')}</Table.Cell>
         <Table.Cell />
         <Table.Cell />
       </Table.Row>
@@ -94,33 +79,24 @@ const TableRowsSaveCountry = ({ country }: { country: SaveCountry }) => {
         <Table.Cell>Government</Table.Cell>
         <Table.Cell>{country.government}</Table.Cell>
         <Table.Cell>Faction</Table.Cell>
-        <Table.Cell>{factionsIR[country.faction]?.name}</Table.Cell>
+        <Table.Cell>{factionsIR.getName(country.faction)}</Table.Cell>
       </Table.Row>
       <Table.Row>
         <Table.Cell>Religion</Table.Cell>
         <Table.Cell>
-          {religionsIR[country.religion]?.name} ({country.religiousUnity.toPrecision(3)}%)
+          {religionsIR.getName(country.religion)} ({country.religiousUnity.toPrecision(3)}%)
         </Table.Cell>
         <Table.Cell>Deities</Table.Cell>
         <Table.Cell>
-          {country.deities
-            .map(key =>
-              deitiesIR[key]
-                ? deitiesIR[key].name + (country.omen.substr(4) === key.substr(5) ? ' (with omen)' : '')
-                : null
-            )
-            .filter(value => value)
+          {deitiesIR
+            .get(country.deities)
+            .map(item => item.name + (country.omen.substr(4) === item.key.substr(5) ? ' (with omen)' : ''))
             .join(', ')}
         </Table.Cell>
       </Table.Row>
       <Table.Row>
         <Table.Cell>Modifiers</Table.Cell>
-        <Table.Cell colSpan='3'>
-          {country.modifiers
-            .map(key => effectsIR[key]?.name)
-            .filter(value => value)
-            .join(', ')}
-        </Table.Cell>
+        <Table.Cell colSpan='3'>{effectsIR.getName(country.modifiers).join(', ')}</Table.Cell>
       </Table.Row>
     </>
   )

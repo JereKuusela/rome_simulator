@@ -1,27 +1,27 @@
 import React, { Component } from 'react'
-import { SiteSettings, ListDefinition } from 'types'
+import { SiteSettings, DataEntry } from 'types'
 import DropdownTable from './DropdownTable'
 import ListModifier from 'components/Utils/ListModifier'
 
 type IProps = {
   value: string
-  values: ListDefinition[]
-  settings: SiteSettings
+  values: DataEntry[]
+  settings?: SiteSettings
   onSelect: (key: string) => void
   type: string
 }
 
 export default class DropdownListDefinition extends Component<IProps> {
-  getContent = (item: ListDefinition, search: string) =>
+  getContent = (item: DataEntry, search: string) =>
     item.name.toLowerCase().includes(search.toLowerCase())
       ? [item.name, <ListModifier name={null} modifiers={item.modifiers} />]
       : null
 
-  isActive = (item: ListDefinition) => item.key === this.props.value
+  isActive = (item: DataEntry) => item.key === this.props.value
 
-  getValue = (item: ListDefinition) => item.key
+  getValue = (item: DataEntry) => item.key
 
-  getText = (item: ListDefinition) => item.name
+  getText = (item: DataEntry) => item.name
 
   getHeaders = () => [this.props.type, 'Effect']
 

@@ -50,7 +50,9 @@ Changelog:
 Todo: 
 
 Saves:
- - Add import from battle (involved armies) or war (all participants and all armies)
+ 
+ * Add import from battle (involved armies) or war (all participants and all armies)
+  -Also import territory + check for mountain pass modifier.
  * Fix tradition import.
  * Data conversion for levy templates.
  * Investigate calculating levies.
@@ -66,6 +68,12 @@ Countries:
 Combat:
  * River/strait crossing negation when 1 engineer for every 10 cohort (+ setting). Try to verify is it 1 + 9 others or 1 + 10 others.
  * Cohort size to 500.
+ * Deployment at mountain passes (flanks?) and implementation (3rd terrain category, parsed from modifiers?):
+  - In game a modifier to the territory.
+  - Not all located at mountains!
+  - Mountain pass: -2 width.
+  - Gate: -4 width.
+  - isthmus_of_corinth (no idea where located): -6 width.
 
 UI:
  * Add tooltip to frontline unit counter (shows combat width, amount of units with breakdown per type, maybe total morale/strength too?)

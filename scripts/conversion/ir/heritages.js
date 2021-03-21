@@ -1,26 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { readFiles, writeFile, getModifier, sort } = require('./core')
+const { readFiles, writeFile, handler1 } = require('./core')
 const path = require('path')
-const { getAttribute } = require('./modifiers')
 
-const results = {}
+const results = []
 
-const handler = data => {
-  Object.keys(data).forEach(key => {
-    const name = getAttribute(key)
-    const heritage = data[key]
-    const entity = {
-      name,
-      key,
-      modifiers: []
-    }
-    Object.keys(heritage.modifier).forEach(key => {
-      const attribute = heritage.modifier[key]
-      if (getAttribute(key)) entity.modifiers.push(getModifier(key, attribute))
-    })
-    results[key] = entity
-  })
-}
+const handler = data => handler1(results, data)
 
 const handlers = {
   [path.join('ir', 'heritage')]: handler
@@ -28,5 +12,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(path.join('ir', 'heritages.json'), sort(results))
+  writeFile(path.join('ir', 'heritages.json'), results)
 }

@@ -24,7 +24,7 @@ const parseObject = tokens => {
     const token = tokens[i]
     if (token === '=') {
       const value = parseValue(tokens)
-      if (result[previous]) {
+      if (result[previous] && result[previous] !== value) {
         // Usually setting a key multiple times indicates an array. But replacing an empty object seems to be an exception.
         if (typeof result[previous] === 'object' && Object.keys(result[previous]).length === 0) result[previous] = value
         else {

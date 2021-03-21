@@ -1,30 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { readFiles, writeFile, getModifier, sort } = require('./core')
+const { readFiles, writeFile, convertEntry } = require('./core')
 const path = require('path')
-const { getAttribute } = require('./modifiers')
 
-const results = {}
-
-const handleTradeSub = (key, modifiers) => {
-  const entity = {
-    name: getAttribute(key),
-    key,
-    modifiers: []
-  }
-  Object.keys(modifiers).forEach(key => {
-    const attribute = modifiers[key]
-    if (getAttribute(key)) {
-      const modifier = getModifier(key, attribute)
-      if (modifier.target !== 'Text') entity.modifiers.push(modifier)
-    }
-  })
-  if (entity.modifiers.length) results[key] = entity
-}
+const results = []
 
 const handler = data => {
   Object.keys(data).forEach(key => {
     const trade = data[key]
-    handleTradeSub(key, trade.country)
+    results.push(convertEntry(key, [trade.province, trade.country], undefined))
   })
 }
 
@@ -34,5 +17,5 @@ const handlers = {
 
 exports.run = () => {
   readFiles(handlers)
-  writeFile(path.join('ir', 'trades.json'), sort(results))
+  writeFile(path.join('ir', 'trades.json'), results)
 }

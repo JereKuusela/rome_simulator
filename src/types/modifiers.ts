@@ -46,51 +46,21 @@ export interface Modifier {
 export interface ModifierWithKey extends Modifier {
   key: string
 }
-export interface Invention extends ListDefinition {
-  index: number
-}
-export interface Path {
-  name: string
-  key: string
-  traditions: ListDefinition[]
-}
 
-export interface ListDefinition {
+export interface DataEntry {
   name: string
   key: string
   modifiers: Modifier[]
-}
-
-export type ListDefinition2 = ListDefinition & {
   relevant: boolean
-  parent?: string
-}
-export type ListDefinitions = Record<string, ListDefinition>
-export type DeityDefinition = ListDefinition & { isOmen: boolean }
-export type DeityDefinitions = Record<string, DeityDefinition>
-
-type ListData = {
-  name: string
-  key: string
-  modifiers: ModifierData[]
+  parent: string
 }
 
-export type OptionData = ListData[]
+export type DeityDefinition = DataEntry & { isOmen: boolean }
 
 export type DictionaryData = Record<string, string>
 
-type ModifierData = {
-  target: string
-  attribute: string
-  value: number
-}
-
-export type InventionData = {
+export interface DataEntryEU4 {
   name: string
-  inventions: {
-    name: string
-    key: string
-    index: number
-    modifiers: ModifierData[]
-  }[]
+  key: string
+  modifiers: Modifier[]
 }
