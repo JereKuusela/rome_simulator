@@ -19,7 +19,7 @@ const resultPath = path.join(__dirname, '../../../src/data/json')
 
 exports.readFiles = handlers => readFiles(directoryPath, handlers)
 exports.sort = sort
-exports.writeFile = (filename, results) => writeFile(path.join(resultPath, filename), results)
+exports.writeFile = (filename, results, debug = false) => writeFile(path.join(resultPath, filename), results, debug)
 
 /**
  * Modifier object

@@ -18,9 +18,11 @@ import { getDefaultCountry } from 'data'
 import { map } from 'utils'
 import { calculateValueWithoutLoss } from 'definition_values'
 import { parseFile, loadFile } from './importer'
-import { getFirstPlayedCountry, loadCountryList, loadCountryWithArmies } from './manager'
+import { getFirstPlayedCountry, loadArmies, loadCountry, loadCountryList } from './manager'
 import { FileInput } from 'components/Utils/Input'
 import {
+  convertCountryData,
+  convertCountryDefinition,
   createArmy,
   deleteArmy,
   enableCountrySelection,
@@ -127,9 +129,11 @@ const ImportSave = () => {
 
   const selectCountry = useCallback(
     (save: Save, id: number) => {
-      const { country, armies } = loadCountryWithArmies(save, id)
+      const country = loadCountry(save, id)
       if (country) {
         setCountry(country)
+        const converted = convertCountryDefinition(convertCountryData(convertCountry(country, [])))
+        const armies = loadArmies(save, country, converted)
         setArmies(armies)
         countryData.current = convertCountry(country, armies)
       }

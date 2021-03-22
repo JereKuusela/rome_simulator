@@ -41,14 +41,15 @@ export interface CountryModifiers extends DefinitionValues<CountryAttribute> {
   culture: CultureType
   government: GovermentType
 }
-
-export interface CountryDefinition {
+export type CountryData = {
   modifiers: CountryModifiers
   armies: Armies
   units: UnitsData
   weariness: WearinessAttributes
   name: CountryName
 }
+
+export type CountryDefinition = CountryData
 
 export type Country = Record<CountryAttribute, number> & {
   selections: Selections

@@ -29,8 +29,8 @@ exports.sort = results => {
   return sorted
 }
 
-exports.writeFile = (file, results) => {
-  const text = JSON.stringify(results, undefined, 2)
+exports.writeFile = (file, results, debug = false) => {
+  const text = JSON.stringify(results, undefined, debug ? 2 : undefined)
   fs.writeFile(file, text, err => {
     if (err) throw err
     console.log(file)

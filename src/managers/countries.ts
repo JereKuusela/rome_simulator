@@ -17,11 +17,13 @@ import {
   ArmyName,
   Mode,
   CountryModifiers,
-  Armies
+  Armies,
+  CountryData
 } from 'types'
 import { getDefaultUnits, getDefaultArmies, getDefaultCountry } from 'data'
 import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
 import { toObj, values, filter } from 'utils'
+import { getCountryModifiers } from './modifiers'
 
 export const createCountry = (countries: Countries, country: CountryName, source?: CountryDefinition): void => {
   countries[country] = source ?? getDefaultCountry(country)
@@ -91,12 +93,18 @@ export const applyCountryModifiers = (country: CountryModifiers, modifiers: Modi
   return country
 }
 
-export const convertCountryDefinition = (country: CountryDefinition, settings: SiteSettings): Country => {
+export const convertCountryData = (country: CountryData) => {
+  const modifiers = getCountryModifiers(country.modifiers)
+  return { ...country, modifiers: applyCountryModifiers(country.modifiers, modifiers) }
+}
+
+export const convertCountryDefinition = (country: CountryDefinition, settings?: SiteSettings): Country => {
   const attributes = values(CountryAttribute)
   const calculated = toObj(
     attributes,
     attribute => attribute,
-    attribute => (isAttributeEnabled(attribute, settings) ? calculateValue(country.modifiers, attribute) : 0)
+    attribute =>
+      !settings || isAttributeEnabled(attribute, settings) ? calculateValue(country.modifiers, attribute) : 0
   )
   return {
     ...calculated,

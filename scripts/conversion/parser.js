@@ -4,17 +4,30 @@
 
 let i = 0
 
-const parseValue = tokens => {
-  for (i = i + 1; i < tokens.length; i++) {
-    const token = tokens[i]
-    if (token === '{') {
-      return parseObject(tokens)
-    }
-    if (token === 'hsv') {
-      parseObject(tokens)
-    }
-    return Number.isNaN(Number(token)) ? token : Number(token)
+const parseCurrentValue = tokens => {
+  const token = tokens[i]
+  if (token === '{') {
+    return parseArrayOrObject(tokens)
   }
+  if (token === 'hsv') {
+    return parseValue(tokens)
+  }
+  return Number.isNaN(Number(token)) ? token : Number(token)
+}
+
+const parseValue = tokens => {
+  i++
+  return parseCurrentValue(tokens)
+}
+
+const isArray = tokens => {
+  let isArray = true
+  for (let j = i + 1; j < tokens.length && isArray; j++) {
+    const token = tokens[j]
+    if (token === '=') isArray = false
+    if (token === '}') break
+  }
+  return isArray
 }
 
 const parseObject = tokens => {
@@ -39,6 +52,21 @@ const parseObject = tokens => {
     previous = token
   }
   return result
+}
+
+const parseArray = tokens => {
+  const result = []
+  for (i = i + 1; i < tokens.length; i++) {
+    const token = tokens[i]
+    if (token === '}') break
+    result.push(parseCurrentValue(tokens))
+  }
+  return result
+}
+
+const parseArrayOrObject = tokens => {
+  if (isArray(tokens)) return parseArray(tokens)
+  return parseObject(tokens)
 }
 
 exports.parseFile = data => {

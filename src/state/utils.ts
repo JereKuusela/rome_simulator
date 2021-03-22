@@ -61,8 +61,8 @@ import {
 } from 'data'
 import { uniq, flatten, sumBy } from 'lodash'
 import * as manager from 'managers/army'
-import { getCountryModifiers, getGeneralModifiers } from 'managers/modifiers'
-import { convertCountryDefinition, applyCountryModifiers, filterArmies } from 'managers/countries'
+import { getGeneralModifiers } from 'managers/modifiers'
+import { convertCountryDefinition, filterArmies, convertCountryData } from 'managers/countries'
 import { convertUnitsData } from 'managers/units'
 import { convertArmy, convertSide, getRound, getAttacker, getLeadingArmy } from 'managers/battle'
 import { iterateCohorts } from 'combat'
@@ -314,8 +314,7 @@ export const getCountry = (state: AppState, countryName: CountryName): Country =
 }
 export const getCountryDefinition = (state: AppState, countryName: CountryName): CountryDefinition => {
   const country = state.countries[countryName]
-  const modifiers = getCountryModifiers(country.modifiers)
-  return { ...country, modifiers: applyCountryModifiers(country.modifiers, modifiers) }
+  return convertCountryData(country)
 }
 const getArmyDefinition = (state: AppState, countryName: CountryName, armyName: ArmyName) =>
   state.countries[countryName].armies[armyName]

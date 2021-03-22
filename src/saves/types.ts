@@ -35,9 +35,17 @@ type SaveJob = {
   character: number
   office: string
 }
+type ProvinceJob = {
+  who: number
+  character: number
+  governorship: string
+  start_date: string
+}
+
+type PopType = 'nobles' | 'citizen' | 'freemen' | 'tribesmen' | 'slaves'
 
 export type SavePop = {
-  type: 'citizen' | 'slaves' | 'nobles' | 'tribesmen' | 'freemen'
+  type: PopType
   culture: string
   religion: string
 }
@@ -64,6 +72,18 @@ type SaveTerritory = {
   }
 }
 
+type SaveProvince = {
+  area: string
+  cached_food_storage: number
+  capital: number
+  culture: number
+  food_value: number
+  governor_policy: string
+  max_food_value: number
+  religion: number
+  state_loyalty: number
+  variables: []
+}
 export type SaveCharacter = {
   character_experience: number
   attributes: {
@@ -183,12 +203,16 @@ type SaveDataCountry = Record<ElementType<typeof laws>, string> & {
       idea: string[]
     }[]
   }
+  governorship: []
   pantheon: SaveCountryDeity[]
   omen: number
   religious_unity: number
   religion?: string
   ruler_term?: {
+    character: number
+    government: string
     party?: string
+    start_date: string
   }
   modifier: {
     modifier: string
@@ -215,23 +239,24 @@ type SaveDataWar = {
 
 type SaveCulture = {
   culture: string
-  pop_type: string
+  pop_type: PopType
   country: number
   progress: number
   pop_count: number
-  integration_status: string
+  integration_status: 'integrated' | undefined
 }
 
 export type Save = Record<string, unknown> & {
   jobs?: {
     office_job: SaveJob[]
     techoffice_job: SaveJob[]
-    province_job: SaveJob[]
+    province_job: ProvinceJob[]
   }
   character?: {
     character_database: Record<number, SaveCharacter>
   }
   provinces?: Record<number, SaveTerritory>
+  states?: Record<number, SaveProvince>
   trade?: {
     route: SaveRoute[]
   }

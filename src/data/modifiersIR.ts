@@ -1,5 +1,5 @@
 import { groupBy } from 'lodash'
-import { DeityDefinition, DictionaryData, DataEntry } from 'types'
+import { DeityDefinition, DictionaryData, DataEntry, CultureData, RegionData } from 'types'
 
 import traditionData from './json/ir/traditions.json'
 import tradeData from './json/ir/trades.json'
@@ -18,6 +18,7 @@ import religionData from './json/ir/religions.json'
 import factionData from './json/ir/parties.json'
 import effectData from './json/ir/effects.json'
 import distinctionData from './json/ir/distinctions.json'
+import regionData from './json/ir/regions.json'
 import { toObj } from 'utils'
 
 type Key = string | number
@@ -71,4 +72,5 @@ export const effectsIR = buildData(process.env.REACT_APP_GAME === 'IR' ? effectD
 
 export const countriesIR = process.env.REACT_APP_GAME === 'IR' ? countryData : ({} as DictionaryData)
 export const territoriesIR = process.env.REACT_APP_GAME === 'IR' ? territoryData : ({} as DictionaryData)
-export const culturesIR = process.env.REACT_APP_GAME === 'IR' ? cultureData : ({} as DictionaryData)
+export const culturesIR = process.env.REACT_APP_GAME === 'IR' ? cultureData : ({} as CultureData)
+export const regionsIR = process.env.REACT_APP_GAME === 'IR' ? regionData : ({} as RegionData)

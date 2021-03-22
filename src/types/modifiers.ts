@@ -59,6 +59,10 @@ export type DeityDefinition = DataEntry & { isOmen: boolean }
 
 export type DictionaryData = Record<string, string>
 
+type Culture = { name: string; template: Record<string, number> }
+export type CultureData = Record<string, Culture>
+export type RegionData = Record<string, number[]>
+
 export interface DataEntryEU4 {
   name: string
   key: string

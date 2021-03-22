@@ -1,7 +1,9 @@
-import { countriesIR, culturesIR, inventionsIR, laws, territoriesIR, traditionsIR, traitsIR } from 'data'
-import { flatten, sum } from 'lodash'
+import { countriesIR, culturesIR, inventionsIR, laws, regionsIR, territoriesIR, traditionsIR, traitsIR } from 'data'
+import { countBy, flatten, groupBy, sum, sumBy } from 'lodash'
 import {
   ArmyName,
+  Country,
+  CountryAttribute,
   CountryName,
   dictionaryTacticType,
   dictionaryUnitType,
@@ -13,7 +15,7 @@ import {
   UnitPreferenceType
 } from 'types'
 import { Tech } from 'types/generated'
-import { arrayify, excludeMissing, filter, keys, toArr, toObj } from 'utils'
+import { arrayify, excludeMissing, filter, forEach, keys, map, toArr, toObj } from 'utils'
 import {
   SaveCharacter,
   Save,
@@ -55,13 +57,9 @@ export const getFirstPlayedCountry = (file: Save) => {
 
 export const loadCountry = (file: Save, id: number) => {
   const deities = file.deity_manager?.deities_database
-  const cultures = file.country_culture_manager?.country_culture_database
   const data = file.country?.country_database[id]
   if (!data) return undefined
-  if (cultures) {
-    const popTypes = toArr(cultures).filter(item => item.country === id && item.pop_type)
-    console.log(popTypes)
-  }
+  console.log(file)
   const availableLaws = data.laws?.map(value => !!value)
   const country: SaveCountry = {
     armies: data.units,
@@ -178,6 +176,98 @@ const countSurplus = (file: Save, capital: number, pops: { [key: number]: SavePo
   return keys(filter(counts, item => item > 1))
 }
 
+const getGovernor = (file: Save, countryId: number, provinceId: number) => {
+  const provinces = file.states
+  const jobs = file.jobs?.province_job
+  const country = file.country?.country_database?.[countryId]
+  if (!provinces || !jobs || !country) return -1
+  const province = provinces[provinceId].area
+  const job = jobs.find(item => item.governorship === province && item.who === countryId)
+  if (job) return job.character
+  return country.ruler_term?.character ?? -1
+}
+
+const getIntegratedCultures = (file: Save, id: number) => {
+  const cultures = file.country_culture_manager?.country_culture_database
+  if (!cultures) return []
+
+  return toArr(cultures)
+    .filter(item => item.country === id && item.integration_status === 'integrated')
+    .map(item => item.culture)
+}
+
+const sumObjects = <T extends string>(objects: Record<T, number>[]) => {
+  const total = {} as Record<T, number>
+  objects.forEach(object => {
+    forEach(object, (value, key) => {
+      if (!total[key]) total[key] = 0
+      total[key] += value
+    })
+  })
+  return total
+}
+
+const getLevyablePOps = (file: Save, id: number) => {
+  const territories = file.provinces
+  const population = file.population?.population
+  if (!territories || !population) return
+  const integratedCultures = getIntegratedCultures(file, id)
+  const popsPerTerritory = map(regionsIR, regionTerritories => {
+    let governor = -1
+    const pops = regionTerritories
+      .filter(index => territories[index].owner === id)
+      .map(index => {
+        const territory = territories[index]
+        if (governor === -1) governor = getGovernor(file, id, territory.state)
+        const pops = arrayify(territory.pop)
+        const levyablePops = pops
+          .map(index => population[index])
+          .filter(item => item.type !== 'slaves' && integratedCultures.includes(item.culture))
+        return countBy(levyablePops, item => item.culture)
+      })
+    return { pops, governor }
+  })
+  const popsPerRegion = filter(
+    map(popsPerTerritory, item => {
+      const pops = sumObjects(item.pops)
+      return { ...item, pops }
+    }),
+    item => Object.keys(item.pops).length
+  )
+  return popsPerRegion
+}
+
+export const getLevies = (file: Save, id: number, levyMultiplier: number) => {
+  // Tribals use clan leaders but not sure how. All troops pooled and split evenly?
+  const regions = getLevyablePOps(file, id)
+  if (!regions) return
+  const leviesRaw = map(regions, region => {
+    const levies = toArr(region.pops, (amount, culture) => {
+      const template = culturesIR[culture].template
+      const cohorts = toArr(
+        map(template, item => item * amount),
+        (value, key) => ({ key, value })
+      )
+      return cohorts
+    })
+    const grouped = groupBy(levies.flat(), item => item.key)
+    const cohorts = map(grouped, item => levyMultiplier * sumBy(item, item => item.value))
+    return { cohorts, leader: region.governor }
+  })
+  const levies = map(leviesRaw, region => {
+    let balance = 0
+    const balanced = map(region.cohorts, amount => {
+      const ceiled = Math.ceil(amount)
+      balance -= amount - ceiled
+      return ceiled
+    })
+    const last = Object.keys(balanced)[Object.keys(balanced).length - 1]
+    balanced[last] = balanced[last] - balance
+    return { ...region, units: balanced }
+  })
+  console.log(levies)
+}
+
 const getCharacterName = (character: SaveCharacter) =>
   character.first_name_loc.name + (character.family_name ? ' ' + character.family_name : '')
 
@@ -237,10 +327,10 @@ const getArmyName = (army: SaveDataUnitName) => {
   return name
 }
 
-export const loadCountryWithArmies = (save: Save, id: number) => {
-  const country = id ? loadCountry(save, id) : null
-  const armies = country && country.armies ? excludeMissing(country.armies.map(id => loadArmy(save, id))) : []
-  return { country, armies }
+export const loadArmies = (save: Save, saveCountry: SaveCountry, country: Country) => {
+  const armies = saveCountry.armies ? excludeMissing(saveCountry.armies.map(id => loadArmy(save, id))) : []
+  getLevies(save, saveCountry.id, country[CountryAttribute.LevySize])
+  return armies
 }
 
 export const countTech = (country: SaveCountry, tech: Tech) =>
@@ -255,7 +345,7 @@ export const getTerritoryName = (name: string) =>
 export const getCategoryName = (name: string) => {
   const split = name.split(' ')
   const rawCulture = split[0].toLowerCase()
-  const culture = culturesIR[rawCulture] ?? rawCulture
+  const culture = culturesIR[rawCulture]?.name ?? rawCulture
   if (split.length > 1) return `${culture} ${split[1]}`
   return culture
 }

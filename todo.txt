@@ -63,11 +63,10 @@ Saves:
   - Replace units with support if needed.
 
 Countries:
- * UI for distinctions.
+ * Great works??
 
 Combat:
  * River/strait crossing negation when 1 engineer for every 10 cohort (+ setting). Try to verify is it 1 + 9 others or 1 + 10 others.
- * Cohort size to 500.
  * Deployment at mountain passes (flanks?) and implementation (3rd terrain category, parsed from modifiers?):
   - In game a modifier to the territory.
   - Not all located at mountains!

@@ -47,7 +47,7 @@ const TableRowsSaveCountry = ({ country }: { country: SaveCountry }) => {
       </Table.Row>
       <Table.Row>
         <Table.Cell>Culture</Table.Cell>
-        <Table.Cell>{culturesIR[country.culture]}</Table.Cell>
+        <Table.Cell>{culturesIR[country.culture].name}</Table.Cell>
         <Table.Cell>Heritage</Table.Cell>
         <Table.Cell>{heritagesIR.getName(country.heritage)}</Table.Cell>
       </Table.Row>
