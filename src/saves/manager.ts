@@ -1,5 +1,5 @@
 import { countriesIR, culturesIR, inventionsIR, laws, regionsIR, territoriesIR, traditionsIR, traitsIR } from 'data'
-import { countBy, flatten, groupBy, sum, sumBy } from 'lodash'
+import { countBy, flatten, groupBy, range, sum, sumBy, upperFirst } from 'lodash'
 import {
   ArmyName,
   Country,
@@ -10,12 +10,13 @@ import {
   GeneralAttribute,
   GovermentType,
   Mode,
+  TacticType,
   UnitAttribute,
   UnitPreferences,
   UnitPreferenceType
 } from 'types'
 import { Tech } from 'types/generated'
-import { arrayify, excludeMissing, filter, forEach, keys, map, toArr, toObj } from 'utils'
+import { arrayify, excludeMissing, filter, forEach, keys, map, toArr, toObj, values } from 'utils'
 import {
   SaveCharacter,
   Save,
@@ -59,7 +60,6 @@ export const loadCountry = (file: Save, id: number) => {
   const deities = file.deity_manager?.deities_database
   const data = file.country?.country_database[id]
   if (!data) return undefined
-  console.log(file)
   const availableLaws = data.laws?.map(value => !!value)
   const country: SaveCountry = {
     armies: data.units,
@@ -70,7 +70,7 @@ export const loadCountry = (file: Save, id: number) => {
       .map(index => inventionsIR.get(index)),
     heritage: data.heritage ?? '',
     militaryExperience: data.currency_data?.military_experience ?? 0,
-    name: (countriesIR[data.country_name?.name.toLowerCase() ?? ''] ?? '') as CountryName,
+    name: (countriesIR[data.tag.toLowerCase()] ?? '') as CountryName,
     civicTech: data.technology?.civic_tech?.level ?? 0,
     martialTech: data.technology?.military_tech?.level ?? 0,
     oratoryTech: data.technology?.oratory_tech?.level ?? 0,
@@ -176,13 +176,11 @@ const countSurplus = (file: Save, capital: number, pops: { [key: number]: SavePo
   return keys(filter(counts, item => item > 1))
 }
 
-const getGovernor = (file: Save, countryId: number, provinceId: number) => {
-  const provinces = file.states
-  const jobs = file.jobs?.province_job
-  const country = file.country?.country_database?.[countryId]
-  if (!provinces || !jobs || !country) return -1
-  const province = provinces[provinceId].area
-  const job = jobs.find(item => item.governorship === province && item.who === countryId)
+const getGovernor = (save: Save, countryId: number, region: string) => {
+  const jobs = save.jobs?.province_job
+  const country = save.country?.country_database?.[countryId]
+  if (!jobs || !country) return -1
+  const job = jobs.find(item => item.governorship === region && item.who === countryId)
   if (job) return job.character
   return country.ruler_term?.character ?? -1
 }
@@ -212,13 +210,13 @@ const getLevyablePOps = (file: Save, id: number) => {
   const population = file.population?.population
   if (!territories || !population) return
   const integratedCultures = getIntegratedCultures(file, id)
-  const popsPerTerritory = map(regionsIR, regionTerritories => {
+  const popsPerTerritory = map(regionsIR, (regionTerritories, region) => {
     let governor = -1
     const pops = regionTerritories
       .filter(index => territories[index].owner === id)
       .map(index => {
         const territory = territories[index]
-        if (governor === -1) governor = getGovernor(file, id, territory.state)
+        if (governor === -1) governor = getGovernor(file, id, region)
         const pops = arrayify(territory.pop)
         const levyablePops = pops
           .map(index => population[index])
@@ -237,42 +235,83 @@ const getLevyablePOps = (file: Save, id: number) => {
   return popsPerRegion
 }
 
-export const getLevies = (file: Save, id: number, levyMultiplier: number) => {
+const getCulture = (save: Save, id: number) => {
+  const country = save.country?.country_database[id]
+  return culturesIR[country?.primary_culture ?? '']
+}
+
+const getUnitPreferences = (save: Save, id: number) => {
+  const culture = getCulture(save, id)
+  if (culture) {
+    return {
+      [UnitPreferenceType.Primary]: dictionaryUnitType[culture.primary],
+      [UnitPreferenceType.Secondary]: dictionaryUnitType[culture.secondary],
+      [UnitPreferenceType.Flank]: dictionaryUnitType[culture.flank]
+    } as UnitPreferences
+  }
+  return {
+    [UnitPreferenceType.Primary]: null,
+    [UnitPreferenceType.Secondary]: null,
+    [UnitPreferenceType.Flank]: null
+  } as UnitPreferences
+}
+
+const cleanName = (name: string) => name.split('_').map(upperFirst).join(' ')
+
+const getLevyName = (region: string) => ('Levy ' + cleanName(region.substring(0, region.length - 7))) as ArmyName
+
+export const getLevies = (save: Save, id: number, levyMultiplier: number) => {
   // Tribals use clan leaders but not sure how. All troops pooled and split evenly?
-  const regions = getLevyablePOps(file, id)
+  const regions = getLevyablePOps(save, id)
   if (!regions) return
-  const leviesRaw = map(regions, region => {
+  const levies = map(regions, region => {
     const levies = toArr(region.pops, (amount, culture) => {
+      let remaining = Math.floor(levyMultiplier * amount)
       const template = culturesIR[culture].template
       const cohorts = toArr(
-        map(template, item => item * amount),
+        map(template, item => {
+          const total = Math.min(remaining, Math.ceil(levyMultiplier * item * amount))
+          remaining -= total
+          return total
+        }),
         (value, key) => ({ key, value })
       )
       return cohorts
     })
     const grouped = groupBy(levies.flat(), item => item.key)
-    const cohorts = map(grouped, item => levyMultiplier * sumBy(item, item => item.value))
-    return { cohorts, leader: region.governor }
-  })
-  const levies = map(leviesRaw, region => {
-    let balance = 0
-    const balanced = map(region.cohorts, amount => {
-      const ceiled = Math.ceil(amount)
-      balance -= amount - ceiled
-      return ceiled
-    })
-    const last = Object.keys(balanced)[Object.keys(balanced).length - 1]
-    balanced[last] = balanced[last] - balance
-    return { ...region, units: balanced }
+    const units = map(grouped, item => sumBy(item, item => item.value))
+    units['supply_train'] = Math.floor(sum(values(units)) / 10)
+    return { units, leader: region.governor }
   })
   console.log(levies)
+  const preferences = getUnitPreferences(save, id)
+  let counter = -1
+  const armies: SaveArmy[] = toArr(levies, (army, region) => ({
+    id: counter--,
+    name: getLevyName(region),
+    cohorts: toArr(army.units, (amount, type) =>
+      range(amount).map(() => ({
+        type: dictionaryUnitType[type],
+        [UnitAttribute.Experience]: undefined,
+        [UnitAttribute.Strength]: undefined,
+        [UnitAttribute.Morale]: undefined
+      }))
+    ).flat(),
+    mode: Mode.Land,
+    tactic: TacticType.ShockAction,
+    preferences,
+    flankSize: 5,
+    leader: loadCharacter(save, army.leader),
+    ability: ''
+  }))
+  return armies
 }
 
 const getCharacterName = (character: SaveCharacter) =>
   character.first_name_loc.name + (character.family_name ? ' ' + character.family_name : '')
 
-const loadCharacter = (file: Save, id: number): Character | undefined => {
-  const character = file.character?.character_database[id]
+const loadCharacter = (save: Save, id: number | undefined): Character | undefined => {
+  const character = save.character?.character_database[id ?? -1]
   if (!character) return undefined
   return {
     martial: character.attributes.martial,
@@ -304,7 +343,7 @@ export const loadArmy = (file: Save, id: number) => {
         ? excludeMissing(arrayify(data.cohort ?? data.ship ?? 0).map(id => loadCohort(file, id)))
         : [],
     flankSize: data.flank_size,
-    leader: data.leader ? loadCharacter(file, data.leader) ?? null : null,
+    leader: loadCharacter(file, data.leader),
     mode: data.is_army === 'yes' ? Mode.Land : Mode.Naval,
     preferences: {
       [UnitPreferenceType.Primary]: dictionaryUnitType[data.primary],
@@ -327,10 +366,18 @@ const getArmyName = (army: SaveDataUnitName) => {
   return name
 }
 
+const armySorter = (a: SaveArmy, b: SaveArmy) => {
+  const mode = a.mode.localeCompare(b.mode)
+  if (mode) return mode
+  const units = b.cohorts.length - a.cohorts.length
+  if (units) return units
+  return a.name.localeCompare(b.name)
+}
+
 export const loadArmies = (save: Save, saveCountry: SaveCountry, country: Country) => {
   const armies = saveCountry.armies ? excludeMissing(saveCountry.armies.map(id => loadArmy(save, id))) : []
-  getLevies(save, saveCountry.id, country[CountryAttribute.LevySize])
-  return armies
+  const levies = getLevies(save, saveCountry.id, country[CountryAttribute.LevySize]) ?? []
+  return [...armies, ...levies].sort(armySorter)
 }
 
 export const countTech = (country: SaveCountry, tech: Tech) =>

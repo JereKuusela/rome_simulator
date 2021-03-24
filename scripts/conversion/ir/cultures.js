@@ -6,14 +6,30 @@ const { getCultures } = require('./modifiers')
 const templates = {}
 const results = {}
 
+const order = [
+  'light_infantry',
+  'archers',
+  'light_cavalry',
+  'horse_archers',
+  'chariots',
+  'camels',
+  'heavy_infantry',
+  'heavy_cavalry',
+  'warelephant'
+]
+
+const keySorter = (a, b) => order.indexOf(a) - order.indexOf(b)
+
 const handleTemplates = data => {
   Object.keys(data).forEach(key => {
     const entry = data[key]
     const template = {}
-    Object.keys(entry).forEach(key => {
-      if (key === 'default') return
-      template[key] = entry[key]
-    })
+    Object.keys(entry)
+      .sort(keySorter)
+      .forEach(key => {
+        if (key === 'default') return
+        template[key] = entry[key]
+      })
     templates[key] = template
   })
 }
@@ -27,7 +43,10 @@ const handleCultures = data => {
     Object.keys(entry.culture).forEach(key => {
       results[key] = {
         name: names[key] || key,
-        template: templates[entry.culture[key].levy_template || defaultTemplate]
+        template: templates[entry.culture[key].levy_template || defaultTemplate],
+        primary: entry.primary,
+        secondary: entry.second,
+        flank: entry.flank
       }
     })
   })

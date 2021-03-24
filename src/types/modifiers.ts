@@ -59,7 +59,13 @@ export type DeityDefinition = DataEntry & { isOmen: boolean }
 
 export type DictionaryData = Record<string, string>
 
-type Culture = { name: string; template: Record<string, number> }
+type Culture = {
+  name: string
+  template: Record<string, number>
+  primary: string
+  secondary: string
+  flank: string
+}
 export type CultureData = Record<string, Culture>
 export type RegionData = Record<string, number[]>
 

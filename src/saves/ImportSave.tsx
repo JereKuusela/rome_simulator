@@ -9,7 +9,9 @@ import {
   SelectionType,
   ArmyName,
   CohortData,
-  CountryDefinition
+  CountryDefinition,
+  Country,
+  CountryData
 } from 'types'
 import { createCountry } from 'reducers'
 import { Button, Grid, Table, Header } from 'semantic-ui-react'
@@ -74,7 +76,13 @@ const convertArmy = (country: CountryDefinition, army: SaveArmy) => {
   const experiences = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Experience))
   const maxStrengths = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Strength))
   const maxMorales = map(units, unit => calculateValueWithoutLoss(unit, UnitAttribute.Morale))
-  const cohorts: CohortData[] = army.cohorts.map(cohort => ({
+  const withoutMissingData = army.cohorts.map(cohort => ({
+    ...cohort,
+    [UnitAttribute.Experience]: cohort[UnitAttribute.Experience] ?? experiences[cohort.type],
+    [UnitAttribute.Strength]: cohort[UnitAttribute.Strength] ?? maxStrengths[cohort.type],
+    [UnitAttribute.Morale]: cohort[UnitAttribute.Morale] ?? maxMorales[cohort.type]
+  }))
+  const cohorts: CohortData[] = withoutMissingData.map(cohort => ({
     type: cohort.type,
     baseValues: {
       [UnitAttribute.Experience]: {
@@ -121,21 +129,23 @@ const convertCountry = (country: SaveCountry, armies: SaveArmy[]) => {
 }
 
 const ImportSave = () => {
-  const [country, setCountry] = useOptionalState<SaveCountry>()
-  const countryData = useRef<CountryDefinition>()
+  const [saveCountry, setCountry] = useOptionalState<SaveCountry>()
+  const countryData = useRef<CountryData>()
+  const country = useRef<Country>()
   const [armies, setArmies] = useState<SaveArmy[]>([])
   const [save, setSave] = useOptionalState<Save>()
   const countries = save ? loadCountryList(save) : []
 
   const selectCountry = useCallback(
     (save: Save, id: number) => {
-      const country = loadCountry(save, id)
-      if (country) {
-        setCountry(country)
-        const converted = convertCountryDefinition(convertCountryData(convertCountry(country, [])))
-        const armies = loadArmies(save, country, converted)
+      const saveCountry = loadCountry(save, id)
+      if (saveCountry) {
+        setCountry(saveCountry)
+
+        country.current = convertCountryDefinition(convertCountryData(convertCountry(saveCountry, [])))
+        const armies = loadArmies(save, saveCountry, country.current)
         setArmies(armies)
-        countryData.current = convertCountry(country, armies)
+        countryData.current = convertCountry(saveCountry, armies)
       }
     },
     [setCountry, setArmies]
@@ -175,7 +185,7 @@ const ImportSave = () => {
       <Grid.Row columns='4'>
         <Grid.Column>
           <SimpleDropdown
-            value={String(country?.id ?? '')}
+            value={String(saveCountry?.id ?? '')}
             values={countries}
             search
             onChange={countries.length ? handleChangeCountry : undefined}
@@ -183,7 +193,7 @@ const ImportSave = () => {
           />
         </Grid.Column>
         <Grid.Column>
-          <Button onClick={handleImport} disabled={!country}>
+          <Button onClick={handleImport} disabled={!saveCountry}>
             Import
           </Button>
         </Grid.Column>
@@ -192,7 +202,7 @@ const ImportSave = () => {
         <Grid.Column>
           <Table>
             <Table.Body>
-              {country && <TableRowsSaveCountry country={country} />}
+              <TableRowsSaveCountry saveCountry={saveCountry} country={country.current} />
               {armies.map(army => (
                 <TableRowsSaveArmy key={army.id} army={army} />
               ))}

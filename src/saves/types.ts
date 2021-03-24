@@ -128,15 +128,15 @@ export type SaveArmy = {
   tactic: TacticType
   preferences: UnitPreferences
   flankSize: number
-  leader: Character | null
+  leader: Character | undefined
   ability: string
 }
 
 export type SaveCohort = {
   type: UnitType
-  [UnitAttribute.Morale]: number
-  [UnitAttribute.Strength]: number
-  [UnitAttribute.Experience]: number
+  [UnitAttribute.Morale]: number | undefined
+  [UnitAttribute.Strength]: number | undefined
+  [UnitAttribute.Experience]: number | undefined
 }
 
 type SaveDataCohort = {
@@ -256,7 +256,9 @@ export type Save = Record<string, unknown> & {
     character_database: Record<number, SaveCharacter>
   }
   provinces?: Record<number, SaveTerritory>
-  states?: Record<number, SaveProvince>
+  state?: {
+    state_database: Record<number, SaveProvince>
+  }
   trade?: {
     route: SaveRoute[]
   }

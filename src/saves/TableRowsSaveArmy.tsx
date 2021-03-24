@@ -59,13 +59,9 @@ const TableRowsSaveArmy = ({ army }: { army: SaveArmy }) => {
       </Table.Row>
       <Table.Row>
         <Table.Cell>Preferences</Table.Cell>
-        <Table.Cell>
-          <LabelItem item={units[army.preferences[UnitPreferenceType.Primary] ?? UnitType.Archers]} />
-        </Table.Cell>
-        <Table.Cell>
-          <LabelItem item={units[army.preferences[UnitPreferenceType.Secondary] ?? UnitType.Archers]} />
-        </Table.Cell>
-        <Table.Cell>
+        <Table.Cell colSpan='3'>
+          <LabelItem item={units[army.preferences[UnitPreferenceType.Primary] ?? UnitType.Archers]} />{' '}
+          <LabelItem item={units[army.preferences[UnitPreferenceType.Secondary] ?? UnitType.Archers]} />{' '}
           <LabelItem item={units[army.preferences[UnitPreferenceType.Flank] ?? UnitType.Archers]} />
         </Table.Cell>
       </Table.Row>

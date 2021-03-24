@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Table, Input, Button, InputOnChangeData } from 'semantic-ui-react'
 
@@ -49,9 +49,9 @@ const TableArmyInfo = ({ type }: Props): JSX.Element => {
 
   const last = participants[participants.length - 1]
 
-  const handleAddParticipant = useCallback(() => {
+  const handleAddParticipant = () => {
     dispatch(addParticipant(type, last.countryName, last.armyName))
-  }, [dispatch, type, last])
+  }
   return (
     <Table celled>
       <Table.Header>
@@ -109,12 +109,30 @@ const ArmyInfo = ({ type, participant, index }: ArmyInfoProps) => {
   const armies = useArmies(countryName)
   const artillery = useUnitDefinition(countryName, armyName, UnitType.Artillery)
 
-  const handleSetDaysUntilBattle = useCallback(
-    (value: number) => {
-      dispatch(setDaysUntilBattle(type, index, value))
-    },
-    [dispatch, index, type]
-  )
+  const handleSetDaysUntilBattle = (value: number) => {
+    dispatch(setDaysUntilBattle(type, index, value))
+  }
+
+  const handleSelectCountry = (name: CountryName) => {
+    dispatch(
+      selectParticipantCountry(
+        type,
+        index,
+        name,
+        countries[name] ? (Object.keys(filterArmies(countries[name], mode))[0] as ArmyName) : getDefaultArmyName(mode)
+      )
+    )
+  }
+  const handleDeleteParticipant = () => {
+    dispatch(deleteParticipant(type, index))
+  }
+  const handleSelectArmy = (name: ArmyName) => {
+    dispatch(selectParticipantArmy(type, index, name))
+  }
+  const handleCreateArmy = (name: ArmyName) => {
+    dispatch(createArmy(countryName, name, mode))
+  }
+
   const clearable = side.participants.length > 1
 
   return (
@@ -123,18 +141,7 @@ const ArmyInfo = ({ type, participant, index }: ArmyInfoProps) => {
         <SimpleDropdown
           values={keys(countries)}
           value={countryName}
-          onChange={name =>
-            name
-              ? selectParticipantCountry(
-                  type,
-                  index,
-                  name,
-                  countries[name]
-                    ? (Object.keys(filterArmies(countries[name], mode))[0] as ArmyName)
-                    : getDefaultArmyName(mode)
-                )
-              : deleteParticipant(type, index)
-          }
+          onChange={name => (name ? handleSelectCountry(name) : handleDeleteParticipant())}
           style={{ width: 110 }}
           onAdd={name => createCountry(name)}
           clearable={clearable}
@@ -144,8 +151,8 @@ const ArmyInfo = ({ type, participant, index }: ArmyInfoProps) => {
         <SimpleDropdown
           values={keys(armies)}
           value={armyName}
-          onChange={name => selectParticipantArmy(type, index, name)}
-          onAdd={name => createArmy(countryName, name, mode)}
+          onChange={handleSelectArmy}
+          onAdd={handleCreateArmy}
           style={{ width: 100 }}
         />
       </Table.Cell>
@@ -193,12 +200,9 @@ interface GeneralAttributeProps {
 const TableGeneralAttribute = ({ countryName: country, armyName: army, attribute }: GeneralAttributeProps) => {
   const dispatch = useDispatch()
   const general = useGeneral(country, army)
-  const handleSetGeneralAttribute = useCallback(
-    (_, { value }: InputOnChangeData) => {
-      dispatch(setGeneralAttribute(country, army, attribute, Number(value)))
-    },
-    [dispatch, country, army, attribute]
-  )
+  const handleSetGeneralAttribute = (_: unknown, { value }: InputOnChangeData) => {
+    dispatch(setGeneralAttribute(country, army, attribute, Number(value)))
+  }
   if (!general) return null
   return (
     <Table.Cell>
