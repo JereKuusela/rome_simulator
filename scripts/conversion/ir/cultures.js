@@ -7,9 +7,9 @@ const templates = {}
 const results = {}
 
 const order = [
+  'light_cavalry',
   'light_infantry',
   'archers',
-  'light_cavalry',
   'horse_archers',
   'chariots',
   'camels',
@@ -35,11 +35,18 @@ const handleTemplates = data => {
 }
 
 const handleCultures = data => {
+  results['default'] = {
+    name: 'default',
+    template: templates['levy_default'],
+    primary: 'archers',
+    secondary: 'archers',
+    flank: 'archers'
+  }
   const names = getCultures()
   Object.keys(data).forEach(key => {
     const entry = data[key]
     if (!entry.culture) return
-    const defaultTemplate = entry.levy_template || 'default'
+    const defaultTemplate = entry.levy_template || 'levy_default'
     Object.keys(entry.culture).forEach(key => {
       results[key] = {
         name: names[key] || key,

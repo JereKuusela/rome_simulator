@@ -1,4 +1,5 @@
 import { countriesIR, culturesIR, inventionsIR, laws, regionsIR, territoriesIR, traditionsIR, traitsIR } from 'data'
+import { getConfig } from 'data/config'
 import { countBy, flatten, groupBy, range, sum, sumBy, upperFirst } from 'lodash'
 import {
   ArmyName,
@@ -210,7 +211,10 @@ const getLevyablePOps = (file: Save, id: number) => {
   const population = file.population?.population
   if (!territories || !population) return
   const integratedCultures = getIntegratedCultures(file, id)
-  const popsPerTerritory = map(regionsIR, (regionTerritories, region) => {
+  const regions = filter(regionsIR, regionTerritories =>
+    regionTerritories.some(index => territories[index].owner === id)
+  )
+  const popsPerTerritory = map(regions, (regionTerritories, region) => {
     let governor = -1
     const pops = regionTerritories
       .filter(index => territories[index].owner === id)
@@ -225,13 +229,10 @@ const getLevyablePOps = (file: Save, id: number) => {
       })
     return { pops, governor }
   })
-  const popsPerRegion = filter(
-    map(popsPerTerritory, item => {
-      const pops = sumObjects(item.pops)
-      return { ...item, pops }
-    }),
-    item => Object.keys(item.pops).length
-  )
+  const popsPerRegion = map(popsPerTerritory, item => {
+    const pops = sumObjects(item.pops)
+    return { ...item, pops }
+  })
   return popsPerRegion
 }
 
@@ -266,24 +267,31 @@ export const getLevies = (save: Save, id: number, levyMultiplier: number) => {
   if (!regions) return
   const levies = map(regions, region => {
     const levies = toArr(region.pops, (amount, culture) => {
-      let remaining = Math.floor(levyMultiplier * amount)
       const template = culturesIR[culture].template
       const cohorts = toArr(
-        map(template, item => {
-          const total = Math.min(remaining, Math.ceil(levyMultiplier * item * amount))
-          remaining -= total
-          return total
-        }),
+        map(template, item => levyMultiplier * item * amount),
         (value, key) => ({ key, value })
       )
       return cohorts
     })
     const grouped = groupBy(levies.flat(), item => item.key)
-    const units = map(grouped, item => sumBy(item, item => item.value))
-    units['supply_train'] = Math.floor(sum(values(units)) / 10)
+    const rawUnits = map(grouped, item => sumBy(item, item => item.value))
+    let remaining = Math.max(getConfig().LevyMinimumSize, Math.floor(levyMultiplier * sum(values(region.pops))))
+    const units = map(rawUnits, item => {
+      const amount = Math.min(remaining, Math.ceil(item))
+      remaining -= amount
+      return amount
+    })
+    const defaultTemplate = culturesIR['default'].template
+    forEach(defaultTemplate, (item, type) => {
+      const amount = Math.min(remaining, Math.ceil(remaining * item))
+      remaining -= amount
+      if (!units[type]) units[type] = 0
+      units[type] += amount
+    })
+    units['supply_train'] = Math.floor(sum(values(units)) / getConfig().LevySupportLimit)
     return { units, leader: region.governor }
   })
-  console.log(levies)
   const preferences = getUnitPreferences(save, id)
   let counter = -1
   const armies: SaveArmy[] = toArr(levies, (army, region) => ({
@@ -376,7 +384,8 @@ const armySorter = (a: SaveArmy, b: SaveArmy) => {
 
 export const loadArmies = (save: Save, saveCountry: SaveCountry, country: Country) => {
   const armies = saveCountry.armies ? excludeMissing(saveCountry.armies.map(id => loadArmy(save, id))) : []
-  const levies = getLevies(save, saveCountry.id, country[CountryAttribute.LevySize]) ?? []
+  const levies =
+    getLevies(save, saveCountry.id, Math.min(getConfig().LevyMaxMultiplier, country[CountryAttribute.LevySize])) ?? []
   return [...armies, ...levies].sort(armySorter)
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { readFiles, writeFile } = require('./core')
 const path = require('path')
 
@@ -17,7 +18,7 @@ const handler = data => {
   results['MinimumStrength'] = 0
   results['ExperienceDamageReduction'] = Number(data['NCombat']['LAND_EXPERIENCE_DAMAGE_REDUCTION'])
   if (data['NCombat']['LAND_EXPERIENCE_DAMAGE_REDUCTION'] !== data['NCombat']['NAVAL_EXPERIENCE_DAMAGE_REDUCTION'])
-    throw 'Damage reduction is different per mode!'
+    throw Error('Damage reduction is different per mode!')
   results['Land']['StrengthDamage'] =
     1000.0 * Number(data['NCombat']['LAND_STRENGTH_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])
   results['Naval']['StrengthDamage'] =
@@ -43,6 +44,9 @@ const handler = data => {
   results['TacticMax'] = Number(data['NCombat']['TACTICS_EFFECTIVENESS_MAX_CAP'])
 
   results['ShipRepair'] = Number(data['NUnit']['MONTHLY_REPAIR'])
+  results['LevySupportLimit'] = Number(data['NLevy']['SUPPORT_REQUIREMENT'])
+  results['LevyMinimumSize'] = Number(data['NLevy']['MIN_SIZE'])
+  results['LevyMaxMultiplier'] = Number(data['NLevy']['SIZE_MULTIPLIER_MAX'])
 }
 
 const handlers = {

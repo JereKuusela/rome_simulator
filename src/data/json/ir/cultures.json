@@ -1,10 +1,20 @@
 {
+  "default": {
+    "name": "default",
+    "template": {
+      "light_cavalry": 0.3,
+      "light_infantry": 0.7
+    },
+    "primary": "archers",
+    "secondary": "archers",
+    "flank": "archers"
+  },
   "puntic": {
     "name": "Macrobian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.45,
       "archers": 0.2,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.15
     },
     "primary": "light_infantry",
@@ -14,9 +24,9 @@
   "aksumite": {
     "name": "Aksumite",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.45,
       "archers": 0.2,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.15
     },
     "primary": "light_infantry",
@@ -26,8 +36,8 @@
   "cappadocian": {
     "name": "Cappadocian",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.25,
+      "light_infantry": 0.55,
       "chariots": 0.1,
       "heavy_cavalry": 0.1
     },
@@ -38,8 +48,8 @@
   "carian": {
     "name": "Carian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -50,8 +60,8 @@
   "phrygian": {
     "name": "Phrygian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -62,8 +72,8 @@
   "lycaonian": {
     "name": "Lycaonian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -74,8 +84,8 @@
   "isaurian": {
     "name": "Isaurian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -86,8 +96,8 @@
   "paphlagonian": {
     "name": "Paphlagonian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -98,8 +108,8 @@
   "lycian": {
     "name": "Lycian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -110,8 +120,8 @@
   "pamphylian": {
     "name": "Pamphylian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -122,8 +132,8 @@
   "mysian": {
     "name": "Mysian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -134,8 +144,8 @@
   "cilician": {
     "name": "Cilician",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.3
     },
     "primary": "light_infantry",
@@ -145,8 +155,8 @@
   "lydian": {
     "name": "Lydian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -157,9 +167,9 @@
   "armenian": {
     "name": "Armenian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.3,
       "archers": 0.25,
-      "light_cavalry": 0.2,
       "horse_archers": 0.05,
       "heavy_cavalry": 0.2
     },
@@ -170,8 +180,8 @@
   "pisidian": {
     "name": "Pisidian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -182,8 +192,8 @@
   "milyadian": {
     "name": "Milyadian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -194,8 +204,8 @@
   "cataonian": {
     "name": "Cataonian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -206,8 +216,8 @@
   "lalasian": {
     "name": "Lalasian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -218,8 +228,8 @@
   "cabalian": {
     "name": "Cabalian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -230,8 +240,8 @@
   "oroandian": {
     "name": "Oroandian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -242,8 +252,8 @@
   "morimenian": {
     "name": "Morimenian",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -254,8 +264,8 @@
   "kennataian": {
     "name": "Cennataean",
     "template": {
-      "light_infantry": 0.7,
       "light_cavalry": 0.15,
+      "light_infantry": 0.7,
       "chariots": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -312,8 +322,8 @@
   "gandhari": {
     "name": "Gandhari",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.05,
+      "light_infantry": 0.6,
       "chariots": 0.2,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
@@ -349,8 +359,8 @@
   "sindhi": {
     "name": "Sindhi",
     "template": {
-      "archers": 0.6,
       "light_cavalry": 0.05,
+      "archers": 0.6,
       "chariots": 0.2,
       "heavy_infantry": 0.15
     },
@@ -371,8 +381,8 @@
   "bactrian": {
     "name": "Bactrian",
     "template": {
-      "archers": 0.45,
       "light_cavalry": 0.15,
+      "archers": 0.45,
       "horse_archers": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05,
@@ -385,8 +395,8 @@
   "margian": {
     "name": "Margian",
     "template": {
-      "archers": 0.45,
       "light_cavalry": 0.15,
+      "archers": 0.45,
       "horse_archers": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05,
@@ -399,8 +409,8 @@
   "sogdian": {
     "name": "Sogdian",
     "template": {
-      "archers": 0.45,
       "light_cavalry": 0.15,
+      "archers": 0.45,
       "horse_archers": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05,
@@ -413,8 +423,8 @@
   "shule": {
     "name": "Shule",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.2,
+      "light_infantry": 0.55,
       "horse_archers": 0.15,
       "heavy_infantry": 0.1
     },
@@ -425,8 +435,8 @@
   "phryni": {
     "name": "Phryni",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.2,
+      "light_infantry": 0.55,
       "horse_archers": 0.15,
       "heavy_infantry": 0.1
     },
@@ -437,8 +447,8 @@
   "tayuan": {
     "name": "Tayuan",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.2,
+      "light_infantry": 0.55,
       "horse_archers": 0.15,
       "heavy_infantry": 0.1
     },
@@ -449,8 +459,8 @@
   "wusun": {
     "name": "Wusun",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.2,
+      "light_infantry": 0.55,
       "horse_archers": 0.15,
       "heavy_infantry": 0.1
     },
@@ -461,8 +471,8 @@
   "saka": {
     "name": "Khotanese",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.2,
+      "light_infantry": 0.55,
       "horse_archers": 0.15,
       "heavy_infantry": 0.1
     },
@@ -473,8 +483,8 @@
   "yuezhi": {
     "name": "Yuezhi",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.2,
+      "light_infantry": 0.55,
       "horse_archers": 0.15,
       "heavy_infantry": 0.1
     },
@@ -485,8 +495,8 @@
   "tocharian": {
     "name": "Tocharian",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.2,
+      "light_infantry": 0.55,
       "horse_archers": 0.15,
       "heavy_infantry": 0.1
     },
@@ -497,8 +507,8 @@
   "aestian": {
     "name": "Aestian",
     "template": {
-      "light_infantry": 0.65,
       "light_cavalry": 0.2,
+      "light_infantry": 0.65,
       "heavy_infantry": 0.15
     },
     "primary": "archers",
@@ -508,8 +518,8 @@
   "belgae": {
     "name": "Menapian",
     "template": {
-      "light_infantry": 0.35,
       "light_cavalry": 0.1,
+      "light_infantry": 0.35,
       "chariots": 0.15,
       "heavy_infantry": 0.4
     },
@@ -520,8 +530,8 @@
   "treverian": {
     "name": "Treverian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -533,8 +543,8 @@
   "aduatacian": {
     "name": "Aduatacian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -546,8 +556,8 @@
   "eburonian": {
     "name": "Eburonian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -559,8 +569,8 @@
   "nervian": {
     "name": "Nervian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -572,8 +582,8 @@
   "morinian": {
     "name": "Morinian",
     "template": {
-      "light_infantry": 0.35,
       "light_cavalry": 0.1,
+      "light_infantry": 0.35,
       "chariots": 0.15,
       "heavy_infantry": 0.4
     },
@@ -584,8 +594,8 @@
   "veliocassian": {
     "name": "Veliocassian",
     "template": {
-      "light_infantry": 0.35,
       "light_cavalry": 0.1,
+      "light_infantry": 0.35,
       "chariots": 0.15,
       "heavy_infantry": 0.4
     },
@@ -596,8 +606,8 @@
   "bellovacian": {
     "name": "Bellovacian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -609,8 +619,8 @@
   "sennonian": {
     "name": "Sennonian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -798,9 +808,9 @@
   "albanian": {
     "name": "Albanian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.3,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.05
     },
@@ -811,9 +821,9 @@
   "ibero": {
     "name": "Ibero",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.5,
       "archers": 0.1,
-      "light_cavalry": 0.15,
       "horse_archers": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -824,9 +834,9 @@
   "colchian": {
     "name": "Colchian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.5,
       "archers": 0.1,
-      "light_cavalry": 0.15,
       "horse_archers": 0.05,
       "heavy_cavalry": 0.1
     },
@@ -837,9 +847,9 @@
   "caristian": {
     "name": "Caristian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -850,9 +860,9 @@
   "celtician": {
     "name": "Celtician",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -863,9 +873,9 @@
   "lusitanian": {
     "name": "Lusitanian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -876,9 +886,9 @@
   "vettonian": {
     "name": "Vettonian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -889,9 +899,9 @@
   "carpetanian": {
     "name": "Carpetanian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -902,9 +912,9 @@
   "celtiberian": {
     "name": "Celtiberian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -915,9 +925,9 @@
   "lobetanian": {
     "name": "Lobetanian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -928,9 +938,9 @@
   "sedetanian": {
     "name": "Sedetanian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -941,9 +951,9 @@
   "vaccaeian": {
     "name": "Vaccaeian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -954,9 +964,9 @@
   "asturian": {
     "name": "Asturian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -967,9 +977,9 @@
   "callaecian": {
     "name": "Callaecian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -980,9 +990,9 @@
   "vardulian": {
     "name": "Vardulian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.25,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -993,8 +1003,8 @@
   "celtic_pannonian": {
     "name": "Scordiscian",
     "template": {
-      "light_infantry": 0.4,
       "light_cavalry": 0.15,
+      "light_infantry": 0.4,
       "chariots": 0.05,
       "heavy_infantry": 0.4
     },
@@ -1005,8 +1015,8 @@
   "letobician": {
     "name": "Letobician",
     "template": {
-      "light_infantry": 0.4,
       "light_cavalry": 0.15,
+      "light_infantry": 0.4,
       "chariots": 0.05,
       "heavy_infantry": 0.4
     },
@@ -1017,8 +1027,8 @@
   "carnian": {
     "name": "Carnian",
     "template": {
-      "light_infantry": 0.4,
       "light_cavalry": 0.15,
+      "light_infantry": 0.4,
       "chariots": 0.05,
       "heavy_infantry": 0.4
     },
@@ -1029,8 +1039,8 @@
   "noric": {
     "name": "Noric",
     "template": {
-      "light_infantry": 0.4,
       "light_cavalry": 0.1,
+      "light_infantry": 0.4,
       "chariots": 0.05,
       "heavy_infantry": 0.45
     },
@@ -1041,8 +1051,8 @@
   "boian": {
     "name": "Boian",
     "template": {
-      "light_infantry": 0.4,
       "light_cavalry": 0.15,
+      "light_infantry": 0.4,
       "chariots": 0.05,
       "heavy_infantry": 0.4
     },
@@ -1053,8 +1063,8 @@
   "eravisci": {
     "name": "Eraviscian",
     "template": {
-      "light_infantry": 0.4,
       "light_cavalry": 0.15,
+      "light_infantry": 0.4,
       "chariots": 0.05,
       "heavy_infantry": 0.4
     },
@@ -1065,9 +1075,9 @@
   "dacian": {
     "name": "Albocensian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1078,9 +1088,9 @@
   "getian": {
     "name": "Getian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1091,9 +1101,9 @@
   "triballoi": {
     "name": "Triballoi",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1104,9 +1114,9 @@
   "moesi": {
     "name": "Moesi",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1117,9 +1127,9 @@
   "harpii": {
     "name": "Harpii",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1130,9 +1140,9 @@
   "costoboci": {
     "name": "Costobocian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1143,9 +1153,9 @@
   "buridavensi": {
     "name": "Buridanvsian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1156,9 +1166,9 @@
   "caucoensi": {
     "name": "Caucoensian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1169,9 +1179,9 @@
   "ratacensi": {
     "name": "Ratacensian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1182,9 +1192,9 @@
   "biephi": {
     "name": "Biephian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1195,8 +1205,8 @@
   "odrysi": {
     "name": "Odrysian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1207,9 +1217,9 @@
   "bithynian": {
     "name": "Bithynian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1220,9 +1230,9 @@
   "mariandynian": {
     "name": "Mariandynian",
     "template": {
+      "light_cavalry": 0.05,
       "light_infantry": 0.55,
       "archers": 0.15,
-      "light_cavalry": 0.05,
       "heavy_infantry": 0.2,
       "heavy_cavalry": 0.05
     },
@@ -1233,8 +1243,8 @@
   "aramaic": {
     "name": "Aramaic",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.25,
+      "light_infantry": 0.6,
       "heavy_cavalry": 0.15
     },
     "primary": "light_infantry",
@@ -1244,8 +1254,8 @@
   "assyrian": {
     "name": "Assyrian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.25,
+      "light_infantry": 0.6,
       "heavy_cavalry": 0.15
     },
     "primary": "light_infantry",
@@ -1255,8 +1265,8 @@
   "babylonian": {
     "name": "Babylonian",
     "template": {
-      "archers": 0.6,
       "light_cavalry": 0.25,
+      "archers": 0.6,
       "heavy_cavalry": 0.15
     },
     "primary": "light_infantry",
@@ -1288,8 +1298,8 @@
   "aremorican": {
     "name": "Aremorican",
     "template": {
-      "light_infantry": 0.35,
       "light_cavalry": 0.1,
+      "light_infantry": 0.35,
       "chariots": 0.15,
       "heavy_infantry": 0.4
     },
@@ -1300,8 +1310,8 @@
   "lepontic": {
     "name": "Lepontic",
     "template": {
-      "archers": 0.5,
       "light_cavalry": 0.1,
+      "archers": 0.5,
       "chariots": 0.05,
       "heavy_infantry": 0.35
     },
@@ -1312,8 +1322,8 @@
   "vindelician": {
     "name": "Vindelician",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1325,8 +1335,8 @@
   "helvetian": {
     "name": "Helvetian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1338,8 +1348,8 @@
   "biturigan": {
     "name": "Biturigan",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1351,8 +1361,8 @@
   "volcae": {
     "name": "Volcae",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1364,8 +1374,8 @@
   "salluvian": {
     "name": "Salluvian",
     "template": {
-      "archers": 0.5,
       "light_cavalry": 0.1,
+      "archers": 0.5,
       "chariots": 0.05,
       "heavy_infantry": 0.35
     },
@@ -1376,8 +1386,8 @@
   "haedui": {
     "name": "Haedui",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1389,8 +1399,8 @@
   "carnuti": {
     "name": "Carnuti",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1402,8 +1412,8 @@
   "santonian": {
     "name": "Santonian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1415,8 +1425,8 @@
   "lemovician": {
     "name": "Lemovician",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1428,8 +1438,8 @@
   "pictonian": {
     "name": "Pictonian",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1441,8 +1451,8 @@
   "aulercian": {
     "name": "Aulercian",
     "template": {
-      "light_infantry": 0.35,
       "light_cavalry": 0.1,
+      "light_infantry": 0.35,
       "chariots": 0.15,
       "heavy_infantry": 0.4
     },
@@ -1453,8 +1463,8 @@
   "arverni": {
     "name": "Arverni",
     "template": {
-      "archers": 0.4,
       "light_cavalry": 0.1,
+      "archers": 0.4,
       "chariots": 0.1,
       "heavy_infantry": 0.35,
       "heavy_cavalry": 0.05
@@ -1466,8 +1476,8 @@
   "saxonian": {
     "name": "Saxonian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1477,8 +1487,8 @@
   "anglian": {
     "name": "Anglian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1488,8 +1498,8 @@
   "reudingian": {
     "name": "Reudingian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1499,8 +1509,8 @@
   "teutonian": {
     "name": "Teutonian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1510,8 +1520,8 @@
   "cimbrian": {
     "name": "Cimbrian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1521,8 +1531,8 @@
   "herulian": {
     "name": "Herulian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1532,8 +1542,8 @@
   "rugian": {
     "name": "Rugian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1543,8 +1553,8 @@
   "helveconian": {
     "name": "Helveconian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1554,8 +1564,8 @@
   "bastarnae": {
     "name": "Bastarnae",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1565,8 +1575,8 @@
   "gutones": {
     "name": "Gutoni",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1576,8 +1586,8 @@
   "suiones": {
     "name": "Suioni",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1587,8 +1597,8 @@
   "vandal": {
     "name": "Vandal",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1598,8 +1608,8 @@
   "raumarician": {
     "name": "Raumarician",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1609,8 +1619,8 @@
   "irminonic": {
     "name": "Irminonic",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1620,8 +1630,8 @@
   "istvaeonic": {
     "name": "Istvaonic",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1631,8 +1641,8 @@
   "ingvaeonic": {
     "name": "Ingvaeonic",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1642,8 +1652,8 @@
   "suebian": {
     "name": "Suebian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1653,8 +1663,8 @@
   "lemovian": {
     "name": "Lemovian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1664,8 +1674,8 @@
   "gothonic": {
     "name": "Gothonic",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1675,8 +1685,8 @@
   "frisian": {
     "name": "Frisian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -1697,8 +1707,8 @@
   "italiotian": {
     "name": "Italiotian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.15,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.35
     },
     "primary": "archers",
@@ -1761,8 +1771,8 @@
   "epirote": {
     "name": "Epirote",
     "template": {
-      "light_infantry": 0.4,
       "light_cavalry": 0.2,
+      "light_infantry": 0.4,
       "heavy_infantry": 0.4
     },
     "primary": "archers",
@@ -1892,8 +1902,8 @@
   "thessalian": {
     "name": "Thessalian",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.25,
+      "light_infantry": 0.5,
       "heavy_cavalry": 0.25
     },
     "primary": "archers",
@@ -1903,8 +1913,8 @@
   "bosporan": {
     "name": "Bosporan",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.3,
+      "light_infantry": 0.6,
       "heavy_cavalry": 0.1
     },
     "primary": "archers",
@@ -1914,8 +1924,8 @@
   "syracusan": {
     "name": "Siceliote",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.15,
+      "light_infantry": 0.5,
       "heavy_infantry": 0.35
     },
     "primary": "archers",
@@ -1958,9 +1968,9 @@
   "oretanian": {
     "name": "Oretanian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -1970,9 +1980,9 @@
   "contestanian": {
     "name": "Contestanian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -1982,9 +1992,9 @@
   "bastetanian": {
     "name": "Bastetanian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -1994,9 +2004,9 @@
   "ilercavonian": {
     "name": "Ilercavonian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2006,9 +2016,9 @@
   "edetanian": {
     "name": "Edetanian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2018,9 +2028,9 @@
   "lacetanian": {
     "name": "Lacetanian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2030,9 +2040,9 @@
   "indiketian": {
     "name": "Indiketian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2042,9 +2052,9 @@
   "ausetanian": {
     "name": "Ausetanian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2054,9 +2064,9 @@
   "turdetanian": {
     "name": "Turdetanian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2066,9 +2076,9 @@
   "couneian": {
     "name": "Cynetian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2078,9 +2088,9 @@
   "turdulian": {
     "name": "Turdulian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2090,8 +2100,8 @@
   "taulantian": {
     "name": "Taulantian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2101,8 +2111,8 @@
   "abrian": {
     "name": "Abrian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2112,8 +2122,8 @@
   "dardanian": {
     "name": "Dardanian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2123,8 +2133,8 @@
   "greco_illyrian": {
     "name": "Dalmatian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2134,8 +2144,8 @@
   "histrian": {
     "name": "Histrian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2145,8 +2155,8 @@
   "liburnian": {
     "name": "Liburnian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2156,8 +2166,8 @@
   "liburnian_culture": {
     "name": "Liburnian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2167,8 +2177,8 @@
   "catari": {
     "name": "Catari",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2178,8 +2188,8 @@
   "deraemestian": {
     "name": "Deraemestian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2189,8 +2199,8 @@
   "deurian": {
     "name": "Deurian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2200,8 +2210,8 @@
   "messapian": {
     "name": "Messapian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2211,8 +2221,8 @@
   "paeonian": {
     "name": "Paeonian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.15,
+      "light_infantry": 0.6,
       "heavy_infantry": 0.25
     },
     "primary": "archers",
@@ -2258,8 +2268,8 @@
   "roman": {
     "name": "Roman",
     "template": {
-      "light_infantry": 0.55,
       "light_cavalry": 0.15,
+      "light_infantry": 0.55,
       "heavy_infantry": 0.3
     },
     "primary": "archers",
@@ -2269,8 +2279,8 @@
   "venetic": {
     "name": "Venetic",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.1,
+      "light_infantry": 0.6,
       "chariots": 0.05,
       "heavy_infantry": 0.25
     },
@@ -2281,8 +2291,8 @@
   "ligurian": {
     "name": "Ligurian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.1,
+      "light_infantry": 0.6,
       "chariots": 0.05,
       "heavy_infantry": 0.25
     },
@@ -2293,9 +2303,9 @@
   "etruscan": {
     "name": "Etruscan",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.4,
       "archers": 0.2,
-      "light_cavalry": 0.1,
       "heavy_infantry": 0.3
     },
     "primary": "archers",
@@ -2317,8 +2327,8 @@
   "umbrian": {
     "name": "Umbrian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.1,
+      "light_infantry": 0.6,
       "chariots": 0.05,
       "heavy_infantry": 0.25
     },
@@ -2340,8 +2350,8 @@
   "siculian": {
     "name": "Siculian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.1,
+      "light_infantry": 0.6,
       "chariots": 0.05,
       "heavy_infantry": 0.25
     },
@@ -2352,8 +2362,8 @@
   "bruttian": {
     "name": "Bruttian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.1,
+      "light_infantry": 0.6,
       "chariots": 0.05,
       "heavy_infantry": 0.25
     },
@@ -2364,8 +2374,8 @@
   "lucanian": {
     "name": "Lucanian",
     "template": {
-      "light_infantry": 0.6,
       "light_cavalry": 0.1,
+      "light_infantry": 0.6,
       "chariots": 0.05,
       "heavy_infantry": 0.25
     },
@@ -2376,9 +2386,9 @@
   "meroitic": {
     "name": "Meroitic",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.2,
       "archers": 0.45,
-      "light_cavalry": 0.1,
       "camels": 0.1,
       "heavy_infantry": 0.15
     },
@@ -2400,8 +2410,8 @@
   "egyptian": {
     "name": "Bohairic",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "camels": 0.1,
       "heavy_infantry": 0.2
     },
@@ -2412,8 +2422,8 @@
   "upper_egyptian": {
     "name": "Sahidic",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "camels": 0.1,
       "heavy_infantry": 0.2
     },
@@ -2424,8 +2434,8 @@
   "middle_egyptian": {
     "name": "Faiyumic",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "camels": 0.1,
       "heavy_infantry": 0.2
     },
@@ -2436,8 +2446,8 @@
   "numidian": {
     "name": "Numidian",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.4,
+      "light_infantry": 0.45,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
     },
@@ -2448,8 +2458,8 @@
   "berber": {
     "name": "Berber",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.4,
+      "light_infantry": 0.45,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
     },
@@ -2460,8 +2470,8 @@
   "gaetulian": {
     "name": "Gaetulian",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.4,
+      "light_infantry": 0.45,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
     },
@@ -2472,8 +2482,8 @@
   "socossian": {
     "name": "Maurian",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.4,
+      "light_infantry": 0.45,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
     },
@@ -2484,8 +2494,8 @@
   "massaesylian": {
     "name": "Massaesylian",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.4,
+      "light_infantry": 0.45,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
     },
@@ -2496,8 +2506,8 @@
   "massylian": {
     "name": "Massylian",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.4,
+      "light_infantry": 0.45,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
     },
@@ -2508,8 +2518,8 @@
   "garamantic": {
     "name": "Garamantic",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.4,
+      "light_infantry": 0.45,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
     },
@@ -2520,8 +2530,8 @@
   "libyan": {
     "name": "Libyan",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.4,
+      "light_infantry": 0.45,
       "heavy_infantry": 0.1,
       "warelephant": 0.05
     },
@@ -2532,9 +2542,9 @@
   "elamite": {
     "name": "Elamite",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2545,9 +2555,9 @@
   "utian": {
     "name": "Utian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2558,9 +2568,9 @@
   "pasargadi": {
     "name": "Persian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.3,
       "archers": 0.3,
-      "light_cavalry": 0.15,
       "heavy_infantry": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2571,9 +2581,9 @@
   "sagartian": {
     "name": "Agartian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2584,9 +2594,9 @@
   "uxian": {
     "name": "Uxian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2597,9 +2607,9 @@
   "amardian": {
     "name": "Amardian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2610,9 +2620,9 @@
   "sarangian": {
     "name": "Sarangian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2623,9 +2633,9 @@
   "pactyan": {
     "name": "Pactyan",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2636,9 +2646,9 @@
   "cossian": {
     "name": "Cossian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2661,8 +2671,8 @@
   "parthian": {
     "name": "Parthian",
     "template": {
-      "archers": 0.5,
       "light_cavalry": 0.15,
+      "archers": 0.5,
       "horse_archers": 0.2,
       "heavy_cavalry": 0.15
     },
@@ -2673,9 +2683,9 @@
   "parecanian": {
     "name": "Parecanian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2698,9 +2708,9 @@
   "median": {
     "name": "Median",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2711,9 +2721,9 @@
   "gedrosian": {
     "name": "Gedrosian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2724,9 +2734,9 @@
   "hyrcanian": {
     "name": "Hyrcanian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2737,9 +2747,9 @@
   "sattagydian": {
     "name": "Sattagydian",
     "template": {
+      "light_cavalry": 0.1,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.1,
       "horse_archers": 0.1,
       "heavy_cavalry": 0.15
     },
@@ -2816,9 +2826,9 @@
   "vasconian": {
     "name": "Vasconian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2828,9 +2838,9 @@
   "aquitani": {
     "name": "Aquitani",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2840,9 +2850,9 @@
   "nuragic": {
     "name": "Nuragic",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.55,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.15
     },
     "primary": "archers",
@@ -2852,9 +2862,9 @@
   "autrigonian": {
     "name": "Autrigonian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2864,9 +2874,9 @@
   "ilergetian": {
     "name": "Ilergetian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2876,9 +2886,9 @@
   "corsian": {
     "name": "Corsian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.55,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.15
     },
     "primary": "archers",
@@ -2888,9 +2898,9 @@
   "cantabrian": {
     "name": "Cantabrian",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.5,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.2
     },
     "primary": "archers",
@@ -2900,9 +2910,9 @@
   "talaiotic": {
     "name": "Talaiotic",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.55,
-      "light_cavalry": 0.2,
       "heavy_infantry": 0.15
     },
     "primary": "archers",
@@ -2912,8 +2922,8 @@
   "scythian": {
     "name": "Scythian",
     "template": {
-      "archers": 0.45,
       "light_cavalry": 0.15,
+      "archers": 0.45,
       "horse_archers": 0.3,
       "heavy_cavalry": 0.1
     },
@@ -2924,8 +2934,8 @@
   "sarmatian": {
     "name": "Sarmatian",
     "template": {
-      "archers": 0.35,
       "light_cavalry": 0.15,
+      "archers": 0.35,
       "horse_archers": 0.35,
       "heavy_cavalry": 0.15
     },
@@ -2936,9 +2946,9 @@
   "kharesmian": {
     "name": "Kharesmian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.15,
       "horse_archers": 0.15,
       "heavy_cavalry": 0.1
     },
@@ -2949,9 +2959,9 @@
   "derbiccan": {
     "name": "Dahae",
     "template": {
+      "light_cavalry": 0.2,
       "light_infantry": 0.1,
       "archers": 0.25,
-      "light_cavalry": 0.2,
       "horse_archers": 0.35,
       "heavy_cavalry": 0.2
     },
@@ -2962,9 +2972,9 @@
   "sindi": {
     "name": "Sindi",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.15,
       "horse_archers": 0.15,
       "heavy_cavalry": 0.1
     },
@@ -2975,9 +2985,9 @@
   "siraci": {
     "name": "Siracian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.15,
       "horse_archers": 0.15,
       "heavy_cavalry": 0.1
     },
@@ -2988,9 +2998,9 @@
   "maeotian": {
     "name": "Maeotian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.15,
       "horse_archers": 0.15,
       "heavy_cavalry": 0.1
     },
@@ -3001,9 +3011,9 @@
   "sakan": {
     "name": "Sakan",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.15,
       "horse_archers": 0.15,
       "heavy_cavalry": 0.1
     },
@@ -3014,9 +3024,9 @@
   "thyssagetaen": {
     "name": "Thyssagetian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.15,
       "horse_archers": 0.15,
       "heavy_cavalry": 0.1
     },
@@ -3027,9 +3037,9 @@
   "legian": {
     "name": "Legian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.15,
       "horse_archers": 0.15,
       "heavy_cavalry": 0.1
     },
@@ -3040,9 +3050,9 @@
   "agathyrsian": {
     "name": "Agathyrsian",
     "template": {
+      "light_cavalry": 0.15,
       "light_infantry": 0.2,
       "archers": 0.4,
-      "light_cavalry": 0.15,
       "horse_archers": 0.15,
       "heavy_cavalry": 0.1
     },
@@ -3053,8 +3063,8 @@
   "hadhrami": {
     "name": "Hadhrami",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.15,
+      "light_infantry": 0.45,
       "camels": 0.25,
       "heavy_cavalry": 0.1
     },
@@ -3065,8 +3075,8 @@
   "qatabanian": {
     "name": "Qatabanian",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.15,
+      "light_infantry": 0.45,
       "camels": 0.15,
       "heavy_infantry": 0.1,
       "heavy_cavalry": 0.1
@@ -3078,8 +3088,8 @@
   "sheban": {
     "name": "Sabaean",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.15,
+      "light_infantry": 0.45,
       "camels": 0.15,
       "heavy_infantry": 0.1,
       "heavy_cavalry": 0.1
@@ -3091,8 +3101,8 @@
   "minaean": {
     "name": "Minaean",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.15,
+      "light_infantry": 0.45,
       "camels": 0.15,
       "heavy_infantry": 0.1,
       "heavy_cavalry": 0.1
@@ -3104,8 +3114,8 @@
   "himjar": {
     "name": "Himjar",
     "template": {
-      "light_infantry": 0.45,
       "light_cavalry": 0.15,
+      "light_infantry": 0.45,
       "camels": 0.15,
       "heavy_infantry": 0.1,
       "heavy_cavalry": 0.1
@@ -3117,8 +3127,8 @@
   "makan": {
     "name": "Makan",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "horse_archers": 0.05,
       "camels": 0.2,
       "heavy_cavalry": 0.05
@@ -3130,8 +3140,8 @@
   "taif": {
     "name": "Ta'if",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "horse_archers": 0.05,
       "camels": 0.2,
       "heavy_cavalry": 0.05
@@ -3143,8 +3153,8 @@
   "thamudi": {
     "name": "Thamudi",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "horse_archers": 0.05,
       "camels": 0.2,
       "heavy_cavalry": 0.05
@@ -3156,8 +3166,8 @@
   "qedarite": {
     "name": "Qedarite",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "horse_archers": 0.05,
       "camels": 0.2,
       "heavy_cavalry": 0.05
@@ -3213,9 +3223,9 @@
   "carthaginian": {
     "name": "Punic",
     "template": {
+      "light_cavalry": 0.25,
       "light_infantry": 0.3,
       "archers": 0.1,
-      "light_cavalry": 0.25,
       "heavy_infantry": 0.2,
       "warelephant": 0.15
     },
@@ -3226,9 +3236,9 @@
   "phoenician": {
     "name": "Phoenician",
     "template": {
+      "light_cavalry": 0.25,
       "light_infantry": 0.3,
       "archers": 0.3,
-      "light_cavalry": 0.25,
       "heavy_infantry": 0.15
     },
     "primary": "archers",
@@ -3238,9 +3248,9 @@
   "hebrew": {
     "name": "Hebrew",
     "template": {
+      "light_cavalry": 0.25,
       "light_infantry": 0.3,
       "archers": 0.3,
-      "light_cavalry": 0.25,
       "heavy_infantry": 0.15
     },
     "primary": "archers",
@@ -3250,8 +3260,8 @@
   "nabatean": {
     "name": "Nabatean",
     "template": {
-      "light_infantry": 0.5,
       "light_cavalry": 0.2,
+      "light_infantry": 0.5,
       "camels": 0.25,
       "heavy_infantry": 0.05
     },
