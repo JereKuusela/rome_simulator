@@ -95,11 +95,16 @@ type SaveProvince = {
   variables: []
 }
 
+type SaveDataIdentity = {
+  type: 'char'
+  identity: number
+}
+
 export type SaveDataCharacter = {
   first_name_loc: {
     name: string
   }
-  family_name: string | undefined
+  family_name?: string
   country: number
   home_country: number
   province: number
@@ -112,15 +117,43 @@ export type SaveDataCharacter = {
     zeal: number
   }
   family: number
+  dna?: string
   traits: string[]
-  female: 'yes' | undefined
-  spouse: number[]
+  father?: number
+  mother?: number
+  female?: 'yes'
+  children?: number[]
+  spouse?: number[]
   culture: string
   ethinicity: string
   religion: string
-  fertility: number
-  character_experience: number
-  party_type: string | undefined
+  death_date?: string
+  fertility?: number
+  character_experience?: number
+  popularity?: number
+  wealth?: number
+  succession?: 'yes'
+  party_type?: string
+  ambition?: {
+    type: string
+    scope: {
+      root: SaveDataIdentity
+      seed: number
+    }
+    start_date: string
+  }
+  variables?: {
+    list: {
+      name: string
+      item: SaveDataIdentity
+    }[]
+  }
+  convictions?: {
+    convictions: {
+      type: string
+      value: number
+    }[]
+  }
 }
 
 export enum TradeGood {
