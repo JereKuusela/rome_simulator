@@ -324,13 +324,16 @@ export const getLevies = (save: Save, id: number, levyMultiplier: number) => {
   return armies
 }
 
-const getCharacterName = (character: SaveDataCharacter) =>
-  character.first_name_loc.name + (character.family_name ? ' ' + character.family_name : '')
+const getCharacterName = (character: SaveDataCharacter, familyName?: string) => {
+  const surname = character.family_name ?? familyName
+  return character.first_name_loc.name + (surname ? ' ' + surname : '')
+}
 
 const loadCharacter = (save: Save, id: number | undefined): SaveCharacter | undefined => {
   const countries = save.country?.country_database
   const character = save.character?.character_database[id ?? -1]
   if (!character || !countries) return undefined
+  const familyName = save.family?.families[character.family]?.key
   return {
     id: id ?? -1,
     attributes: toObj(
@@ -343,11 +346,12 @@ const loadCharacter = (save: Save, id: number | undefined): SaveCharacter | unde
       attribute => attribute,
       attribute => getCharacterBaseAttribute(character, attribute)
     ),
-    name: getCharacterName(character),
+    name: getCharacterName(character, familyName),
     traits: character.traits ?? [],
     countryName: getCountryName(countries[character.country]),
     country: character.country,
     age: character.age,
+    alive: !character.death_date,
     gender: character.female === 'yes' ? 'Female' : 'Male'
   }
 }

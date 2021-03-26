@@ -94,6 +94,7 @@ const Filters = ({ save, onChange }: FiltersProps) => {
   const [traits, setTraits] = useState<string[]>([])
   const [male, setMale] = useBooleanState(true)
   const [female, setFemale] = useBooleanState(true)
+  const [alive, setAlive] = useBooleanState(true)
 
   const createFilterSorter = useCallback(() => {
     const filter = (item: SaveCharacter) => {
@@ -107,6 +108,7 @@ const Filters = ({ save, onChange }: FiltersProps) => {
       if (!verifyValue(item.age, filters.current['Age'])) return false
       if (!male && item.gender === 'Male') return false
       if (!female && item.gender === 'Female') return false
+      if (alive !== item.alive) return false
       return true
     }
     const sorter = (a: SaveCharacter, b: SaveCharacter) => {
@@ -122,7 +124,7 @@ const Filters = ({ save, onChange }: FiltersProps) => {
     }
     const filterSorter = (items: SaveCharacter[]) => items.filter(filter).sort(sorter)
     onChangeRef.current(filterSorter)
-  }, [countries, traits, male, female])
+  }, [countries, traits, male, female, alive])
 
   useEffect(createFilterSorter, [createFilterSorter])
 
@@ -150,6 +152,7 @@ const Filters = ({ save, onChange }: FiltersProps) => {
         <InputRange attribute={'Age'} onChange={handleChange} />
         <Checkbox label={'Male'} checked={male} onChange={setMale} />
         <Checkbox label={'Female'} checked={female} onChange={setFemale} />
+        <Checkbox label={'Alive'} checked={alive} onChange={setAlive} />
       </SimpleGridRow>
     </>
   )

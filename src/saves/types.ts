@@ -69,7 +69,7 @@ export type Territory = {
   rank: string
 }
 
-type SaveTerritory = {
+type SaveDataTerritory = {
   trade_goods: TradeGood
   province_rank: 'settlement' | 'city'
   buildings: number[]
@@ -82,7 +82,7 @@ type SaveTerritory = {
   }
 }
 
-type SaveProvince = {
+type SaveDataProvince = {
   area: string
   cached_food_storage: number
   capital: number
@@ -179,6 +179,7 @@ export type SaveCharacter = {
   country: number
   countryName: string
   age: number
+  alive: boolean
   gender: 'Female' | 'Male'
 }
 
@@ -308,6 +309,16 @@ type SaveCulture = {
   integration_status: 'integrated' | undefined
 }
 
+type SaveDataFamily = {
+  key: string
+  owner: number
+  prestige: number
+  prestige_ratio: number
+  color: number
+  member: number[]
+  culture: string
+}
+
 export type Save = Record<string, unknown> & {
   jobs?: {
     office_job: SaveJob[]
@@ -317,9 +328,12 @@ export type Save = Record<string, unknown> & {
   character?: {
     character_database: Record<number, SaveDataCharacter>
   }
-  provinces?: Record<number, SaveTerritory>
+  family?: {
+    families: Record<number, SaveDataFamily>
+  }
+  provinces?: Record<number, SaveDataTerritory>
   state?: {
-    state_database: Record<number, SaveProvince>
+    state_database: Record<number, SaveDataProvince>
   }
   trade?: {
     route: SaveRoute[]
