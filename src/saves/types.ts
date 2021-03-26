@@ -129,6 +129,7 @@ export type SaveDataCharacter = {
   religion: string
   death_date?: string
   fertility?: number
+  health?: number
   character_experience?: number
   popularity?: number
   wealth?: number
@@ -180,6 +181,8 @@ export type SaveCharacter = {
   countryName: string
   age: number
   alive: boolean
+  health: number
+  fertility: number
   gender: 'Female' | 'Male'
 }
 

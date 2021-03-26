@@ -6,12 +6,12 @@ import { Tab } from 'semantic-ui-react'
 const ExportTool = () => {
   const panes = [
     {
-      menuItem: 'Pops',
-      render: () => <ExportPops />
-    },
-    {
       menuItem: 'Characters',
       render: () => <FindCharacter />
+    },
+    {
+      menuItem: 'Pops',
+      render: () => <ExportPops />
     }
   ]
   return <Tab panes={panes} defaultActiveIndex={0} />

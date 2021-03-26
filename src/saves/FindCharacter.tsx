@@ -106,6 +106,8 @@ const Filters = ({ save, onChange }: FiltersProps) => {
       )
         return false
       if (!verifyValue(item.age, filters.current['Age'])) return false
+      if (!verifyValue(item.health, filters.current['Health'])) return false
+      if (!verifyValue(item.fertility, filters.current['Fertility'])) return false
       if (!male && item.gender === 'Male') return false
       if (!female && item.gender === 'Female') return false
       if (alive !== item.alive) return false
@@ -150,9 +152,17 @@ const Filters = ({ save, onChange }: FiltersProps) => {
         <InputRange attribute={GeneralAttribute.Zeal} onChange={handleChange} />
         <InputRange attribute={GeneralAttribute.Charisma} onChange={handleChange} />
         <InputRange attribute={'Age'} onChange={handleChange} />
+        <InputRange attribute={'Health'} onChange={handleChange} />
+        <InputRange attribute={'Ferility'} onChange={handleChange} />
+      </SimpleGridRow>
+      <SimpleGridRow>
         <Checkbox label={'Male'} checked={male} onChange={setMale} />
         <Checkbox label={'Female'} checked={female} onChange={setFemale} />
         <Checkbox label={'Alive'} checked={alive} onChange={setAlive} />
+        <span />
+        <span />
+        <span />
+        <span />
       </SimpleGridRow>
     </>
   )
@@ -167,7 +177,9 @@ const TableCharacters = ({ items }: { items: SaveCharacter[] }) => {
           <Table.HeaderCell>Name</Table.HeaderCell>
           <Table.HeaderCell>Country</Table.HeaderCell>
           <Table.HeaderCell>Age</Table.HeaderCell>
+          <Table.HeaderCell>Health</Table.HeaderCell>
           <Table.HeaderCell>Gender</Table.HeaderCell>
+          <Table.HeaderCell>Fertility</Table.HeaderCell>
           <Table.HeaderCell colSpan='4'>Attributes</Table.HeaderCell>
           <Table.HeaderCell>Traits</Table.HeaderCell>
         </Table.Row>

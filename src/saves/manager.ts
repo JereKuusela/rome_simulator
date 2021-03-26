@@ -352,6 +352,8 @@ const loadCharacter = (save: Save, id: number | undefined): SaveCharacter | unde
     country: character.country,
     age: character.age,
     alive: !character.death_date,
+    health: character.health ?? (character.death_date ? 0 : 1.0),
+    fertility: character.fertility ?? 0,
     gender: character.female === 'yes' ? 'Female' : 'Male'
   }
 }

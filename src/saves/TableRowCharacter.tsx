@@ -1,5 +1,6 @@
 import AttributeImage from 'components/Utils/AttributeImage'
 import { traitsIR } from 'data'
+import { toPercent } from 'formatters'
 import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { GeneralAttribute } from 'types'
@@ -19,7 +20,9 @@ const TableRowCharacter = ({ character }: { character: SaveCharacter }) => {
       <Table.Cell>{character.name}</Table.Cell>
       <Table.Cell>{character.countryName}</Table.Cell>
       <Table.Cell>{character.age}</Table.Cell>
+      <Table.Cell>{toPercent(character.health)}</Table.Cell>
       <Table.Cell>{character.gender}</Table.Cell>
+      <Table.Cell>{toPercent(character.fertility)}</Table.Cell>
       <Table.Cell>
         <RenderAttribute character={character} attribute={GeneralAttribute.Martial} />
       </Table.Cell>
