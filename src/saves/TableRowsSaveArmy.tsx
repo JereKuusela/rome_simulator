@@ -40,7 +40,7 @@ const TableRowsSaveArmy = ({ army }: { army: SaveArmy }) => {
           {army.leader ? (
             <>
               <AttributeImage attribute={GeneralAttribute.Martial} />
-              {' ' + (army.leader.martial + army.leader.traitMartial)}
+              {' ' + army.leader.attributes[GeneralAttribute.Martial]}
             </>
           ) : (
             ''

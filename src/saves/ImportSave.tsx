@@ -14,14 +14,12 @@ import {
   CountryData
 } from 'types'
 import { createCountry } from 'reducers'
-import { Button, Grid, Table, Header } from 'semantic-ui-react'
+import { Button, Grid, Table } from 'semantic-ui-react'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import { getDefaultCountry } from 'data'
 import { map } from 'utils'
 import { calculateValueWithoutLoss } from 'definition_values'
-import { parseFile, loadFile } from './importer'
 import { getFirstPlayedCountry, loadArmies, loadCountry, loadCountryList } from './manager'
-import { FileInput } from 'components/Utils/Input'
 import {
   convertCountryData,
   convertCountryDefinition,
@@ -46,11 +44,7 @@ import { useOptionalState } from 'components/hooks'
 import { SaveCountry, SaveArmy, Save } from './types'
 import TableRowsSaveCountry from './TableRowsSaveCountry'
 import TableRowsSaveArmy from './TableRowsSaveArmy'
-
-const loadSave = async (file: File) => {
-  const [data] = await loadFile(file)
-  return data ? (parseFile(data) as Save) : undefined
-}
+import InputImportSave from './InputImportSave'
 
 const convertArmy = (country: CountryDefinition, army: SaveArmy) => {
   const armyName = army.name
@@ -60,7 +54,7 @@ const convertArmy = (country: CountryDefinition, army: SaveArmy) => {
   createArmy(country, armyName, army.mode)
   const armyData = country.armies[armyName]
   if (army.leader) {
-    setGeneralAttribute(armyData, GeneralAttribute.Martial, army.leader.martial)
+    setGeneralAttribute(armyData, GeneralAttribute.Martial, army.leader.baseAttributes[GeneralAttribute.Martial])
     enableGeneralSelection(armyData, SelectionType.Ability, army.ability)
     enableGeneralSelections(armyData, SelectionType.Trait, army.leader.traits)
   } else {
@@ -162,8 +156,7 @@ const ImportSave = () => {
     selectCountry(save, Number(id))
   }
 
-  const handleFile = async (file: File) => {
-    const save = file && (await loadSave(file))
+  const handleImportSave = (save: Save) => {
     setCountry(undefined)
     setArmies([])
     setSave(save)
@@ -178,8 +171,7 @@ const ImportSave = () => {
     <Grid padded>
       <Grid.Row>
         <Grid.Column verticalAlign='middle'>
-          <Header style={{ display: 'inline' }}>Select a save game to import</Header>
-          <FileInput style={{ display: 'inline' }} onChange={handleFile} />
+          <InputImportSave onImported={handleImportSave} />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row columns='4'>

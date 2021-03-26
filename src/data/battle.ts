@@ -2,9 +2,14 @@ import { Mode } from 'types/definition'
 import { Battle, CountryName, SideType, ModeState, TerrainType, Participant, ArmyName, SideData } from 'types'
 import { mapRange } from 'utils'
 
+const initialLand =
+  process.env.REACT_APP_GAME === 'EU4'
+    ? [TerrainType.None, TerrainType.Grasslands]
+    : [TerrainType.None, TerrainType.Plains, TerrainType.NoModifier]
+
 export const getInitialTerrains = (mode: Mode): TerrainType[] => {
   if (mode === Mode.Naval) return [TerrainType.Ocean]
-  else return [TerrainType.None, process.env.REACT_APP_GAME === 'EU4' ? TerrainType.Grasslands : TerrainType.Plains]
+  else return initialLand
 }
 
 export const getDefaultSide = (type: SideType, name: CountryName, mode: Mode, participants: number): SideData => {

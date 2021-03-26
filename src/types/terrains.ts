@@ -9,12 +9,14 @@ export enum TerrainType {
   None = 'None',
   Plains = 'Plains',
   River = 'River',
-  Ocean = 'Open Sea'
+  Ocean = 'Open Sea',
+  NoModifier = 'No modifier'
 }
 
 export enum LocationType {
   Border = 'Border',
-  Tile = 'Tile'
+  Tile = 'Tile',
+  Modifier = 'Modifier'
 }
 
 export enum TerrainCalc {

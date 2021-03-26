@@ -21,6 +21,9 @@ export enum ArmyName {
 
 export enum GeneralAttribute {
   Martial = 'Martial',
+  Finesse = 'Finesse',
+  Charisma = 'Charisma',
+  Zeal = 'Zeal',
   Maneuver = 'Maneuver'
 }
 

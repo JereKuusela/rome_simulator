@@ -27,6 +27,12 @@ const results = [
     location: 'Tile',
     roll: 0,
     combat_width: 1
+  },
+  {
+    type: 'No modifier',
+    location: 'Modifier',
+    roll: 0,
+    combat_width: 0
   }
 ]
 
@@ -44,8 +50,25 @@ const handleTerrains = data => {
   })
 }
 
+const modifierKey = 'local_combat_width_modifier'
+
+const handleModifiers = data => {
+  Object.keys(data).forEach(terrainName => {
+    const modifiers = data[terrainName]
+    if (!Object.keys(modifiers).includes(modifierKey)) return
+    const name = getAttribute(terrainName)
+    const entity = {
+      type: name || terrainName,
+      roll: 0,
+      location: 'Modifier',
+      combat_width: modifiers[modifierKey]
+    }
+    results.push(entity)
+  })
+}
 const handlers = {
-  [path.join('ir', 'terrain_types')]: handleTerrains
+  [path.join('ir', 'terrain_types')]: handleTerrains,
+  [path.join('ir', 'modifiers')]: handleModifiers
 }
 
 exports.run = () => {

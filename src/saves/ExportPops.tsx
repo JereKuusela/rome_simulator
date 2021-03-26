@@ -30,7 +30,7 @@ const exportPops = (save: Save, id: number) => {
       total[category] = (total[category] ?? 0) + amount
     })
   )
-  const sorted = toArr(total, (amount, category) => ({ amount, category })).sort((a, b) => b.amount - a.amount)
+  const sorted = toArr(total, (amount, category: string) => ({ amount, category })).sort((a, b) => b.amount - a.amount)
   const categories = sorted.map(item => item.category)
   let data = ',Rank,'
   data += categories.map(getCategoryName).join(',') + '\n'

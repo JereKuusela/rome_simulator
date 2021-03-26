@@ -1,4 +1,14 @@
-import { ArmyName, CountryName, GovermentType, Mode, TacticType, UnitAttribute, UnitPreferences, UnitType } from 'types'
+import {
+  ArmyName,
+  CountryName,
+  GeneralAttribute,
+  GovermentType,
+  Mode,
+  TacticType,
+  UnitAttribute,
+  UnitPreferences,
+  UnitType
+} from 'types'
 import { laws } from 'data'
 import { DataEntry } from '../types/modifiers'
 
@@ -51,7 +61,7 @@ export type SavePop = {
 }
 
 export type Territory = {
-  id: string
+  id: number
   name: string
   controller: number
   totalPops: number
@@ -84,19 +94,33 @@ type SaveProvince = {
   state_loyalty: number
   variables: []
 }
-export type SaveCharacter = {
-  character_experience: number
+
+export type SaveDataCharacter = {
+  first_name_loc: {
+    name: string
+  }
+  family_name: string | undefined
+  country: number
+  home_country: number
+  province: number
+  age: number
+  birth_date: string
   attributes: {
     martial: number
     finesse: number
     charisma: number
     zeal: number
   }
-  first_name_loc: {
-    name: string
-  }
-  family_name: string
+  family: number
   traits: string[]
+  female: 'yes' | undefined
+  spouse: number[]
+  culture: string
+  ethinicity: string
+  religion: string
+  fertility: number
+  character_experience: number
+  party_type: string | undefined
 }
 
 export enum TradeGood {
@@ -113,11 +137,15 @@ export type SaveCountryDeity = {
   deity: number
 }
 
-export type Character = {
+export type SaveCharacter = {
+  id: number
   name: string
-  martial: number
-  traitMartial: number
+  attributes: Record<GeneralAttribute, number>
+  baseAttributes: Record<GeneralAttribute, number>
   traits: string[]
+  country: number
+  countryName: string
+  age: number
 }
 
 export type SaveArmy = {
@@ -128,7 +156,7 @@ export type SaveArmy = {
   tactic: TacticType
   preferences: UnitPreferences
   flankSize: number
-  leader: Character | undefined
+  leader: SaveCharacter | undefined
   ability: string
 }
 
@@ -170,7 +198,7 @@ type SaveDataArmy = {
 
 type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
 
-type SaveDataCountry = Record<ElementType<typeof laws>, string> & {
+export type SaveDataCountry = Record<ElementType<typeof laws>, string> & {
   laws?: number[]
   units: number[]
   active_inventions: number[]
@@ -253,7 +281,7 @@ export type Save = Record<string, unknown> & {
     province_job: ProvinceJob[]
   }
   character?: {
-    character_database: Record<number, SaveCharacter>
+    character_database: Record<number, SaveDataCharacter>
   }
   provinces?: Record<number, SaveTerritory>
   state?: {

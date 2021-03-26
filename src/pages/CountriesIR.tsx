@@ -533,7 +533,7 @@ const RenderInventions = ({ country, tech, attribute, filterNonCombat }: RenderI
 type CountrySelectionProps = { country: Country; filterNonCombat: boolean }
 
 const RenderTechSection = ({ country, filterNonCombat }: CountrySelectionProps) => {
-  const panes = toArr(inventionsIR.byParent(), (_, key) => ({
+  const panes = toArr(inventionsIR.byParent(), (_, key: string) => ({
     menuItem: key,
     render: () => (
       <RenderInventions
@@ -591,7 +591,7 @@ type RenderGeneralProps = {
 }
 
 const RenderGeneralSection = ({ country, armyName, general, filterNonCombat }: RenderGeneralProps) => {
-  const panes = toArr(traitsIR.byParent(), (_, key) => ({
+  const panes = toArr(traitsIR.byParent(), (_, key: string) => ({
     menuItem: key,
     render: () => (
       <RenderTraitGroup
@@ -828,7 +828,7 @@ const RenderDeityGroup = ({ country, filterNonCombat, parent }: CountruSelection
 }
 
 const RenderDeities = ({ country, filterNonCombat }: CountrySelectionProps) => {
-  const panes = toArr(deitiesIR.byParent(), (_, key) => ({
+  const panes = toArr(deitiesIR.byParent(), (_, key: string) => ({
     menuItem: key,
     render: () => <RenderDeityGroup country={country} parent={key} filterNonCombat={filterNonCombat} />
   }))

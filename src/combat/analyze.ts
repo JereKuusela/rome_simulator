@@ -27,10 +27,10 @@ export const initResourceLosses = (): ResourceLosses => ({
   seizedRepairMaintenance: 0
 })
 
-const getParticipantIndexToProperties = (side: Side): { [key: number]: UnitProperties } =>
+const getParticipantIndexToProperties = (side: Side): Record<string, UnitProperties> =>
   toObj(
     side.armies,
-    army => army.participantIndex,
+    army => String(army.participantIndex),
     army => army.unitProperties
   )
 

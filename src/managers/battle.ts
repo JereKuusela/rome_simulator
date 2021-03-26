@@ -102,7 +102,7 @@ export const convertSide = (side: SideData, armies: Army[], settings: Settings):
       },
       retreated: []
     },
-    flankRatio: 0,
+    crossingSupport: 0,
     armies,
     deployed: [],
     type: side.type,

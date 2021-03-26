@@ -19,25 +19,33 @@ import {
 import { Tech } from 'types/generated'
 import { arrayify, excludeMissing, filter, forEach, keys, map, toArr, toObj, values } from 'utils'
 import {
-  SaveCharacter,
+  SaveDataCharacter,
   Save,
   SaveCountry,
   SaveCountryDeity,
   Territory,
   SavePop,
   TradeGood,
-  Character,
+  SaveCharacter,
   SaveCohort,
   SaveArmy,
-  SaveDataUnitName
+  SaveDataUnitName,
+  SaveDataCountry
 } from './types'
 
-const getCharacterMartial = (character: SaveCharacter) =>
-  character.attributes.martial +
+const getCharacterBaseAttribute = (character: SaveDataCharacter, attribute: GeneralAttribute) => {
+  if (attribute === GeneralAttribute.Martial) return character.attributes.martial
+  if (attribute === GeneralAttribute.Finesse) return character.attributes.finesse
+  if (attribute === GeneralAttribute.Charisma) return character.attributes.charisma
+  if (attribute === GeneralAttribute.Zeal) return character.attributes.zeal
+  return 0
+}
+
+const getCharacterAttribute = (character: SaveDataCharacter, attribute: GeneralAttribute) =>
+  getCharacterBaseAttribute(character, attribute) +
   sum(
     arrayify(character.traits).map(
-      (key: string) =>
-        traitsIR.get(key)?.modifiers.find(modifier => modifier.attribute === GeneralAttribute.Martial)?.value ?? 0
+      (key: string) => traitsIR.get(key)?.modifiers.find(modifier => modifier.attribute === attribute)?.value ?? 0
     )
   )
 
@@ -57,6 +65,8 @@ export const getFirstPlayedCountry = (file: Save) => {
   return null
 }
 
+const getCountryName = (country: SaveDataCountry) => (countriesIR[country.tag.toLowerCase()] ?? '') as CountryName
+
 export const loadCountry = (file: Save, id: number) => {
   const deities = file.deity_manager?.deities_database
   const data = file.country?.country_database[id]
@@ -71,7 +81,7 @@ export const loadCountry = (file: Save, id: number) => {
       .map(index => inventionsIR.get(index)),
     heritage: data.heritage ?? '',
     militaryExperience: data.currency_data?.military_experience ?? 0,
-    name: (countriesIR[data.tag.toLowerCase()] ?? '') as CountryName,
+    name: getCountryName(data),
     civicTech: data.technology?.civic_tech?.level ?? 0,
     martialTech: data.technology?.military_tech?.level ?? 0,
     oratoryTech: data.technology?.oratory_tech?.level ?? 0,
@@ -123,7 +133,7 @@ export const loadPopsByTerritory = (file: Save, id: number): Territory[] => {
     .filter(territory => territory.controller === id)
     .sort((a, b) => b.pop.length - a.pop.length)
   const territoryPops = ownTerritories.map(territory => ({
-    id: territory.id,
+    id: Number(territory.id),
     name: territory.province_name.name,
     controller: territory.controller,
     pops: countPops(pops, territory.pop),
@@ -262,7 +272,6 @@ const cleanName = (name: string) => name.split('_').map(upperFirst).join(' ')
 const getLevyName = (region: string) => ('Levy ' + cleanName(region.substring(0, region.length - 7))) as ArmyName
 
 export const getLevies = (save: Save, id: number, levyMultiplier: number) => {
-  // Tribals use clan leaders but not sure how. All troops pooled and split evenly?
   const regions = getLevyablePOps(save, id)
   if (!regions) return
   const levies = map(regions, region => {
@@ -315,17 +324,30 @@ export const getLevies = (save: Save, id: number, levyMultiplier: number) => {
   return armies
 }
 
-const getCharacterName = (character: SaveCharacter) =>
+const getCharacterName = (character: SaveDataCharacter) =>
   character.first_name_loc.name + (character.family_name ? ' ' + character.family_name : '')
 
-const loadCharacter = (save: Save, id: number | undefined): Character | undefined => {
+const loadCharacter = (save: Save, id: number | undefined): SaveCharacter | undefined => {
+  const countries = save.country?.country_database
   const character = save.character?.character_database[id ?? -1]
-  if (!character) return undefined
+  if (!character || !countries) return undefined
   return {
-    martial: character.attributes.martial,
-    traitMartial: getCharacterMartial(character) - character.attributes.martial,
+    id: id ?? -1,
+    attributes: toObj(
+      values(GeneralAttribute),
+      attribute => attribute,
+      attribute => getCharacterAttribute(character, attribute)
+    ),
+    baseAttributes: toObj(
+      values(GeneralAttribute),
+      attribute => attribute,
+      attribute => getCharacterBaseAttribute(character, attribute)
+    ),
     name: getCharacterName(character),
-    traits: character.traits ?? []
+    traits: character.traits ?? [],
+    countryName: getCountryName(countries[character.country]),
+    country: character.country,
+    age: character.age
   }
 }
 
@@ -406,10 +428,18 @@ export const getCategoryName = (name: string) => {
   return culture
 }
 
-export const loadCountryList = (save: Save) => {
-  const data = save.country?.country_database
+export const loadCountryList = (save: Save | undefined) => {
+  const data = save?.country?.country_database
   if (data) {
     return keys(data).map(key => ({ text: getTagName(data[Number(key)].tag), value: key }))
   }
+  return []
+}
+
+export const loadCharacters = (save: Save | undefined) => {
+  if (save)
+    return toArr(save.character?.character_database ?? {}, (_, id) => loadCharacter(save, Number(id))).filter(
+      item => item
+    ) as SaveCharacter[]
   return []
 }

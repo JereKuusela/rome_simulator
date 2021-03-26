@@ -226,11 +226,11 @@ export const getTacticMatch = (tactic: TacticDefinition, counterTactic?: TacticD
   return TacticMatch.Neutral
 }
 
-const calculateFlankRatioPenalty = (armies: Army[], cohorts: Cohorts, ratio: number, setting: Settings) => {
+const calculateFlankRatioPenalty = (armies: Army[], cohorts: Cohorts, setting: Settings) => {
   const ratios = calculateFlankRatios(cohorts)
   return toObj(
     armies,
-    army => army.participantIndex,
+    army => String(army.participantIndex),
     army =>
       army.flankRatio && ratios[army.participantIndex] > army.flankRatio
         ? setting[Setting.InsufficientSupportPenalty] / (1 - setting[Setting.InsufficientSupportPenalty])
@@ -317,7 +317,9 @@ const calculateArmyPips = (environment: Environment, source: Side, target: Side,
   const armyT = getLeadingArmy(target)
   const generalPips = armyS && armyT ? calculateGeneralPips(armyS.general, armyT.general, phase) : 0
   const terrainPips =
-    armyS && armyT ? getTerrainPips(terrains, source.type === attacker, armyS.general, armyT.general) : 0
+    armyS && armyT
+      ? getTerrainPips(terrains, source.type === attacker, armyS.general, armyT.general, source.crossingSupport)
+      : 0
   source.results.generalPips = generalPips
   source.results.terrainPips = terrainPips
   source.results.totalBonusPips = source.results.dice + source.results.generalPips + source.results.terrainPips
@@ -340,7 +342,7 @@ const attack = (
   source.results.tacticStrengthDamageMultiplier = tacticStrengthDamageMultiplier
   source.results.tacticBonus =
     settings[Setting.Tactics] && armyS && armyT ? calculateTactic(source.cohorts, armyS.tactic, armyT.tactic) : 0.0
-  const flankRatioPenalty = calculateFlankRatioPenalty(target.deployed, target.cohorts, target.flankRatio, settings)
+  const flankRatioPenalty = calculateFlankRatioPenalty(target.deployed, target.cohorts, settings)
   const multiplier = (1 + source.results.tacticBonus) * dailyMultiplier
   attackSub(
     source.cohorts.frontline,

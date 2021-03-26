@@ -150,13 +150,13 @@ export function reduceKeys<K extends string, R>(
   return keys(object).reduce(callback, initial as R)
 }
 
-export function toObj<K extends string | number, V>(arr: V[], key: (value: V, index: number) => K): Record<K, V>
-export function toObj<K extends string | number, V, R>(
+export function toObj<K extends string, V>(arr: V[], key: (value: V, index: number) => K): Record<K, V>
+export function toObj<K extends string, V, R>(
   arr: V[],
   key: (value: V, index: number) => K,
   value: (value: V, index: number) => R
 ): Record<K, R>
-export function toObj<K extends string | number, V, R>(
+export function toObj<K extends string, V, R>(
   arr: V[],
   key: (value: V, index: number) => K,
   value: (value: V, index: number) => R = value => (value as any) as R

@@ -115,12 +115,12 @@ const formatTokens = {
 const tokens = {
   ...toObj(
     keys(formatTokens),
-    key => parseInt(key, 16),
+    key => String(parseInt(key, 16)),
     key => formatTokens[key]
   ),
   ...toObj(
     keys(stringTokens),
-    key => parseInt(key, 16),
+    key => String(parseInt(key, 16)),
     key => stringTokens[key]
   )
 }

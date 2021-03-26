@@ -368,12 +368,16 @@ const Controls = () => {
   const dispatch = useDispatch()
   const participantA = useParticipant(SideType.A)
   const participantB = useParticipant(SideType.B)
-  const handleResetUnits = useCallback(() => {
+  const handleResetUnits = () => {
     dispatch(clearCohorts(participantA.countryName, participantA.armyName))
     dispatch(clearCohorts(participantB.countryName, participantB.armyName))
-  }, [dispatch, participantA.countryName, participantA.armyName, participantB.countryName, participantB.armyName])
+    dispatch(refreshBattle())
+  }
 
-  const handleResetData = useCallback(() => dispatch(resetState()), [dispatch])
+  const handleResetData = () => {
+    dispatch(resetState())
+    dispatch(refreshBattle())
+  }
   return (
     <Grid>
       <Grid.Row>
