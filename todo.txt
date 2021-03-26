@@ -45,7 +45,7 @@ Changelog:
 
 "Export from save" page: 
  * Added a tool for exporting a table with territories and their pops.
-
+ * Added a tool for finding characters.
 
 Todo: 
 
@@ -53,7 +53,6 @@ Saves:
  
  * Add import from battle (involved armies) or war (all participants and all armies)
   -Also import territory + check for mountain pass modifier.
- * Fix tradition import.
 
 
 Countries:

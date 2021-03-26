@@ -347,7 +347,8 @@ const loadCharacter = (save: Save, id: number | undefined): SaveCharacter | unde
     traits: character.traits ?? [],
     countryName: getCountryName(countries[character.country]),
     country: character.country,
-    age: character.age
+    age: character.age,
+    gender: character.female === 'yes' ? 'Female' : 'Male'
   }
 }
 

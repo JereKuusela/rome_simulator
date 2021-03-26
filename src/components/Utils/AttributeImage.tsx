@@ -26,7 +26,10 @@ import IconCost from 'images/cost.png'
 import IconFoodConsumption from 'images/food.png'
 import IconFoodStorage from 'images/food_capacity.png'
 import IconSupplyLimit from 'images/supply_limit.png'
-import IconMartial from 'images/military_power.png'
+import IconMartial from 'images/martial.png'
+import IconFinesse from 'images/finesse.png'
+import IconCharisma from 'images/charisma.png'
+import IconZeal from 'images/zeal.png'
 
 type IProps = {
   attribute: string
@@ -74,6 +77,12 @@ const getFirstImage = (attribute: string, mode?: Mode) => {
     case CombatPhase.Default:
     case GeneralAttribute.Martial:
       return IconMartial
+    case GeneralAttribute.Finesse:
+      return IconFinesse
+    case GeneralAttribute.Charisma:
+      return IconCharisma
+    case GeneralAttribute.Zeal:
+      return IconZeal
     default:
       return null
   }

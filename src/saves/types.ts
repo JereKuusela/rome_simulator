@@ -179,6 +179,7 @@ export type SaveCharacter = {
   country: number
   countryName: string
   age: number
+  gender: 'Female' | 'Male'
 }
 
 export type SaveArmy = {

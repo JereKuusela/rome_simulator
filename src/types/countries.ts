@@ -4,8 +4,8 @@ import { UnitsData, UnitAttribute } from './units'
 import { DefinitionValues } from 'definition_values'
 
 export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
-export type WearinessAttributes = Record<WearinessAttribute, MinMax>
-type MinMax = { min: number; max: number }
+export type WearinessAttributes = Record<WearinessAttribute, Range>
+export type Range = { min: number; max: number }
 
 export enum CountryName {
   Country1 = 'Country 1',

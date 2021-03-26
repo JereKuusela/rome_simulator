@@ -19,6 +19,7 @@ const TableRowCharacter = ({ character }: { character: SaveCharacter }) => {
       <Table.Cell>{character.name}</Table.Cell>
       <Table.Cell>{character.countryName}</Table.Cell>
       <Table.Cell>{character.age}</Table.Cell>
+      <Table.Cell>{character.gender}</Table.Cell>
       <Table.Cell>
         <RenderAttribute character={character} attribute={GeneralAttribute.Martial} />
       </Table.Cell>

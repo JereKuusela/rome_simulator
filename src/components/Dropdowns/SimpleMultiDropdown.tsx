@@ -2,22 +2,19 @@ import React, { useCallback, useMemo } from 'react'
 import { Dropdown, DropdownProps } from 'semantic-ui-react'
 
 interface IProps<T extends string | number> {
-  value: T
+  value: T[]
   values: ({ value: T; text: string } | T)[]
-  onChange?: (value: T) => void
-  clearable?: boolean
-  onAdd?: (value: T) => void
+  onChange?: (value: T[]) => void
+  onAdd?: (value: T[]) => void
   style?: unknown
   search?: boolean
   placeholder?: string
 }
 
-const SimpleDropdown = <T extends string | number>(props: IProps<T>): JSX.Element => {
-  const { value, clearable, onChange, onAdd, search, placeholder, values } = props
-  const style = props.style ?? { minWidth: 170, maxWidth: 170 }
-
-  const handleAddItem = useCallback((_, { value }: DropdownProps) => onAdd && onAdd(value as T), [onAdd])
-  const handleChange = useCallback((_, { value }: DropdownProps) => onChange && onChange(value as T), [onChange])
+const SimpleMultiDropdown = <T extends string | number>(props: IProps<T>): JSX.Element => {
+  const { value, onChange, onAdd, search, placeholder, values, style } = props
+  const handleAddItem = useCallback((_, { value }: DropdownProps) => onAdd && onAdd(value as T[]), [onAdd])
+  const handleChange = useCallback((_, { value }: DropdownProps) => onChange && onChange(value as T[]), [onChange])
 
   const options = useMemo(
     () =>
@@ -30,16 +27,15 @@ const SimpleDropdown = <T extends string | number>(props: IProps<T>): JSX.Elemen
 
   return (
     <Dropdown
-      className='selection'
-      clearable={clearable}
       value={value}
       disabled={!onChange}
       onAddItem={handleAddItem}
       onChange={handleChange}
       style={style}
-      compact={!!style}
       search={search || !!onAdd}
       selection
+      multiple
+      fluid
       options={options}
       placeholder={placeholder}
       allowAdditions={!!onAdd}
@@ -47,4 +43,4 @@ const SimpleDropdown = <T extends string | number>(props: IProps<T>): JSX.Elemen
   )
 }
 
-export default SimpleDropdown
+export default SimpleMultiDropdown

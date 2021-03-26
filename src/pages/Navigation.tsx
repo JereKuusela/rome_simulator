@@ -68,7 +68,7 @@ const Navigation = () => {
           {process.env.REACT_APP_GAME === 'IR' && renderModeButton(Mode.Naval)}
           <div id='version'>
             <div>Site version 0.8.2</div>
-            <div>Game version {process.env.REACT_APP_GAME === 'IR' ? '1.5.3' : '1.30.4'}</div>
+            <div>Game version {process.env.REACT_APP_GAME === 'IR' ? '2.0.3' : '1.30.4'}</div>
           </div>
         </div>
       </Menu>

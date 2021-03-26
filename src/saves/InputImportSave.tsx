@@ -17,7 +17,7 @@ const InputImportSave = ({ onImported }: { onImported: (save: Save) => void }) =
 
   return (
     <>
-      <Header style={{ display: 'inline' }}>Select a save game to import</Header>
+      <Header style={{ display: 'inline' }}>Select a save game</Header>
       <FileInput style={{ display: 'inline' }} onChange={handleFile} />
     </>
   )
