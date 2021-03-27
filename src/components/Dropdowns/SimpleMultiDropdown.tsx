@@ -14,13 +14,7 @@ interface IProps<T extends string | number> {
 const SimpleMultiDropdown = <T extends string | number>(props: IProps<T>): JSX.Element => {
   const { value, onChange, onAdd, search, placeholder, values, style } = props
   const handleAddItem = useCallback((_, { value }: DropdownProps) => onAdd && onAdd(value as T[]), [onAdd])
-  const handleChange = useCallback(
-    (_, { value }: DropdownProps) => {
-      console.log(value)
-      onChange && onChange(value as T[])
-    },
-    [onChange]
-  )
+  const handleChange = useCallback((_, { value }: DropdownProps) => onChange && onChange(value as T[]), [onChange])
 
   const options = useMemo(
     () =>
