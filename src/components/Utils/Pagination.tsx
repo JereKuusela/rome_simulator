@@ -3,7 +3,7 @@ import { chunk } from 'lodash'
 import React, { useState, useMemo } from 'react'
 import { PaginationProps, Pagination as PaginationUI } from 'semantic-ui-react'
 
-const paginations = [100, 1000, 10000, 100000]
+const paginations = [10, 25, 100, 1000, 10000, 100000]
 
 type Props<T> = {
   items: T[]
