@@ -58,18 +58,17 @@ const InputRange = ({
   attribute: string
   onChange: (attribute: string, range?: Range) => void
 }) => {
-  const onChangeRef = useRef(onChange)
   const [min, setMin] = useState('')
   const [max, setMax] = useState('')
 
   useEffect(() => {
-    if (min === '' && max === '') onChangeRef.current(attribute)
+    if (min === '' && max === '') onChange(attribute)
     else
-      onChangeRef.current(attribute, {
+      onChange(attribute, {
         min: min === '' ? -Number.MAX_SAFE_INTEGER : Number(min),
         max: max === '' ? Number.MAX_SAFE_INTEGER : Number(max)
       })
-  }, [attribute, min, max])
+  }, [onChange, attribute, min, max])
   return (
     <div style={{ whiteSpace: 'nowrap' }}>
       <AttributeImage attribute={attribute} />
@@ -92,14 +91,15 @@ type FiltersProps = {
   onChange: (filterSorter: FilterSorter) => void
 }
 
+const emptyArray = [] as never[]
+
 const Filters = ({ save, onChange }: FiltersProps) => {
-  const onChangeRef = useRef(onChange)
   const filters = useRef<Record<string, Range | undefined>>({})
 
-  const [countries, setCountries] = useState<string[]>([])
+  const [countries, setCountries] = useState<string[]>(emptyArray)
   const countryList = useMemo(() => loadCountryList(save), [save])
 
-  const [traits, setTraits] = useState<string[]>([])
+  const [traits, setTraits] = useState<string[]>(emptyArray)
   const [male, setMale] = useBooleanState(true)
   const [female, setFemale] = useBooleanState(true)
   const [alive, setAlive] = useBooleanState(true)
@@ -128,15 +128,18 @@ const Filters = ({ save, onChange }: FiltersProps) => {
       return a[CharacterAttribute.Age] - b[CharacterAttribute.Age]
     }
     const filterSorter = (items: SaveCharacter[]) => items.filter(filterer).sort(sorter)
-    onChangeRef.current(filterSorter)
-  }, [countries, traits, male, female, alive])
+    onChange(filterSorter)
+  }, [onChange, countries, traits, male, female, alive])
 
   useEffect(createFilterSorter, [createFilterSorter])
 
-  const handleChange = (attribute: string, range?: Range) => {
-    filters.current[attribute] = range
-    createFilterSorter()
-  }
+  const handleChange = useCallback(
+    (attribute: string, range?: Range) => {
+      filters.current[attribute] = range
+      createFilterSorter()
+    },
+    [createFilterSorter]
+  )
   return (
     <>
       <SimpleGridRow>
@@ -208,9 +211,12 @@ const FindCharacter = ({ save }: { save: Save }) => {
     return characters
   }, [characters, filterSorter])
 
-  const handleSetFilterSorter = (filterSorter: FilterSorter) => {
-    setFilterSorter((_: unknown) => filterSorter)
-  }
+  const handleSetFilterSorter = useCallback(
+    (filterSorter: FilterSorter) => {
+      setFilterSorter((_: unknown) => filterSorter)
+    },
+    [setFilterSorter]
+  )
 
   return (
     <Grid padded>
