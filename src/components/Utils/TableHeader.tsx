@@ -7,9 +7,9 @@ const TableHeader = ({ headers }: { headers: readonly string[] }) => {
     <Table.Header>
       <Table.Row>
         {headers.map(header => (
-          <Table.Cell key={header}>
+          <Table.HeaderCell key={header}>
             <AttributeImage attribute={header} />
-          </Table.Cell>
+          </Table.HeaderCell>
         ))}
       </Table.Row>
     </Table.Header>
