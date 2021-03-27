@@ -13,7 +13,7 @@ import { values, keys } from 'utils'
 import { ExportKey } from 'types'
 import { exportState, saveToFile } from 'managers/transfer'
 import { setExportKey, setResetMissing, importState } from 'reducers'
-import { FileInput } from 'components/Utils/Input'
+import { FileInput } from 'components/Utils/Inputs'
 
 interface IState {
   data: string

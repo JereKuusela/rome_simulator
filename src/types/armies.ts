@@ -13,19 +13,33 @@ import {
   UnitProperties
 } from 'types'
 import { UnitDefinitions } from './units'
+import { filter } from 'utils'
 
 export enum ArmyName {
   Army = 'Army',
   Navy = 'Navy'
 }
 
-export enum GeneralAttribute {
+export enum CharacterAttribute {
   Martial = 'Martial',
   Finesse = 'Finesse',
   Charisma = 'Charisma',
   Zeal = 'Zeal',
-  Maneuver = 'Maneuver'
+  Maneuver = 'Maneuver',
+  Health = 'Health',
+  Age = 'Age',
+  Fertility = 'Fertility'
 }
+
+const attributes = [
+  CharacterAttribute.Martial,
+  CharacterAttribute.Charisma,
+  CharacterAttribute.Finesse,
+  CharacterAttribute.Zeal
+]
+export const isStatAttribute = (attribute: CharacterAttribute) => attributes.includes(attribute)
+export const filterStatAttributes = (attributes: Record<CharacterAttribute, number>) =>
+  filter(attributes, (_, attribute) => isStatAttribute(attribute))
 
 export type GeneralDefinition = {
   tactic: TacticDefinition
@@ -38,7 +52,7 @@ export type GeneralDefinition = {
 
 export type GeneralValues = { [key in GeneralValueType]: number }
 
-export type GeneralValueType = GeneralAttribute | CombatPhase
+export type GeneralValueType = CharacterAttribute | CombatPhase
 
 export type Armies = { [key in ArmyName]: ArmyData }
 

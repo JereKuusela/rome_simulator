@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
 
-import Input from './Utils/Input'
+import { Input } from './Utils/Inputs'
 import Headers from './Utils/Headers'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import DetailInputRow from './Detail/DetailInputRow'

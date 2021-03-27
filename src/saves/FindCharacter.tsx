@@ -1,46 +1,54 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Checkbox, Grid, Pagination, PaginationProps, Table } from 'semantic-ui-react'
-import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
+import { Button, Checkbox, Grid, Table } from 'semantic-ui-react'
 import { loadCharacters, loadCountryList } from './manager'
 import { useBooleanState, useOptionalState } from 'components/hooks'
 import { Save, SaveCharacter } from './types'
-import InputImportSave from './InputImportSave'
 import TableRowCharacter from './TableRowCharacter'
-import { chunk, sum } from 'lodash'
+import { sum } from 'lodash'
 import { traitsIR } from 'data'
 import { values } from 'utils'
-import Input from 'components/Utils/Input'
+import { InputDelayed } from 'components/Utils/Inputs'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { GeneralAttribute, Range } from 'types'
+import { CharacterAttribute, filterStatAttributes, Range } from 'types'
 import SimpleGridRow from 'components/SimpleGrid'
 import SimpleMultiDropdown from 'components/Dropdowns/SimpleMultiDropdown'
+import Pagination from 'components/Utils/Pagination'
+import TableHeader from 'components/Utils/TableHeader'
 
-const paginations = [100, 1000, 10000, 100000]
+const headers = [
+  'Id',
+  'Name',
+  'Country',
+  'Gender',
+  CharacterAttribute.Age,
+  CharacterAttribute.Health,
+  CharacterAttribute.Fertility,
+  CharacterAttribute.Martial,
+  CharacterAttribute.Finesse,
+  CharacterAttribute.Charisma,
+  CharacterAttribute.Zeal,
+  'Traits'
+] as const
 
-const VariablePagination = <T extends unknown>({
-  items,
-  Component
-}: {
-  items: T[]
-  Component: (props: { items: T[] }) => JSX.Element
-}) => {
-  const [page, setPage] = useState(1)
-  const [pagination, setPagination] = useState(paginations[0])
+const sep = ','
 
-  const handlePaginationChange = (_: unknown, { activePage }: PaginationProps) => setPage(Number(activePage))
+const exportCharacter = (item: SaveCharacter) =>
+  headers
+    .map(header => {
+      if (header === 'Id') return item.id
+      if (header === 'Country') return item.countryName
+      if (header === 'Name') return item.name
+      if (header === 'Gender') return item.gender
+      if (header === 'Traits') return item.traits.map(key => traitsIR.get(key)?.name).join(' ')
+      return item[header]
+    })
+    .join(sep)
 
-  const paginated = useMemo(() => chunk(items, pagination), [items, pagination])
-  const shownItems = paginated[page - 1]
-
-  return (
-    <>
-      <div>
-        <Pagination activePage={page} totalPages={paginated.length} onPageChange={handlePaginationChange} />
-        <SimpleDropdown values={paginations} value={pagination} onChange={setPagination} />
-      </div>
-      <Component items={shownItems} />
-    </>
-  )
+const exportCharacters = (items: SaveCharacter[]) => {
+  let data = `sep=${sep}\n${headers.join(sep)}\n`
+  data += items.map(exportCharacter).join('\n')
+  const blob = new Blob([data], { type: 'text/plain;charset=utf-8' })
+  saveAs(blob, `characters_${Date.now()}.csv`)
 }
 
 const InputRange = ({
@@ -63,11 +71,11 @@ const InputRange = ({
       })
   }, [attribute, min, max])
   return (
-    <div>
+    <div style={{ whiteSpace: 'nowrap' }}>
       <AttributeImage attribute={attribute} />
-      <Input value={min} onChange={setMin} style={{ width: 40 }} />
+      <InputDelayed value={min} onChange={setMin} style={{ width: 40 }} />
       -
-      <Input value={max} onChange={setMax} style={{ width: 40 }} />
+      <InputDelayed value={max} onChange={setMax} style={{ width: 40 }} />
     </div>
   )
 }
@@ -80,7 +88,7 @@ const verifyValue = (value: number, range?: Range) => {
 type FilterSorter = (items: SaveCharacter[]) => SaveCharacter[]
 
 type FiltersProps = {
-  save?: Save
+  save: Save
   onChange: (filterSorter: FilterSorter) => void
 }
 
@@ -97,17 +105,12 @@ const Filters = ({ save, onChange }: FiltersProps) => {
   const [alive, setAlive] = useBooleanState(true)
 
   const createFilterSorter = useCallback(() => {
-    const filter = (item: SaveCharacter) => {
+    const filterer = (item: SaveCharacter) => {
       if (countries.length > 0 && !countries.includes(String(item.country))) return false
       if (traits.length > 0 && item.traits.every(trait => !traits.includes(trait))) return false
 
-      if (
-        values(GeneralAttribute).some(attribute => !verifyValue(item.attributes[attribute], filters.current[attribute]))
-      )
+      if (values(CharacterAttribute).some(attribute => !verifyValue(item[attribute], filters.current[attribute])))
         return false
-      if (!verifyValue(item.age, filters.current['Age'])) return false
-      if (!verifyValue(item.health, filters.current['Health'])) return false
-      if (!verifyValue(item.fertility, filters.current['Fertility'])) return false
       if (!male && item.gender === 'Male') return false
       if (!female && item.gender === 'Female') return false
       if (alive !== item.alive) return false
@@ -118,13 +121,13 @@ const Filters = ({ save, onChange }: FiltersProps) => {
       const traitsB = b.traits.filter(trait => traits.includes(trait)).length
       const traitDifference = traitsB - traitsA
       if (traitDifference) return traitDifference
-      const attributesA = sum(values(a.attributes))
-      const attributesB = sum(values(b.attributes))
+      const attributesA = sum(values(filterStatAttributes(a)))
+      const attributesB = sum(values(filterStatAttributes(b)))
       const attributesDifference = attributesB - attributesA
       if (attributesDifference) return attributesDifference
-      return a.age - b.age
+      return a[CharacterAttribute.Age] - b[CharacterAttribute.Age]
     }
-    const filterSorter = (items: SaveCharacter[]) => items.filter(filter).sort(sorter)
+    const filterSorter = (items: SaveCharacter[]) => items.filter(filterer).sort(sorter)
     onChangeRef.current(filterSorter)
   }, [countries, traits, male, female, alive])
 
@@ -147,13 +150,13 @@ const Filters = ({ save, onChange }: FiltersProps) => {
         <SimpleMultiDropdown value={traits} values={traitOptions} search onChange={setTraits} placeholder='Traits' />
       </SimpleGridRow>
       <SimpleGridRow>
-        <InputRange attribute={GeneralAttribute.Martial} onChange={handleChange} />
-        <InputRange attribute={GeneralAttribute.Finesse} onChange={handleChange} />
-        <InputRange attribute={GeneralAttribute.Zeal} onChange={handleChange} />
-        <InputRange attribute={GeneralAttribute.Charisma} onChange={handleChange} />
-        <InputRange attribute={'Age'} onChange={handleChange} />
-        <InputRange attribute={'Health'} onChange={handleChange} />
-        <InputRange attribute={'Ferility'} onChange={handleChange} />
+        <InputRange attribute={CharacterAttribute.Age} onChange={handleChange} />
+        <InputRange attribute={CharacterAttribute.Health} onChange={handleChange} />
+        <InputRange attribute={CharacterAttribute.Fertility} onChange={handleChange} />
+        <InputRange attribute={CharacterAttribute.Martial} onChange={handleChange} />
+        <InputRange attribute={CharacterAttribute.Finesse} onChange={handleChange} />
+        <InputRange attribute={CharacterAttribute.Zeal} onChange={handleChange} />
+        <InputRange attribute={CharacterAttribute.Charisma} onChange={handleChange} />
       </SimpleGridRow>
       <SimpleGridRow>
         <Checkbox label={'Male'} checked={male} onChange={setMale} />
@@ -171,28 +174,32 @@ const Filters = ({ save, onChange }: FiltersProps) => {
 const TableCharacters = ({ items }: { items: SaveCharacter[] }) => {
   return (
     <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Id</Table.HeaderCell>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.HeaderCell>Country</Table.HeaderCell>
-          <Table.HeaderCell>Age</Table.HeaderCell>
-          <Table.HeaderCell>Health</Table.HeaderCell>
-          <Table.HeaderCell>Gender</Table.HeaderCell>
-          <Table.HeaderCell>Fertility</Table.HeaderCell>
-          <Table.HeaderCell colSpan='4'>Attributes</Table.HeaderCell>
-          <Table.HeaderCell>Traits</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>{items && items.map(item => <TableRowCharacter key={item.id} character={item} />)}</Table.Body>
+      <TableHeader headers={headers} />
+      <Table.Body>
+        {items.map(item => (
+          <TableRowCharacter key={item.id} character={item} />
+        ))}
+      </Table.Body>
     </Table>
+  )
+}
+
+const Characters = ({ items }: { items: SaveCharacter[] }) => {
+  return (
+    <Grid.Row>
+      <Grid.Column>
+        <Button primary style={{ float: 'right', height: 42 }} onClick={() => exportCharacters(items)}>
+          Export
+        </Button>
+        <Pagination Component={TableCharacters} items={items} />
+      </Grid.Column>
+    </Grid.Row>
   )
 }
 
 const traitOptions = traitsIR.byIndex().map(item => ({ text: item.name, value: item.key }))
 
-const FindCharacter = () => {
-  const [save, setSave] = useOptionalState<Save>()
+const FindCharacter = ({ save }: { save: Save }) => {
   const characters = useMemo(() => loadCharacters(save), [save])
   const [filterSorter, setFilterSorter] = useOptionalState<FilterSorter>()
 
@@ -207,17 +214,8 @@ const FindCharacter = () => {
 
   return (
     <Grid padded>
-      <Grid.Row>
-        <Grid.Column verticalAlign='middle'>
-          <InputImportSave onImported={setSave} />
-        </Grid.Column>
-      </Grid.Row>
       <Filters onChange={handleSetFilterSorter} save={save} />
-      <Grid.Row>
-        <Grid.Column>
-          <VariablePagination Component={TableCharacters} items={filtered} />
-        </Grid.Column>
-      </Grid.Row>
+      <Characters items={filtered} />
     </Grid>
   )
 }

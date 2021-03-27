@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
 
 import PaddedRow from './Utils/PaddedRow'
-import Input from './Utils/Input'
+import { Input } from './Utils/Inputs'
 import Headers from './Utils/Headers'
 
 import { ValuesType, formatAttribute } from 'types'

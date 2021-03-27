@@ -8,7 +8,7 @@ import {
   CountryName,
   dictionaryTacticType,
   dictionaryUnitType,
-  GeneralAttribute,
+  CharacterAttribute,
   GovermentType,
   Mode,
   TacticType,
@@ -33,21 +33,19 @@ import {
   SaveDataCountry
 } from './types'
 
-const getCharacterBaseAttribute = (character: SaveDataCharacter, attribute: GeneralAttribute) => {
-  if (attribute === GeneralAttribute.Martial) return character.attributes.martial
-  if (attribute === GeneralAttribute.Finesse) return character.attributes.finesse
-  if (attribute === GeneralAttribute.Charisma) return character.attributes.charisma
-  if (attribute === GeneralAttribute.Zeal) return character.attributes.zeal
+const getCharacterBaseAttribute = (character: SaveDataCharacter, attribute: CharacterAttribute) => {
+  if (attribute === CharacterAttribute.Martial) return character.attributes.martial
+  if (attribute === CharacterAttribute.Finesse) return character.attributes.finesse
+  if (attribute === CharacterAttribute.Charisma) return character.attributes.charisma
+  if (attribute === CharacterAttribute.Zeal) return character.attributes.zeal
   return 0
 }
 
-const getCharacterAttribute = (character: SaveDataCharacter, attribute: GeneralAttribute) =>
-  getCharacterBaseAttribute(character, attribute) +
-  sum(
-    arrayify(character.traits).map(
-      (key: string) => traitsIR.get(key)?.modifiers.find(modifier => modifier.attribute === attribute)?.value ?? 0
-    )
-  )
+const getTraitEffect = (traits: string[], attribute: string) =>
+  sum(traitsIR.getModifiers(arrayify(traits)).map(modifier => (modifier.attribute === attribute ? modifier.value : 0)))
+
+const getCharacterAttribute = (character: SaveDataCharacter, attribute: CharacterAttribute) =>
+  getCharacterBaseAttribute(character, attribute) + getTraitEffect(character.traits, attribute)
 
 const maintenanceToKey = (value: number) => {
   switch (value) {
@@ -334,27 +332,36 @@ const loadCharacter = (save: Save, id: number | undefined): SaveCharacter | unde
   const character = save.character?.character_database[id ?? -1]
   if (!character || !countries) return undefined
   const familyName = save.family?.families[character.family]?.key
-  return {
-    id: id ?? -1,
-    attributes: toObj(
-      values(GeneralAttribute),
+  const attributes = {
+    ...toObj(
+      values(CharacterAttribute),
       attribute => attribute,
       attribute => getCharacterAttribute(character, attribute)
     ),
-    baseAttributes: toObj(
-      values(GeneralAttribute),
-      attribute => attribute,
-      attribute => getCharacterBaseAttribute(character, attribute)
-    ),
-    name: getCharacterName(character, familyName),
-    traits: character.traits ?? [],
-    countryName: getCountryName(countries[character.country]),
-    country: character.country,
-    age: character.age,
-    alive: !character.death_date,
-    health: character.health ?? (character.death_date ? 0 : 1.0),
-    fertility: character.fertility ?? 0,
-    gender: character.female === 'yes' ? 'Female' : 'Male'
+    ...{
+      [CharacterAttribute.Age]: character.age,
+      [CharacterAttribute.Fertility]: character.fertility ?? 0,
+      [CharacterAttribute.Health]: character.health ?? (character.death_date ? 0 : 100.0)
+    }
+  }
+
+  return {
+    ...attributes,
+    ...{
+      id: id ?? -1,
+      baseAttributes: toObj(
+        values(CharacterAttribute),
+        attribute => attribute,
+        attribute => getCharacterBaseAttribute(character, attribute)
+      ),
+      name: getCharacterName(character, familyName),
+      traits: character.traits ?? [],
+      countryName: getCountryName(countries[character.country]),
+      country: character.country,
+      alive: !character.death_date,
+      monthlyHealth: getTraitEffect(character.traits, CharacterAttribute.Health),
+      gender: character.female === 'yes' ? 'Female' : 'Male'
+    }
   }
 }
 

@@ -6,7 +6,7 @@ import {
   UnitAttribute,
   UnitData,
   CombatPhase,
-  GeneralAttribute,
+  CharacterAttribute,
   LocationType,
   CohortProperties,
   SiteSettings,
@@ -27,7 +27,7 @@ import { multiplyChance } from 'utils'
  * Every two levels increase dice roll by one (rounded down).
  */
 export const calculateGeneralPips = (values: GeneralValues, enemy: GeneralValues, phase: CombatPhase): number => {
-  const martialPip = Math.floor((values[GeneralAttribute.Martial] - enemy[GeneralAttribute.Martial]) / 2.0)
+  const martialPip = Math.floor((values[CharacterAttribute.Martial] - enemy[CharacterAttribute.Martial]) / 2.0)
   const phasePip = values[phase] - enemy[phase]
   return Math.max(0, martialPip + phasePip)
 }
@@ -41,7 +41,7 @@ export const getTerrainPips = (
 ) => {
   const enableTiles = isAttacker
   const enableBorders =
-    isAttacker && crossingSupport < 1.0 && values[GeneralAttribute.Maneuver] <= enemy[GeneralAttribute.Maneuver]
+    isAttacker && crossingSupport < 1.0 && values[CharacterAttribute.Maneuver] <= enemy[CharacterAttribute.Maneuver]
   terrains = terrains.filter(terrain => (terrain.location === LocationType.Border ? enableBorders : enableTiles))
   return sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 }

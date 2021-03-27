@@ -13,7 +13,7 @@ import {
   createDefeatedCohort,
   selectTerrainTest
 } from './utils'
-import { UnitType, SideType, Setting, GeneralAttribute, CombatPhase, TerrainType } from 'types'
+import { UnitType, SideType, Setting, CharacterAttribute, CombatPhase, TerrainType } from 'types'
 
 if (process.env.REACT_APP_GAME === 'IR') {
   describe('dice', () => {
@@ -36,7 +36,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
 
     it('dice increase from 2 martial', () => {
-      setGeneralAttributeTest(state, SideType.A, GeneralAttribute.Martial, 2, 0)
+      setGeneralAttributeTest(state, SideType.A, CharacterAttribute.Martial, 2, 0)
       addToReserveTest(state, SideType.A, [cohort])
       addToReserveTest(state, SideType.B, [cohort])
       expected[1].A.roll = 3
@@ -44,8 +44,8 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
 
     it('dice increase from 1 martial', () => {
-      setGeneralAttributeTest(state, SideType.A, GeneralAttribute.Martial, 2, 0)
-      setGeneralAttributeTest(state, SideType.B, GeneralAttribute.Martial, 1, 0)
+      setGeneralAttributeTest(state, SideType.A, CharacterAttribute.Martial, 2, 0)
+      setGeneralAttributeTest(state, SideType.B, CharacterAttribute.Martial, 1, 0)
       addToReserveTest(state, SideType.A, [cohort])
       addToReserveTest(state, SideType.B, [cohort])
       expected[1].A.roll = 2
@@ -74,7 +74,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
     })
 
     it('dice decrease from terrain (crossing ignored)', () => {
-      setGeneralAttributeTest(state, SideType.A, GeneralAttribute.Maneuver, 1)
+      setGeneralAttributeTest(state, SideType.A, CharacterAttribute.Maneuver, 1)
       selectTerrainTest(state, TerrainType.Forest)
       selectTerrainTest(state, TerrainType.Naval, 1)
       addToReserveTest(state, SideType.A, [cohort])

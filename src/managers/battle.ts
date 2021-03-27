@@ -12,7 +12,7 @@ import {
   SideData,
   Side,
   ArmyDefinition,
-  GeneralAttribute,
+  CharacterAttribute,
   Participant,
   CombatPhase
 } from 'types'
@@ -154,7 +154,7 @@ export const convertArmy = (
     leftFlank: army.flankSize,
     rightFlank: army.flankSize,
     priority:
-      army.general.values[GeneralAttribute.Martial] +
+      army.general.values[CharacterAttribute.Martial] +
       army.general.values[CombatPhase.Fire] +
       army.general.values[CombatPhase.Shock],
     tactic: army.general.tactic,

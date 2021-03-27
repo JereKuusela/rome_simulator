@@ -1,4 +1,4 @@
-import { CombatPhase, GeneralAttribute, CountryAttribute, UnitAttribute, Setting, Mode, ValuesType } from 'types'
+import { CombatPhase, CharacterAttribute, CountryAttribute, UnitAttribute, Setting, Mode, ValuesType } from 'types'
 import { toPercent } from 'formatters'
 import { SiteSettings, DisciplineValue } from './settings'
 
@@ -11,7 +11,7 @@ export const formatAttribute = (value: number, attribute: string) => {
     attribute === CountryAttribute.ReligiousTech ||
     attribute === CountryAttribute.MartialTech ||
     attribute === CountryAttribute.OmenPower ||
-    attribute in GeneralAttribute ||
+    attribute in CharacterAttribute ||
     attribute in CombatPhase
   )
     return String(value)
@@ -98,7 +98,7 @@ export const isAttributeEnabled = (
   )
     return false
   if (!settings[Setting.AttributeDrill] && attribute === UnitAttribute.Drill) return false
-  if (!settings[Setting.Martial] && attribute === GeneralAttribute.Martial) return false
+  if (!settings[Setting.Martial] && attribute === CharacterAttribute.Martial) return false
   if (
     !settings[Setting.Food] &&
     (attribute === UnitAttribute.FoodConsumption || attribute === UnitAttribute.FoodStorage)

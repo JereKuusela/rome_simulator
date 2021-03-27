@@ -1,4 +1,4 @@
-import { UnitType, dictionaryUnitType, SideType, GeneralAttribute, UnitPreferenceType } from 'types'
+import { UnitType, dictionaryUnitType, SideType, CharacterAttribute, UnitPreferenceType } from 'types'
 import { forEach } from 'utils'
 import { TestState, getArmyTest, addToReserveTest, getUnit, createArmyTest } from './utils'
 import { setFlankSize, setGeneralAttribute, setUnitPreference } from 'managers/army'
@@ -39,7 +39,7 @@ const setInfoFromInput = (state: TestState, side: SideType, input: Input | Input
 const setArmyFromInput = (state: TestState, side: SideType, input: Input, index: number) => {
   const army = getArmyTest(state, side, index)
   setFlankSize(army, getFlankSize(input))
-  setGeneralAttribute(army, GeneralAttribute.Martial, getGeneral(input))
+  setGeneralAttribute(army, CharacterAttribute.Martial, getGeneral(input))
   const preferences = getUnitPrefences(input)
   setUnitPreference(army, UnitPreferenceType.Primary, preferences[0])
   setUnitPreference(army, UnitPreferenceType.Secondary, preferences[1])

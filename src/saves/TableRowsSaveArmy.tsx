@@ -6,7 +6,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 import { AppState } from 'state'
-import { Mode, GeneralAttribute, UnitPreferenceType, UnitType } from 'types'
+import { Mode, CharacterAttribute, UnitPreferenceType, UnitType } from 'types'
 import { toObj, toArr } from 'utils'
 import { SaveArmy } from './types'
 
@@ -39,8 +39,8 @@ const TableRowsSaveArmy = ({ army }: { army: SaveArmy }) => {
         <Table.Cell>
           {army.leader ? (
             <>
-              <AttributeImage attribute={GeneralAttribute.Martial} />
-              {' ' + army.leader.attributes[GeneralAttribute.Martial]}
+              <AttributeImage attribute={CharacterAttribute.Martial} />
+              {' ' + army.leader[CharacterAttribute.Martial]}
             </>
           ) : (
             ''

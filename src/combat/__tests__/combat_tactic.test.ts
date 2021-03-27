@@ -12,7 +12,7 @@ import {
   createArmyTest,
   setGeneralAttributeTest
 } from './utils'
-import { UnitType, TacticType, SideType, Setting, Mode, GeneralAttribute } from 'types'
+import { UnitType, TacticType, SideType, Setting, Mode, CharacterAttribute } from 'types'
 
 if (process.env.REACT_APP_GAME === 'IR') {
   describe('tactics', () => {
@@ -108,7 +108,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       selectTacticTest(state, SideType.A, TacticType.Bottleneck)
       selectTacticTest(state, SideType.A, TacticType.ShockAction, 1)
       selectTacticTest(state, SideType.B, TacticType.PadmaVyuha)
-      setGeneralAttributeTest(state, SideType.A, GeneralAttribute.Martial, 1, 1)
+      setGeneralAttributeTest(state, SideType.A, CharacterAttribute.Martial, 1, 1)
       addToReserveTest(state, SideType.A, [cohort])
       addToReserveTest(state, SideType.B, [cohort])
 

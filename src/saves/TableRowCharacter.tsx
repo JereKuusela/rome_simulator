@@ -1,17 +1,24 @@
-import AttributeImage from 'components/Utils/AttributeImage'
 import { traitsIR } from 'data'
 import { toPercent } from 'formatters'
-import React from 'react'
+import React, { memo } from 'react'
 import { Table } from 'semantic-ui-react'
-import { GeneralAttribute } from 'types'
+import { CharacterAttribute } from 'types'
 import { SaveCharacter } from './types'
 
-const RenderAttribute = ({ attribute, character }: { attribute: GeneralAttribute; character: SaveCharacter }) => (
-  <>
-    <AttributeImage attribute={attribute} />
-    {' ' + character.attributes[attribute]}
-  </>
+type RenderAttributeProps = {
+  attribute: CharacterAttribute
+  character: SaveCharacter
+  renderer?: (value: number) => string
+}
+
+const RenderAttribute = ({ attribute, character, renderer }: RenderAttributeProps) => (
+  <span>{renderer ? renderer(character[attribute]) : character[attribute]}</span>
 )
+
+const healthString = (health: number, monthly: number) => {
+  if (monthly) return `${toPercent(health / 100.0)} (${toPercent(monthly)})`
+  return toPercent(health / 100.0)
+}
 
 const TableRowCharacter = ({ character }: { character: SaveCharacter }) => {
   return (
@@ -19,25 +26,35 @@ const TableRowCharacter = ({ character }: { character: SaveCharacter }) => {
       <Table.Cell>{character.id}</Table.Cell>
       <Table.Cell>{character.name}</Table.Cell>
       <Table.Cell>{character.countryName}</Table.Cell>
-      <Table.Cell>{character.age}</Table.Cell>
-      <Table.Cell>{toPercent(character.health)}</Table.Cell>
       <Table.Cell>{character.gender}</Table.Cell>
-      <Table.Cell>{toPercent(character.fertility)}</Table.Cell>
       <Table.Cell>
-        <RenderAttribute character={character} attribute={GeneralAttribute.Martial} />
+        <RenderAttribute character={character} attribute={CharacterAttribute.Age} />
       </Table.Cell>
       <Table.Cell>
-        <RenderAttribute character={character} attribute={GeneralAttribute.Finesse} />
+        <RenderAttribute
+          character={character}
+          attribute={CharacterAttribute.Health}
+          renderer={health => healthString(health, character.monthlyHealth)}
+        />
       </Table.Cell>
       <Table.Cell>
-        <RenderAttribute character={character} attribute={GeneralAttribute.Charisma} />
+        <RenderAttribute character={character} attribute={CharacterAttribute.Fertility} renderer={toPercent} />
       </Table.Cell>
       <Table.Cell>
-        <RenderAttribute character={character} attribute={GeneralAttribute.Zeal} />
+        <RenderAttribute character={character} attribute={CharacterAttribute.Martial} />
+      </Table.Cell>
+      <Table.Cell>
+        <RenderAttribute character={character} attribute={CharacterAttribute.Finesse} />
+      </Table.Cell>
+      <Table.Cell>
+        <RenderAttribute character={character} attribute={CharacterAttribute.Charisma} />
+      </Table.Cell>
+      <Table.Cell>
+        <RenderAttribute character={character} attribute={CharacterAttribute.Zeal} />
       </Table.Cell>
       <Table.Cell>{character.traits.map(key => traitsIR.get(key)?.name).join(', ')}</Table.Cell>
     </Table.Row>
   )
 }
 
-export default TableRowCharacter
+export default memo(TableRowCharacter)

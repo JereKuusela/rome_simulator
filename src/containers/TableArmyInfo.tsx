@@ -6,7 +6,7 @@ import {
   SideType,
   CountryName,
   Setting,
-  GeneralAttribute,
+  CharacterAttribute,
   GeneralValueType,
   isAttributeEnabled,
   CountryAttribute,
@@ -157,7 +157,7 @@ const ArmyInfo = ({ type, participant, index }: ArmyInfoProps) => {
         />
       </Table.Cell>
       {settings[Setting.Martial] && (
-        <TableGeneralAttribute attribute={GeneralAttribute.Martial} countryName={countryName} armyName={armyName} />
+        <TableGeneralAttribute attribute={CharacterAttribute.Martial} countryName={countryName} armyName={armyName} />
       )}
       {settings[Setting.Tactics] && (
         <Table.Cell>

@@ -1,4 +1,4 @@
-import { FileInput } from 'components/Utils/Input'
+import { FileInput } from 'components/Utils/Inputs'
 import React from 'react'
 import { Header } from 'semantic-ui-react'
 import { loadFile, parseFile } from './importer'

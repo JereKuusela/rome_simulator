@@ -1,23 +1,21 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { Input } from '../Utils/Inputs'
 
-import Input from '../Utils/Input'
-
-interface IProps {
+type Props = {
   value: number
   onChange?: (value: number) => void
   disabled?: boolean
 }
 
-export default class DetailValueInput extends Component<IProps> {
-  render() {
-    const { value, onChange, disabled } = this.props
-    return (
-      <Input
-        style={{ width: 50 }}
-        value={String(value)}
-        disabled={disabled}
-        onChange={value => onChange && onChange(Number(value))}
-      />
-    )
-  }
+const DetailValueInput = ({ value, onChange, disabled }: Props) => {
+  return (
+    <Input
+      style={{ width: 50 }}
+      value={String(value)}
+      disabled={disabled}
+      onChange={value => onChange && onChange(Number(value))}
+    />
+  )
 }
+
+export default DetailValueInput

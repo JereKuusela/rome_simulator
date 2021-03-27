@@ -8,7 +8,7 @@ import {
 } from 'definition_values'
 import {
   Mode,
-  GeneralAttribute,
+  CharacterAttribute,
   UnitType,
   UnitAttribute,
   GeneralData,
@@ -47,8 +47,8 @@ export const convertGeneralDefinition = (
 ): GeneralDefinition => {
   const base = filterValues(general, BASE_STAT_KEY)
   const attributes = [
-    GeneralAttribute.Maneuver,
-    GeneralAttribute.Martial,
+    CharacterAttribute.Maneuver,
+    CharacterAttribute.Martial,
     CombatPhase.Fire,
     CombatPhase.Shock,
     CombatPhase.Default

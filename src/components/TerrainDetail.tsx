@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 import PaddedRow from './Utils/PaddedRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
-import Input from './Utils/Input'
+import { Input } from './Utils/Inputs'
 import Headers from './Utils/Headers'
 
 import {

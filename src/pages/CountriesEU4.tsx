@@ -13,7 +13,7 @@ import { mapRange, values } from '../utils'
 
 import {
   CountryAttribute,
-  GeneralAttribute,
+  CharacterAttribute,
   CombatPhase,
   GeneralValueType,
   filterAttributes,
@@ -116,7 +116,7 @@ class CountriesEU4 extends Component<IProps> {
                 />
                 <TableAttributes
                   attributes={filterAttributes(
-                    (values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)),
+                    (values(CharacterAttribute) as GeneralValueType[]).concat(values(CombatPhase)),
                     settings
                   )}
                   customValueKey={CUSTOM_KEY}

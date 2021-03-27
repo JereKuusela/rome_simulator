@@ -4,7 +4,7 @@ import { Grid } from 'semantic-ui-react'
 import { binaryToPlain, parseFile } from 'saves/importer'
 
 import tokens from 'data/json/ir/binary.json'
-import { FileInput } from '../components/Utils/Input'
+import { FileInput } from '../components/Utils/Inputs'
 
 const mapper = (
   mapping: Record<string, string>,

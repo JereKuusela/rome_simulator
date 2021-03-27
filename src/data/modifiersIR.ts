@@ -1,5 +1,5 @@
 import { groupBy } from 'lodash'
-import { DeityDefinition, DictionaryData, DataEntry, CultureData, RegionData } from 'types'
+import { DeityDefinition, DictionaryData, DataEntry, CultureData, RegionData, Modifier } from 'types'
 
 import traditionData from './json/ir/traditions.json'
 import tradeData from './json/ir/trades.json'
@@ -44,6 +44,11 @@ const buildData = <T extends DataEntry>(data: unknown[]) => {
     if (Array.isArray(items)) return items.map(item => item.name) as GetName<S>
     return ((items as T)?.name ?? '') as GetName<S>
   }
+  const getModifiers = <S = Key | string[] | number[]>(key: S): Modifier[] => {
+    const items = get(key)
+    if (Array.isArray(items)) return items.map(item => item.modifiers).flat()
+    return (items as T)?.modifiers ?? []
+  }
   return {
     byIndex: (filter = false) => (filter ? byIndexFiltered : byIndex),
     byKey: (filter = false) => (filter ? byKeyFiltered : byKey),
@@ -51,7 +56,8 @@ const buildData = <T extends DataEntry>(data: unknown[]) => {
     siblings,
     siblingKeys,
     get,
-    getName
+    getName,
+    getModifiers
   }
 }
 

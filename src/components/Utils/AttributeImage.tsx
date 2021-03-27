@@ -9,7 +9,7 @@ import {
   isAttributeEnabled,
   Setting,
   DisciplineValue,
-  GeneralAttribute
+  CharacterAttribute
 } from 'types'
 
 import IconDiscipline from 'images/discipline.png'
@@ -30,6 +30,9 @@ import IconMartial from 'images/martial.png'
 import IconFinesse from 'images/finesse.png'
 import IconCharisma from 'images/charisma.png'
 import IconZeal from 'images/zeal.png'
+import IconHealth from 'images/health.png'
+import IconAge from 'images/age.png'
+import IconFertility from 'images/fertility.png'
 
 type IProps = {
   attribute: string
@@ -75,14 +78,20 @@ const getFirstImage = (attribute: string, mode?: Mode) => {
     case UnitAttribute.AttritionWeight:
       return IconSupplyLimit
     case CombatPhase.Default:
-    case GeneralAttribute.Martial:
+    case CharacterAttribute.Martial:
       return IconMartial
-    case GeneralAttribute.Finesse:
+    case CharacterAttribute.Finesse:
       return IconFinesse
-    case GeneralAttribute.Charisma:
+    case CharacterAttribute.Charisma:
       return IconCharisma
-    case GeneralAttribute.Zeal:
+    case CharacterAttribute.Zeal:
       return IconZeal
+    case CharacterAttribute.Age:
+      return IconAge
+    case CharacterAttribute.Health:
+      return IconHealth
+    case CharacterAttribute.Fertility:
+      return IconFertility
     default:
       return null
   }

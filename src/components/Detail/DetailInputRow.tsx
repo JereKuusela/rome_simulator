@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PaddedRow from '../Utils/PaddedRow'
-import Input from '../Utils/Input'
+import { Input } from '../Utils/Inputs'
 
 interface IProps<T extends string> {
   text: string

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import {
   Mode,
   UnitPreferenceType,
-  GeneralAttribute,
+  CharacterAttribute,
   UnitAttribute,
   CountryAttribute,
   SelectionType,
@@ -54,7 +54,7 @@ const convertArmy = (country: CountryDefinition, army: SaveArmy) => {
   createArmy(country, armyName, army.mode)
   const armyData = country.armies[armyName]
   if (army.leader) {
-    setGeneralAttribute(armyData, GeneralAttribute.Martial, army.leader.baseAttributes[GeneralAttribute.Martial])
+    setGeneralAttribute(armyData, CharacterAttribute.Martial, army.leader.baseAttributes[CharacterAttribute.Martial])
     enableGeneralSelection(armyData, SelectionType.Ability, army.ability)
     enableGeneralSelections(armyData, SelectionType.Trait, army.leader.traits)
   } else {

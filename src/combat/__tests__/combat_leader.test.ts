@@ -12,7 +12,7 @@ import {
   Expected,
   createStrongCohort
 } from './utils'
-import { UnitType, SideType, Setting, GeneralAttribute, CombatPhase } from 'types'
+import { UnitType, SideType, Setting, CharacterAttribute, CombatPhase } from 'types'
 
 if (process.env.REACT_APP_GAME === 'IR') {
   describe('leaders', () => {
@@ -38,7 +38,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
 
     it('stronger leader takes over (martial)', () => {
       createArmyTest(state, SideType.A, 2)
-      setGeneralAttributeTest(state, SideType.A, GeneralAttribute.Martial, 1, 1)
+      setGeneralAttributeTest(state, SideType.A, CharacterAttribute.Martial, 1, 1)
 
       expected[2].A.leader = 1
     })
@@ -53,7 +53,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
 
     it('stronger leader is selected (martial)', () => {
       createArmyTest(state, SideType.A, 1)
-      setGeneralAttributeTest(state, SideType.A, GeneralAttribute.Martial, 1, 1)
+      setGeneralAttributeTest(state, SideType.A, CharacterAttribute.Martial, 1, 1)
 
       expected[2].A.leader = 1
     })
@@ -78,7 +78,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       createArmyTest(state, SideType.A, 2)
       addToReserveTest(state, SideType.A, [strongCohort], 1)
       addToReserveTest(state, SideType.B, [strongCohort])
-      setGeneralAttributeTest(state, SideType.A, GeneralAttribute.Martial, 10, 0)
+      setGeneralAttributeTest(state, SideType.A, CharacterAttribute.Martial, 10, 0)
       expected[2].A.leader = 1
       expected[2].A.defeated = [cohort.type]
     })

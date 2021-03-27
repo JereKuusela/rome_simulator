@@ -16,7 +16,7 @@ import {
   DataEntry,
   Modifier,
   CountryAttribute,
-  GeneralAttribute,
+  CharacterAttribute,
   CombatPhase,
   GeneralValueType,
   filterAttributes,
@@ -250,7 +250,7 @@ class CountriesIR extends Component<IProps> {
                 />
                 <TableAttributes
                   attributes={filterAttributes(
-                    (values(GeneralAttribute) as GeneralValueType[]).concat(values(CombatPhase)),
+                    (values(CharacterAttribute) as GeneralValueType[]).concat(values(CombatPhase)),
                     settings
                   )}
                   customValueKey='Custom'
@@ -609,7 +609,7 @@ const RenderGeneralSection = ({ country, armyName, general, filterNonCombat }: R
     dispatch(setHasGeneral(country.name, armyName, !general.enabled))
   }
   const handleChange = (value: string) => {
-    dispatch(setGeneralAttribute(country.name, armyName, GeneralAttribute.Martial, Number(value)))
+    dispatch(setGeneralAttribute(country.name, armyName, CharacterAttribute.Martial, Number(value)))
   }
 
   return (
@@ -627,10 +627,10 @@ const RenderGeneralSection = ({ country, armyName, general, filterNonCombat }: R
           <Input
             disabled={!general.enabled}
             type='number'
-            value={general.baseValues[GeneralAttribute.Martial]}
+            value={general.baseValues[CharacterAttribute.Martial]}
             onChange={(_, { value }) => handleChange(value)}
           />{' '}
-          with <StyledNumber value={general.extraValues[GeneralAttribute.Martial]} formatter={addSignWithZero} /> from
+          with <StyledNumber value={general.extraValues[CharacterAttribute.Martial]} formatter={addSignWithZero} /> from
           traits
           <Tab panes={panes} />
           <RenderAbilities country={country} general={general} armyName={armyName} filterNonCombat={filterNonCombat} />

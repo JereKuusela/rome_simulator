@@ -5,7 +5,7 @@ import {
   ModifierWithKey,
   CountryAttribute,
   GeneralData,
-  GeneralAttribute,
+  CharacterAttribute,
   SelectionType,
   CountryModifiers,
   Selections,
@@ -201,7 +201,7 @@ export const getGeneralModifiers = (general: GeneralData): ModifierWithKey[] => 
       getModifiers(modifiers, general.selections[SelectionType.Trait], traitsIR.get)
       getModifiers(modifiers, general.selections[SelectionType.Ability], abilitiesIR.get)
       getModifiers(modifiers, general.selections[SelectionType.Distinction], distinctionsIR.get)
-      const martial = calculateValue(general, GeneralAttribute.Martial)
+      const martial = calculateValue(general, CharacterAttribute.Martial)
       if (martial) modifiers.push(...getDynamicEffect('unit_martial_mod', martial))
     }
   } else {

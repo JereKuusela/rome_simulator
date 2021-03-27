@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Grid, Header } from 'semantic-ui-react'
 import { loadFile } from './importer'
-import { FileInput } from '../components/Utils/Input'
+import { FileInput } from '../components/Utils/Inputs'
 
 /** Converts a compressed binary save to plain text. */
 const ConvertSave = () => {

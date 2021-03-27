@@ -1,7 +1,7 @@
 import {
   ArmyName,
   CountryName,
-  GeneralAttribute,
+  CharacterAttribute,
   GovermentType,
   Mode,
   TacticType,
@@ -171,18 +171,15 @@ export type SaveCountryDeity = {
   deity: number
 }
 
-export type SaveCharacter = {
+export type SaveCharacter = Record<CharacterAttribute, number> & {
   id: number
   name: string
-  attributes: Record<GeneralAttribute, number>
-  baseAttributes: Record<GeneralAttribute, number>
+  baseAttributes: Record<CharacterAttribute, number>
   traits: string[]
   country: number
   countryName: string
-  age: number
   alive: boolean
-  health: number
-  fertility: number
+  monthlyHealth: number
   gender: 'Female' | 'Male'
 }
 
