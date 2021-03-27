@@ -573,10 +573,10 @@ const RenderTraitGroup = ({ country, armyName, general, parent, filterNonCombat 
   const handleOnClick = useGeneralSelection(country.name, armyName)
   return (
     <TableModifierList
-      selections={general.selections[SelectionType.Invention]}
+      selections={general.selections[SelectionType.Trait]}
       columns={4}
       usePercentPadding
-      type={SelectionType.Invention}
+      type={SelectionType.Trait}
       onClick={handleOnClick}
       items={traitsIR.byParent(filterNonCombat)[parent]}
     />
