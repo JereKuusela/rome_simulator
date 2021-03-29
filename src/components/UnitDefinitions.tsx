@@ -112,7 +112,7 @@ export default class UnitDefinitions extends Component<IProps> {
         <Table.Cell>
           {mode === Mode.Naval
             ? toPercent(calculateValue(unit, UnitAttribute.Strength))
-            : toManpower(calculateValue(unit, UnitAttribute.Strength))}
+            : toManpower(settings, calculateValue(unit, UnitAttribute.Strength))}
         </Table.Cell>
         <Table.Cell>{toNumber(calculateValue(unit, UnitAttribute.Maneuver))}</Table.Cell>
         {this.filterByMode(filterAttributes(this.attributes, settings)).map(attribute => (

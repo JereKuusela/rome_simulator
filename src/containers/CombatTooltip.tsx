@@ -206,7 +206,9 @@ class CombatTooltip extends Component<IProps, IState> {
     const { round, tacticStrengthDamageMultiplier } = results
     const phase = getCombatPhase(round, settings)
     const strengthLostMultiplier =
-      mode === Mode.Land ? settings[Setting.StrengthLostMultiplier] : settings[Setting.StrengthLostMultiplier] / 1000
+      mode === Mode.Land
+        ? settings[Setting.CohortSize] * settings[Setting.StrengthLostMultiplier]
+        : 100 * settings[Setting.StrengthLostMultiplier]
     const strengthDamage = source.strengthDealt
 
     return (
@@ -225,7 +227,7 @@ class CombatTooltip extends Component<IProps, IState> {
           )}
         {settings[Setting.AttributeStrengthDamage] && this.getAttribute(source, UnitAttribute.StrengthDamageDone)}
         {settings[Setting.AttributeStrengthDamage] && this.getAttribute(target, UnitAttribute.StrengthDamageTaken)}
-        {this.renderItem('Strength damage', strengthDamage, value => strengthToValue(mode, value))}
+        {this.renderItem('Strength damage', strengthDamage, value => strengthToValue(settings, mode, value))}
       </>
     )
   }
@@ -245,7 +247,7 @@ class CombatTooltip extends Component<IProps, IState> {
             1 / (target[UnitAttribute.Strength] + target.strengthLoss),
             toMultiplier
           )}
-        {this.renderModifier('Constant', moraleLostMultiplier / 1000.0, this.toMultiplier)}
+        {this.renderModifier('Constant', moraleLostMultiplier, this.toMultiplier)}
         {settings[Setting.AttributeMoraleDamage] && this.getAttribute(source, UnitAttribute.MoraleDamageDone)}
         {settings[Setting.AttributeMoraleDamage] && this.getAttribute(target, UnitAttribute.MoraleDamageTaken)}
         {this.renderModifier(moraleStr, morale, this.toMultiplier)}
@@ -258,7 +260,7 @@ class CombatTooltip extends Component<IProps, IState> {
     this.renderStyledItem(attribute, unit[attribute], toSignedPercent)
 
   getInfoSection = (source: IUnit, target: IUnit | null) => {
-    const { mode } = this.props
+    const { mode, settings } = this.props
     const moraleCurrent = source[UnitAttribute.Morale]
     const moraleMax = source.maxMorale
     const moraleLoss = -source.moraleLoss
@@ -270,13 +272,13 @@ class CombatTooltip extends Component<IProps, IState> {
         {source.isDefeated ? <List.Item>{'Defeated at round ' + source.defeatedDay}</List.Item> : null}
         <List.Item>
           {'Strength: '}
-          <span className={this.ORANGE}>{strengthToValue(mode, strengthCurrent)}</span>
+          <span className={this.ORANGE}>{strengthToValue(settings, mode, strengthCurrent)}</span>
           {strengthLoss ? (
             <>
               {' ('}
               <StyledNumber
                 value={strengthLoss}
-                formatter={value => strengthToValue(mode, value)}
+                formatter={value => strengthToValue(settings, mode, value)}
                 negativeColor={this.RED}
               />
               {')'}

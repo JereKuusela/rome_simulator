@@ -94,16 +94,18 @@ class TableStats extends Component<IProps> {
   }
 
   renderCells = (cohorts: Cohort[]) => {
-    const { mode } = this.props
+    const { mode, settings } = this.props
     return (
       <>
         <Table.Cell width='3'>
           {strengthToValue(
+            settings,
             mode,
             this.sum(cohorts, cohort => cohort[UnitAttribute.Strength])
           )}{' '}
           /{' '}
           {strengthToValue(
+            settings,
             mode,
             this.sum(cohorts, cohort => cohort.properties.maxStrength)
           )}
@@ -121,6 +123,7 @@ class TableStats extends Component<IProps> {
         </Table.Cell>
         <Table.Cell width='3'>
           {strengthToValue(
+            settings,
             mode,
             this.sum(cohorts, cohort => cohort.state.totalStrengthDealt)
           )}

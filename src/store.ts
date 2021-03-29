@@ -6,12 +6,17 @@ import {
   restoreDefaultTerrains,
   restoreDefaultUnits,
   stripRounds,
-  restoreDefaultSettings
+  restoreDefaultSettings,
+  AppState
 } from 'state'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { map } from 'utils'
 import { CountryDefinitions, ModeState, SettingsAndOptions, TacticDefinitions, TerrainDefinitions } from 'types'
+import { initialize } from 'managers/combat'
+import { PersistPartial } from 'redux-persist/es/persistReducer'
+import { Reducer } from 'react'
+import { Action } from 'reducers/utils'
 
 const TacticsTransform = createTransform(
   inboundState => inboundState,
@@ -58,8 +63,15 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
+type State = (AppState & PersistPartial) | undefined
+
+const reducer: Reducer<State, Action> = (state, action) => {
+  const result = persistedReducer(state, action) as State
+  return initialize(result) as State
+}
+
 export default function configureStore() {
-  const store = createStore(persistedReducer, devToolsEnhancer({}))
+  const store = createStore(reducer as never, devToolsEnhancer({}))
   const persistor = persistStore(store)
   return { store, persistor }
 }

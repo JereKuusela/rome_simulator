@@ -46,13 +46,21 @@ const setArmyFromInput = (state: TestState, side: SideType, input: Input, index:
   setUnitPreference(army, UnitPreferenceType.Flank, preferences[2])
   addToReserveTest(state, side, getUnits(input).map(getUnit), index)
 }
+
+type InputFormat = {
+  combat_name: {
+    attacker: Input
+    defender: Input
+  }
+}
+
 /**
  * Loads a given input data to a given test info.
  * @param state
  * @param data
  */
 export const loadInput = (data: string, state: TestState) => {
-  const parsed = parseFile(data)
+  const parsed = parseFile(data) as InputFormat
   const [attacker, defender] = [parsed.combat_name.attacker, parsed.combat_name.defender]
   setInfoFromInput(state, SideType.A, attacker)
   setInfoFromInput(state, SideType.B, defender)

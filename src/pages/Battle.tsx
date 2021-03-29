@@ -9,7 +9,7 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import { clearCohorts, changeSiteParameter, refreshBattle, resetState, openModal, battle, undo } from 'reducers'
-import { useParticipant, useSiteSettings, useBattle, useCombatWidth, useTimestamp } from 'state'
+import { useParticipant, useSiteSettings, useBattle, useCombatWidth } from 'state'
 import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
@@ -23,17 +23,9 @@ const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
 
 const Battle = (): JSX.Element | null => {
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(refreshBattle())
-  }, [dispatch])
-
-  const timestamp = useTimestamp()
-  if (!timestamp) return null
+  useRefresher()
   return (
     <>
-      <Refresher />
       <Frontline />
       <br />
       <br />
@@ -48,18 +40,15 @@ const Battle = (): JSX.Element | null => {
   )
 }
 
-const Refresher = () => {
+const useRefresher = () => {
   const dispatch = useDispatch()
   const settings = useSiteSettings()
   const battle = useBattle()
   const round = getRound(battle)
   const autoRefresh = settings[Setting.AutoRefresh]
-
   useEffect(() => {
     if (battle.outdated && (autoRefresh || round < 0)) dispatch(refreshBattle())
   }, [battle.outdated, round, dispatch, autoRefresh])
-
-  return null
 }
 
 const getRoundName = (day: number, round: number, fightOver: boolean, phase: CombatPhase): string => {
@@ -371,12 +360,10 @@ const Controls = () => {
   const handleResetUnits = () => {
     dispatch(clearCohorts(participantA.countryName, participantA.armyName))
     dispatch(clearCohorts(participantB.countryName, participantB.armyName))
-    dispatch(refreshBattle())
   }
 
   const handleResetData = () => {
     dispatch(resetState())
-    dispatch(refreshBattle())
   }
   return (
     <Grid>

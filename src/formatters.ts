@@ -1,5 +1,6 @@
 import { mapRange } from './utils'
 import { Mode } from './types/definition'
+import { Setting, SiteSettings } from 'types'
 
 /**
  * This file contains functions to format numbers to strings.
@@ -20,12 +21,12 @@ export const addSignWithZero = (number?: number): string => {
 }
 
 /**
- * Special converter for manpower. Strength multiplied by 1000 and floored down.
+ * Special converter for manpower. Strength multiplied by cohort size and floored down.
  */
-export const toManpower = (number?: number): string => {
+export const toManpower = (settings: SiteSettings, number?: number): string => {
   if (number === undefined) return ''
   // Higher precision round removes floating point errors.
-  return String(Math.floor(0.1 * Math.round(10000 * number)))
+  return String(Math.floor(0.1 * Math.round(10 * settings[Setting.CohortSize] * number)))
 }
 
 export const toMorale = (number?: number): string => {
@@ -34,9 +35,9 @@ export const toMorale = (number?: number): string => {
   return String(Math.floor(0.01 * Math.round(10000 * number)) / 100)
 }
 
-export const strengthToValue = (mode: Mode, number: number) => {
+export const strengthToValue = (settings: SiteSettings, mode: Mode, number: number) => {
   if (mode === Mode.Naval) return toPercent(number)
-  return toManpower(number)
+  return toManpower(settings, number)
 }
 
 export const toMaintenance = (number?: number): string => {

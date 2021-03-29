@@ -58,8 +58,6 @@ Saves:
 Countries:
  * Great works??
 
-Combat:
- * River/strait crossing negation when 1 engineer for every 10 cohort (+ setting). Try to verify is it 1 + 9 others or 1 + 10 others.
 UI:
  * Add tooltip to frontline unit counter (shows combat width, amount of units with breakdown per type, maybe total morale/strength too?)
 
@@ -89,6 +87,7 @@ Tests:
 * utils tested
 
 Refactor:
+ - Generate enums from game data (like terrain names).
  -? Moving terrain attributes to terrain definitions:
   - Could applied as a modifier to units when a terrain is selected, instead of showing separately on unit definition and requiring special handling.
   - Downside is that in game the modifiers are shown next to units, so the UI would differ from the game.

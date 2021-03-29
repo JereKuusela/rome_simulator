@@ -74,7 +74,6 @@ export type Side = {
   armiesRemaining: boolean
   isDefeated: boolean
   armies: Army[]
-  crossingSupport: number
   deployed: Army[]
   cohorts: Cohorts
   type: SideType

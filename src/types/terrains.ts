@@ -4,8 +4,9 @@ import { DefinitionValues, calculateValue } from 'definition_values'
 // Only listed what are required by code. There is actually a lot more terrains.
 export enum TerrainType {
   Grasslands = 'Grasslands',
+  Farmland = 'Farmland',
   Forest = 'Forest',
-  Naval = 'Naval',
+  CrossingShore = 'Crossing shore',
   None = 'None',
   Plains = 'Plains',
   River = 'River',

@@ -106,7 +106,8 @@ const attributes = {
   strength_damage_taken: 'Strength Damage Taken',
   stability_cost_modifier: 'Divine Sacrifice Cost',
   type: PARENT,
-  character_loyalty: 'Loyalty'
+  character_loyalty: 'Loyalty',
+  watercrossing_negation: 'Crossing Support'
 }
 
 Object.keys(units).forEach(key => {

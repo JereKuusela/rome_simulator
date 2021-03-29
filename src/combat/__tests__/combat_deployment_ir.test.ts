@@ -1,6 +1,5 @@
 import {
   TestState,
-  initState,
   getUnit,
   testDeployment,
   createExpected,
@@ -9,7 +8,8 @@ import {
   getArmyTest,
   createArmyTest,
   initExpected,
-  testCombatWithDefaultRolls
+  testCombatWithDefaultRolls,
+  initCleanState
 } from './utils'
 import { UnitType, Setting, SideType } from 'types'
 import { loadInput } from './parser'
@@ -31,7 +31,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
   describe('initial deployment', () => {
     let state: TestState
     beforeEach(() => {
-      state = initState()
+      state = initCleanState()
     })
 
     it('deploys all land units with default order except support', () => {
@@ -216,8 +216,8 @@ if (process.env.REACT_APP_GAME === 'IR') {
       loadInput(multiArmyPooling, state)
       const expected = {
         front: createExpected([UnitType.Archers, 20], [UnitType.HorseArchers, 10]),
-        reserveFront: createExpected([UnitType.HorseArchers, 30]),
-        reserveFlank: createExpected([UnitType.Archers, 20])
+        reserveFront: createExpected([UnitType.HorseArchers, 20]),
+        reserveFlank: createExpected([UnitType.HorseArchers, 10], [UnitType.Archers, 20])
       }
       testDeployment(state, expected, expected)
     })

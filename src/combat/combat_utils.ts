@@ -1,6 +1,5 @@
 import { sumBy } from 'lodash'
 import {
-  Terrain,
   TerrainCalc,
   Setting,
   UnitAttribute,
@@ -33,17 +32,21 @@ export const calculateGeneralPips = (values: GeneralValues, enemy: GeneralValues
 }
 
 export const getTerrainPips = (
-  terrains: Terrain[],
+  { settings, terrains }: Environment,
   isAttacker: boolean,
   values: GeneralValues,
   enemy: GeneralValues,
   crossingSupport: number
 ) => {
+  const crossingSupported =
+    crossingSupport >= settings[Setting.RequiredCrossingSupport] ||
+    values[CharacterAttribute.Maneuver] > enemy[CharacterAttribute.Maneuver]
   const enableTiles = isAttacker
-  const enableBorders =
-    isAttacker && crossingSupport < 1.0 && values[CharacterAttribute.Maneuver] <= enemy[CharacterAttribute.Maneuver]
-  terrains = terrains.filter(terrain => (terrain.location === LocationType.Border ? enableBorders : enableTiles))
-  return sumBy(terrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
+  const enableBorders = isAttacker && !crossingSupported
+  const activeTerrains = terrains.filter(terrain =>
+    terrain.location === LocationType.Border ? enableBorders : enableTiles
+  )
+  return sumBy(activeTerrains, terrain => calculateValue(terrain, TerrainCalc.Roll))
 }
 
 /**

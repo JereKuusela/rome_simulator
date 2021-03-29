@@ -152,14 +152,12 @@ const applyDamageTypes = (
   values: { [key in UnitType]: { [key in CombatPhase]: number } }
 ) => {
   const moraleDone =
-    (getValue(unit, UnitAttribute.MoraleDamageDone, settings[Setting.AttributeMoraleDamage]) *
-      settings[Setting.MoraleLostMultiplier]) /
-    1000.0
+    getValue(unit, UnitAttribute.MoraleDamageDone, settings[Setting.AttributeMoraleDamage]) *
+    settings[Setting.MoraleLostMultiplier]
   const strengthDone = applyPhaseDamageDone(
     unit,
-    (getValue(unit, UnitAttribute.StrengthDamageDone, settings[Setting.AttributeStrengthDamage]) *
-      settings[Setting.StrengthLostMultiplier]) /
-      1000.0
+    getValue(unit, UnitAttribute.StrengthDamageDone, settings[Setting.AttributeStrengthDamage]) *
+      settings[Setting.StrengthLostMultiplier]
   )
   return {
     [UnitAttribute.Strength]: map(values, values => map(values, (value, phase) => value * strengthDone[phase])),

@@ -81,7 +81,8 @@ export enum UnitAttribute {
   FoodStorage = 'Food Storage',
   CaptureChance = 'Capture Chance',
   CaptureResist = 'Capture Resist',
-  DailyLossResist = 'Daily Loss Resist'
+  DailyLossResist = 'Daily Loss Resist',
+  CrossingSupport = 'Crossing Support'
 }
 
 export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase

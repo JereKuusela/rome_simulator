@@ -9,7 +9,8 @@ const results = {
     Mode: 'Land',
     Role: 'Front',
     'Attrition Weight': 1.0,
-    Damage: 1.0
+    Damage: 1.0,
+    Strength: 1.0
   },
   'Naval Unit': {
     Type: 'Naval Unit',
@@ -17,7 +18,8 @@ const results = {
     Mode: 'Naval',
     Role: 'Front',
     'Attrition Weight': 1.0,
-    Damage: 1.0
+    Damage: 1.0,
+    Strength: 1.0
   },
   'Light Ship': {
     Type: 'Light Ship',
@@ -46,11 +48,8 @@ const definesHandler = data => {
   results['Medium Ship']['Capture Resist'] = Number(data['NCombat']['SHIP_CAPTURE_CATEGORY_IMPACT']) * 2
   results['Heavy Ship']['Capture Resist'] = cutDecimals(Number(data['NCombat']['SHIP_CAPTURE_CATEGORY_IMPACT']) * 3, 1)
 
-  results['Land Unit']['Strength'] = Number(data['NUnit']['COHORT_SIZE']) / 1000.0
-  results['Naval Unit']['Strength'] = Number(data['NUnit']['COHORT_SIZE']) / 1000.0
   results['Land Unit']['Morale'] = Number(data['NUnit']['LAND_MORALE'])
-  results['Naval Unit']['Morale'] = Number(data['NUnit']['LAND_MORALE'])
-  if (data['NUnit']['LAND_MORALE'] !== data['NUnit']['NAVAL_MORALE']) throw Error('Base morale is different per mode!')
+  results['Naval Unit']['Morale'] = Number(data['NUnit']['NAVAL_MORALE'])
 }
 
 const modifiersHandler = data => {

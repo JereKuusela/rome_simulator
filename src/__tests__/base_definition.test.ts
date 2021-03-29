@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Mode } from 'types'
+import { Mode, Setting, SiteSettings } from 'types'
 import {
   mergeValues,
   addValues,
@@ -523,11 +523,13 @@ describe('explainShort', () => {
 
 describe('strengthToValue', () => {
   it('works for naval', () => {
-    const result = strengthToValue(Mode.Naval, 0.75)
+    const settings = {} as SiteSettings
+    const result = strengthToValue(settings, Mode.Naval, 0.75)
     expect(result).toEqual('75%')
   })
   it('works for land', () => {
-    const result = strengthToValue(Mode.Land, 0.75)
-    expect(result).toEqual('750')
+    const settings = { [Setting.CohortSize]: 500 } as SiteSettings
+    const result = strengthToValue(settings, Mode.Land, 0.75)
+    expect(result).toEqual('375')
   })
 })

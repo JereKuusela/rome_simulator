@@ -1,21 +1,21 @@
 import {
   TestState,
-  initState,
   getUnit,
   testDeployment,
   createExpected,
   getSettingsTest,
-  addToReserveTest
+  addToReserveTest,
+  initCleanState
 } from './utils'
 import { UnitType, SideType, Setting } from 'types'
 
 import { mapRange } from 'utils'
 
-if (process.env.REACT_APP_GAME === 'IR') {
+if (process.env.REACT_APP_GAME === 'EU4') {
   describe('initial deployment', () => {
     let state: TestState
     beforeEach(() => {
-      state = initState()
+      state = initCleanState()
       getSettingsTest(state)[Setting.Culture] = false
     })
 

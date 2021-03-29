@@ -66,7 +66,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
 
     it('dice decrease from terrain', () => {
       selectTerrainTest(state, TerrainType.Forest)
-      selectTerrainTest(state, TerrainType.Naval, 1)
+      selectTerrainTest(state, TerrainType.CrossingShore, 1)
       addToReserveTest(state, SideType.A, [cohort])
       addToReserveTest(state, SideType.B, [cohort])
       expected[1].A.roll = -1
@@ -76,7 +76,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
     it('dice decrease from terrain (crossing ignored)', () => {
       setGeneralAttributeTest(state, SideType.A, CharacterAttribute.Maneuver, 1)
       selectTerrainTest(state, TerrainType.Forest)
-      selectTerrainTest(state, TerrainType.Naval, 1)
+      selectTerrainTest(state, TerrainType.CrossingShore, 1)
       addToReserveTest(state, SideType.A, [cohort])
       addToReserveTest(state, SideType.B, [cohort])
       expected[1].A.roll = 1
@@ -89,7 +89,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       addToReserveTest(state, SideType.B, [weakCohort])
       addToReserveTest(state, SideType.B, [cohort], 1)
       selectTerrainTest(state, TerrainType.Forest)
-
+      console.log(state.battle.Land.terrains)
       expected = initExpected(3)
       expected[3].B.leader = 1
       expected[3].A.roll = 2
@@ -98,7 +98,7 @@ if (process.env.REACT_APP_GAME === 'IR') {
       expected[3].attackerFlipped = true
     })
 
-    it("attacker wo't swap if not enabled", () => {
+    it("attacker won't swap if not enabled", () => {
       getSettingsTest(state)[Setting.AttackerSwapping] = false
 
       createArmyTest(state, SideType.B, 2)

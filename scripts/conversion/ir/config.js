@@ -20,14 +20,14 @@ const handler = data => {
   if (data['NCombat']['LAND_EXPERIENCE_DAMAGE_REDUCTION'] !== data['NCombat']['NAVAL_EXPERIENCE_DAMAGE_REDUCTION'])
     throw Error('Damage reduction is different per mode!')
   results['Land']['StrengthDamage'] =
-    1000.0 * Number(data['NCombat']['LAND_STRENGTH_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])
+    Number(data['NCombat']['LAND_STRENGTH_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])
   results['Naval']['StrengthDamage'] =
-    1000.0 * Number(data['NCombat']['NAVAL_STRENGTH_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])
+    Number(data['NCombat']['NAVAL_STRENGTH_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])
   results['Land']['MoraleDamage'] =
-    (1000.0 * Number(data['NCombat']['LAND_MORALE_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])) /
+    (Number(data['NCombat']['LAND_MORALE_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])) /
     Number(data['NCombat']['BASE_MORALE_DAMAGE'])
   results['Naval']['MoraleDamage'] =
-    (1000.0 * Number(data['NCombat']['NAVAL_MORALE_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])) /
+    (Number(data['NCombat']['NAVAL_MORALE_DAMAGE_MODIFIER']) * Number(data['NCombat']['COMBAT_DAMAGE_MULT'])) /
     Number(data['NCombat']['BASE_MORALE_DAMAGE'])
   results['MoraleHitForLateDeployment'] = Number(data['NCombat']['MORALE_HIT_FOR_LATE_DEPLOYMENT'])
   results['MoraleHitForNonSecondaryReinforcement'] = Number(
@@ -43,7 +43,9 @@ const handler = data => {
   results['TacticMin'] = Number(data['NCombat']['TACTICS_EFFECTIVENESS_MIN_CAP'])
   results['TacticMax'] = Number(data['NCombat']['TACTICS_EFFECTIVENESS_MAX_CAP'])
 
+  results['CohortSize'] = Number(data['NUnit']['COHORT_SIZE'])
   results['ShipRepair'] = Number(data['NUnit']['MONTHLY_REPAIR'])
+  results['RequiredCrossingSupport'] = Number(data['NUnit']['WATERCROSSING_NEGATION_REQUIRED_PER_COHORT'])
   results['LevySupportLimit'] = Number(data['NLevy']['SUPPORT_REQUIREMENT'])
   results['LevyMinimumSize'] = Number(data['NLevy']['MIN_SIZE'])
   results['LevyMaxMultiplier'] = Number(data['NLevy']['SIZE_MULTIPLIER_MAX'])

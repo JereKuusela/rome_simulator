@@ -14,10 +14,12 @@ import {
   ArmyDefinition,
   CharacterAttribute,
   Participant,
-  CombatPhase
+  CombatPhase,
+  UnitAttribute
 } from 'types'
 import { getCombatUnit, sortReserve } from 'combat'
 import { map } from 'utils'
+import { sumBy } from 'lodash'
 
 export const selectTerrain = (battle: Battle, index: number, terrain: TerrainType) => {
   battle.terrains[index] = terrain
@@ -102,7 +104,6 @@ export const convertSide = (side: SideData, armies: Army[], settings: Settings):
       },
       retreated: []
     },
-    crossingSupport: 0,
     armies,
     deployed: [],
     type: side.type,
@@ -147,6 +148,8 @@ export const convertArmy = (
   const sorted = sortReserve(reserve, army.unitPreferences)
   return {
     reserve: sorted,
+    crossingSupport: sumBy(reserve, item => item.properties[UnitAttribute.CrossingSupport]),
+    armySize: reserve.length,
     flankRatio: army.flankRatio,
     unitProperties,
     flankSize: army.flankSize,

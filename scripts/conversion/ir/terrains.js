@@ -17,6 +17,12 @@ const results = [
     combat_width: 0
   },
   {
+    type: 'Crossing shore',
+    location: 'Border',
+    roll: -2,
+    combat_width: 0
+  },
+  {
     type: 'None',
     location: 'Border',
     roll: 0,
@@ -35,6 +41,12 @@ const results = [
     combat_width: 0
   }
 ]
+
+const handleConfig = data => {
+  results[0].roll = -Number(data['NUnit']['WATERCROSSING_PENALTY_FOR_RIVER'])
+  results[1].roll = -Number(data['NUnit']['WATERCROSSING_PENALTY_FOR_STRAIT'])
+  results[2].roll = -Number(data['NUnit']['WATERCROSSING_PENALTY_FOR_SHORE'])
+}
 
 const handleTerrains = data => {
   Object.keys(data).forEach(terrainName => {
@@ -67,6 +79,7 @@ const handleModifiers = data => {
   })
 }
 const handlers = {
+  [path.join('ir', 'defines', '00_defines.txt')]: handleConfig,
   [path.join('ir', 'terrain_types')]: handleTerrains,
   [path.join('ir', 'modifiers')]: handleModifiers
 }

@@ -77,13 +77,18 @@ export const initCleanState = (): TestState => {
   settings.siteSettings[Setting.CustomDeployment] = true
   settings.siteSettings[Setting.AttackerSwapping] = true
   settings.siteSettings[Setting.AttributeDiscipline] = DisciplineValue.Off
-  return {
+  settings.siteSettings[Setting.BaseCombatWidth] = 30
+
+  const state = {
     battle: getDefaultBattle(1),
     settings,
     countries: getDefaultCountryDefinitions(),
     terrains: getDefaultTerrains(),
     tactics: getDefaultTactics()
   }
+  state.battle[Mode.Land].terrains = []
+  state.battle[Mode.Naval].terrains = []
+  return state
 }
 
 const getCountryNameTest = (side: SideType) => (side === SideType.A ? CountryName.Country1 : CountryName.Country2)
@@ -140,6 +145,7 @@ export const createCohort = (type: UnitType): CohortDefinition => {
   cohort.baseValues[UnitAttribute.Morale] = { key: 1 }
   cohort.baseValues[UnitAttribute.Strength] = { key: 1 }
   cohort.baseValues[UnitAttribute.Maneuver] = { key: 1 }
+  cohort.baseValues[UnitAttribute.Damage] = { key: 1 }
   return cohort
 }
 

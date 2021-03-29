@@ -71,7 +71,9 @@ export enum Setting {
   ReduceRolls = 'Reduce possible dice rolls',
   ShowGraphs = 'Show graphs',
   AutoRefresh = 'Automatic refresh',
-  StackWipeCaptureChance = 'Capture chance when stack wiping'
+  StackWipeCaptureChance = 'Capture chance when stack wiping',
+  CohortSize = 'Cohort size',
+  RequiredCrossingSupport = 'Required crossing support'
 }
 
 export enum SimulationSpeed {
@@ -289,6 +291,10 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
     case Setting.AutoRefresh:
       if (value) return 'Battle refreshes automatically after any changes.'
       else return 'Battle only refreshes when going to previous or next rounds.'
+    case Setting.CohortSize:
+      return 'Amount of manpower in a cohort.'
+    case Setting.RequiredCrossingSupport:
+      return 'Amount of average crossing support to ignore crossing penalties.'
     default:
       return 'No description.'
   }
@@ -369,6 +375,8 @@ export type SiteSettings = {
   [Setting.ReduceRolls]: number
   [Setting.Performance]: SimulationSpeed
   [Setting.AutoRefresh]: boolean
+  [Setting.CohortSize]: number
+  [Setting.RequiredCrossingSupport]: number
 }
 
 export type Settings = CombatSettings & SiteSettings

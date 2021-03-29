@@ -56,7 +56,8 @@ const damage = [
   Setting.DiceMaximum,
   Setting.MinimumMorale,
   Setting.MinimumStrength,
-  Setting.RelativePips
+  Setting.RelativePips,
+  Setting.CohortSize
 ]
 const stackwipe = [
   Setting.Stackwipe,

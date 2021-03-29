@@ -115,6 +115,8 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.AutoRefresh]: true,
       [Setting.MoraleDamageBasedOnTargetStrength]: false,
       [Setting.DamageLossForMissingMorale]: 0,
+      [Setting.CohortSize]: 1000,
+      [Setting.RequiredCrossingSupport]: 1,
       // Analyze
       [Setting.Performance]: SimulationSpeed.Fast,
       [Setting.ChunkSize]: 1000,
@@ -195,7 +197,9 @@ export const getDefaultSiteSettings = (): SiteSettings => {
       [Setting.Food]: true,
       [Setting.AutoRefresh]: true,
       [Setting.MoraleDamageBasedOnTargetStrength]: false,
-      [Setting.DamageLossForMissingMorale]: 0
+      [Setting.DamageLossForMissingMorale]: 0,
+      [Setting.CohortSize]: getConfig().CohortSize,
+      [Setting.RequiredCrossingSupport]: getConfig().RequiredCrossingSupport
     }
   }
 }

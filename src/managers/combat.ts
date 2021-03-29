@@ -1,9 +1,10 @@
 import { AppState, getMode, getCombatSide, getCombatEnvironment, convertSides } from 'state'
 import { doCombatRound, removeDefeated, getCombatPhaseNumber } from 'combat'
-import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve } from 'types'
+import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve, Mode } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
 import { getDay, getStartingPhaseNumber, getRound } from './battle'
+import produce from 'immer'
 
 const copyCohorts = (cohorts: Cohorts): Cohorts => ({
   frontline: cohorts.frontline.map(row => row.map(value => (value ? { ...value, state: { ...value.state } } : null))),
@@ -35,7 +36,7 @@ const copy = (side: Side): Side => ({
   results: { ...side.results }
 })
 
-const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: Side, steps: number) => {
+export const subBattle = (battle: Battle, env: Environment, attacker: Side, defender: Side, steps: number) => {
   const sideA = battle.sides[SideType.A]
   const sideD = battle.sides[SideType.B]
   const settings = env.settings
@@ -118,14 +119,27 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
   )
 }
 
-export const refreshBattle = (pair: [AppState, AppState]) => {
+export const refreshBattle = (pair: [AppState, AppState], mode?: Mode) => {
   const [state, draft] = pair
-  const mode = getMode(state)
+  mode = mode ?? getMode(state)
   const battle = draft.battle[mode]
   const steps = getDay(battle)
   battle.days = []
   const [attacker, defender] = convertSides(state)
   subBattle(battle, getCombatEnvironment(draft), attacker, defender, steps)
+}
+
+/**
+ * Initializes battle state to contain initial data.
+ * Lots of code requires this data to work properly.
+ */
+export const initialize = (state?: AppState) => {
+  if (!state) return state
+  if (state.battle[Mode.Land].timestamp > 0 && state.battle[Mode.Naval].timestamp > 0) return state
+  return produce(state, (draft: AppState) => {
+    refreshBattle([state, draft], Mode.Land)
+    refreshBattle([state, draft], Mode.Naval)
+  })
 }
 
 export const undo = (pair: [AppState, AppState], steps: number) => {

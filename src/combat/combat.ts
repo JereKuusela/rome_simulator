@@ -36,7 +36,7 @@ import {
 import { deploy, undeploy, moveDefeatedToRetreated } from './deployment'
 import { getLeadingArmy, getDefaultCombatResults } from 'managers/battle'
 import { getConfig } from 'data/config'
-import { clamp, sum } from 'lodash'
+import { clamp, sum, sumBy } from 'lodash'
 
 /**
  * Makes given armies attach each other.
@@ -312,13 +312,15 @@ const moveDefeated = (environment: Environment, frontline: Frontline, defeated: 
 }
 
 const calculateArmyPips = (environment: Environment, source: Side, target: Side, phase: CombatPhase) => {
-  const { terrains, attacker } = environment
+  const { attacker } = environment
+  const crossingSupport = sumBy(source.deployed, item => item.crossingSupport)
+  const armySize = sumBy(source.deployed, item => item.armySize)
   const armyS = getLeadingArmy(source)
   const armyT = getLeadingArmy(target)
   const generalPips = armyS && armyT ? calculateGeneralPips(armyS.general, armyT.general, phase) : 0
   const terrainPips =
     armyS && armyT
-      ? getTerrainPips(terrains, source.type === attacker, armyS.general, armyT.general, source.crossingSupport)
+      ? getTerrainPips(environment, source.type === attacker, armyS.general, armyT.general, crossingSupport / armySize)
       : 0
   source.results.generalPips = generalPips
   source.results.terrainPips = terrainPips

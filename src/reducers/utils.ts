@@ -125,11 +125,11 @@ export const compose = <State>(...reducers: ReducerWithParam<State>[]): ReducerW
 
 type ReducerWithParam<State> = (state: State | undefined, action: any, params: ReducerParams) => State
 
-export function combineRoot<S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> }): Reducer<CombinedState<S>> {
+export const combineRoot = <S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]> }): Reducer<CombinedState<S>> => {
   const reducerKeys = Object.keys(reducers) as (keyof S)[]
 
-  return function combination(state: S = {} as S, action) {
-    let nextState: S = {} as S
+  return (state: S = {} as S, action) => {
+    let nextState = {} as S
     const settings: ReducerParams = { mode: (state as any)?.settings?.mode }
 
     let invalidated = false

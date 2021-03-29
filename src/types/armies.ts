@@ -108,6 +108,8 @@ export type Army = {
   leftFlank: number
   rightFlank: number
   priority: number
+  crossingSupport: number
+  armySize: number
   tactic: TacticDefinition
   participantIndex: number
   general: { [key in GeneralValueType]: number }
