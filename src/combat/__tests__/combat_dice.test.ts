@@ -89,7 +89,6 @@ if (process.env.REACT_APP_GAME === 'IR') {
       addToReserveTest(state, SideType.B, [weakCohort])
       addToReserveTest(state, SideType.B, [cohort], 1)
       selectTerrainTest(state, TerrainType.Forest)
-      console.log(state.battle.Land.terrains)
       expected = initExpected(3)
       expected[3].B.leader = 1
       expected[3].A.roll = 2
