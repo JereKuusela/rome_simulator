@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { UnitAttribute, UnitDefinition, ValuesType, CountryName, getAttributeValuesType } from 'types'
 import { setUnitValue } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
-import { filterValues, calculateBase, calculateModifier } from 'definition_values'
+import { filterValues, calculateBase, calculateModifier } from 'data_values'
 
 type Props = {
   unit: UnitDefinition

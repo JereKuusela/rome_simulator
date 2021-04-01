@@ -11,7 +11,7 @@ import {
   ArmyName
 } from 'types'
 import UnitDetail from 'components/UnitDetail'
-import { AppState, getUnitDefinition, getTerrainTypes, getMode, getUnitTypeList, getSiteSettings } from 'state'
+import { AppState, getUnitDefinition, getUnitTypeList } from 'state'
 import {
   openModal,
   changeUnitType,
@@ -26,6 +26,7 @@ import {
 import BaseModal from './BaseModal'
 import { getRootParent } from 'managers/units'
 import ItemRemover from 'components/ItemRemover'
+import { getTerrainTypes, getMode, getCombatSettings } from 'selectors'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 
@@ -113,9 +114,9 @@ const mapStateToProps = (state: AppState) => {
     unit: data ? getUnitDefinition(state, data.type, data.country) : null,
     unitTypes: getUnitTypeList(state, true, data?.country),
     unitTypesWithParent: getUnitTypeList(state, false, data?.country).filter(type => type !== data?.type),
-    terrainTypes: getTerrainTypes(state),
+    terrainTypes: getTerrainTypes(state, undefined),
     mode: getMode(state),
-    settings: getSiteSettings(state)
+    settings: getCombatSettings(state)
   }
 }
 

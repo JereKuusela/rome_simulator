@@ -20,17 +20,17 @@ import {
   Setting,
   CombatPhase,
   isAttributeEnabled,
-  SiteSettings,
+  CombatSharedSettings,
   getTerrainAttributes
 } from 'types'
 import { values } from 'utils'
-import { getValue, calculateValue, explain } from 'definition_values'
+import { getValue, calculateValue, explain } from 'data_values'
 import { toMaintenance } from 'formatters'
 import DelayedNumericInput from './Detail/DelayedNumericInput'
 
 interface IProps {
   mode: Mode
-  settings: SiteSettings
+  settings: CombatSharedSettings
   customValueKey: string
   unit: CohortDefinition
   unitTypes?: UnitType[]

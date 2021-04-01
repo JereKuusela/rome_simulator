@@ -16,7 +16,7 @@ import {
   TacticType,
   CohortDefinition,
   CombatPhase,
-  Settings,
+  CombatSettings,
   Setting,
   DisciplineValue,
   SideType,
@@ -55,9 +55,9 @@ if (process.env.REACT_APP_GAME === 'IR') {
       unit.baseValues![type] = { key: 0.2 }
       unit.baseValues![UnitAttribute.OffensiveSupport] = { key: 0.5 }
 
-      state.settings.siteSettings = map(state.settings.siteSettings, item =>
+      state.settings.sharedSettings = map(state.settings.sharedSettings, item =>
         typeof item === 'boolean' ? false : item
-      ) as Settings
+      ) as CombatSettings
       getSettingsTest(state)[Setting.CounteringDamage] = 0
       getSettingsTest(state)[Setting.AttributeDiscipline] = DisciplineValue.Off
       getSettingsTest(state)[Setting.BackRow] = true

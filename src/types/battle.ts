@@ -1,4 +1,4 @@
-import { CountryName, Mode, TerrainType, Terrain, Settings, Cohorts } from 'types'
+import { CountryName, Mode, TerrainType, TerrainData, CombatSettings, Cohorts } from 'types'
 import { ArmyName, Army } from './armies'
 
 export type Battle = {
@@ -49,8 +49,8 @@ export type Environment = {
   round: number
   mode: Mode
   day: number
-  terrains: Terrain[]
-  settings: Settings
+  terrains: TerrainData[]
+  settings: CombatSettings
   attacker: SideType
 }
 

@@ -5,6 +5,7 @@ import { UnitType } from './units'
 import { TerrainType } from './terrains'
 import { TacticType } from './tactics'
 import { ObjSet } from 'utils'
+import { Mode } from './definition'
 
 export enum ModalType {
   DiceRolls = 'DiceRolls',
@@ -18,7 +19,11 @@ export enum ModalType {
 export type UI = {
   accordions: ObjSet
   modals: Modals
-  selectedParticipantIndex: { [key in SideType]: number }
+  selectedParticipantIndex: Record<SideType, number>
+  mode: Mode
+  selectedArmyIndex: number
+  selectedCountryIndex: number
+  filterNonCombat: boolean
 }
 
 export type Modals = {

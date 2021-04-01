@@ -4,7 +4,7 @@ import { Table, Grid, Checkbox, Header, Input } from 'semantic-ui-react'
 import { Setting, parameterToDescription, SimulationSpeed, DisciplineValue } from 'types'
 import { toArr, values } from 'utils'
 import SimpleDropdown from './Dropdowns/SimpleDropdown'
-import { getDefaultLandSettings, getDefaultSiteSettings } from 'data'
+import { getDefaultLandSettings, getDefaultSharedSettings } from 'data'
 
 type Values = string | number | boolean
 
@@ -13,7 +13,7 @@ type IProps<T extends Setting> = {
   onChange: (key: T, str: Values) => void
 }
 
-const defaultSettings = { ...getDefaultLandSettings(), ...getDefaultSiteSettings() }
+const defaultSettings = { ...getDefaultLandSettings(), ...getDefaultSharedSettings() }
 
 /** Component for showing and changing settings.  */
 export default class GridSettings<T extends Setting> extends Component<IProps<T>> {

@@ -1,8 +1,9 @@
-import { DefinitionValues, calculateValue } from 'definition_values'
-import { TerrainType, Definition, Mode, CultureType, Terrain } from 'types'
+import { DataValues, calculateValue } from 'data_values'
+import { TerrainType, Mode, CultureType, TerrainData } from 'types'
 import { toNumber, toPercent, toSignedPercent, toMultiplier } from 'formatters'
 import { CombatPhase } from './battle'
 import { flatten } from 'lodash'
+import { DataWithMode } from './definition'
 
 export enum UnitType {
   Archers = 'Archers',
@@ -87,14 +88,14 @@ export enum UnitAttribute {
 
 export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase
 export type UnitValues = { [key in UnitType]: UnitValue }
-export type UnitValue = DefinitionValues<UnitValueType>
+export type UnitValue = DataValues<UnitValueType>
 
-export const formTerrainAttribute = (terrain: Terrain | TerrainType, attribute: UnitAttribute) => {
+export const formTerrainAttribute = (terrain: TerrainData | TerrainType, attribute: UnitAttribute) => {
   if (typeof terrain === 'object') return `${terrain.type} ${attribute}` as UnitValueType
   return `${terrain} ${attribute}` as UnitValueType
 }
 
-export const getTerrainAttributes = (terrains: (Terrain | TerrainType)[]) => {
+export const getTerrainAttributes = (terrains: (TerrainData | TerrainType)[]) => {
   return flatten(
     terrains.map(terrain => [
       formTerrainAttribute(terrain, UnitAttribute.Damage),
@@ -106,7 +107,7 @@ export const getTerrainAttributes = (terrains: (Terrain | TerrainType)[]) => {
 }
 
 /** A single (sub) unit definition. Used to store data but shouldn't be used for anything else. */
-export interface UnitData extends Definition<UnitType>, DefinitionValues<UnitValueType> {
+export interface UnitData extends DataWithMode<UnitType>, DataValues<UnitValueType> {
   role?: UnitRole
   isLoyal?: boolean
   parent?: UnitType
@@ -119,7 +120,7 @@ export interface UnitDefinition extends UnitData {
   mode: Mode
 }
 
-export const unitValueToString = (definition: DefinitionValues<UnitValueType>, type: UnitValueType): string => {
+export const unitValueToString = (definition: DataValues<UnitValueType>, type: UnitValueType): string => {
   const value = calculateValue(definition, type)
   switch (type) {
     case UnitAttribute.Maneuver:

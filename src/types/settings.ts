@@ -1,4 +1,4 @@
-import { CountryName, Mode } from 'types'
+import { Mode } from 'types'
 
 export enum Setting {
   GlobalTargeting = 'Units attack all targets',
@@ -300,13 +300,13 @@ export const parameterToDescription = (parameter: Setting, value: string | numbe
   }
 }
 
-export type CombatSettings = {
+export type CombatModeSettings = {
   [Setting.MoraleLostMultiplier]: number
   [Setting.StrengthLostMultiplier]: number
   [Setting.StackWipeCaptureChance]: number
 }
 
-export type SiteSettings = {
+export type CombatSharedSettings = {
   [Setting.GlobalTargeting]: boolean
   [Setting.BasePips]: number
   [Setting.MaxPips]: number
@@ -379,13 +379,9 @@ export type SiteSettings = {
   [Setting.RequiredCrossingSupport]: number
 }
 
-export type Settings = CombatSettings & SiteSettings
+export type CombatSettings = CombatModeSettings & CombatSharedSettings
 
-export type SettingsAndOptions = {
-  combatSettings: { [key in Mode]: CombatSettings }
-  siteSettings: SiteSettings
-  mode: Mode
-  filterNonCombat: boolean
-  country: CountryName
-  army: number
+export type Settings = {
+  modeSettings: Record<Mode, CombatModeSettings>
+  sharedSettings: CombatSharedSettings
 }

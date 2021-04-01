@@ -13,12 +13,12 @@ import {
   Country,
   CountryData
 } from 'types'
-import { createCountry } from 'reducers'
+import { importCountry } from 'reducers'
 import { Button, Grid, Table } from 'semantic-ui-react'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import { getDefaultCountry } from 'data'
 import { map } from 'utils'
-import { calculateValueWithoutLoss } from 'definition_values'
+import { calculateValueWithoutLoss } from 'data_values'
 import { getFirstPlayedCountry, loadArmies, loadCountry, loadCountryList } from './manager'
 import {
   convertCountryData,
@@ -164,7 +164,7 @@ const ImportSave = () => {
 
   const dispatch = useDispatch()
   const handleImport = () => {
-    if (countryData.current) dispatch(createCountry(countryData.current.name, countryData.current))
+    if (countryData.current) dispatch(importCountry(countryData.current))
   }
 
   return (

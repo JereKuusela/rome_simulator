@@ -1,7 +1,7 @@
 import { GovermentType, Selections } from './modifiers'
 import { Armies } from './armies'
 import { UnitsData, UnitAttribute } from './units'
-import { DefinitionValues } from 'definition_values'
+import { DataValues } from 'data_values'
 
 export type WearinessAttribute = UnitAttribute.Morale | UnitAttribute.Strength
 export type WearinessAttributes = Record<WearinessAttribute, Range>
@@ -36,7 +36,7 @@ export const countryAttributeToEffect = (attribute: CountryAttribute) => {
 
 export type CountryDefinitions = Record<CountryName, CountryDefinition>
 
-export interface CountryModifiers extends DefinitionValues<CountryAttribute> {
+export interface CountryModifiers extends DataValues<CountryAttribute> {
   selections: Selections
   culture: CultureType
   government: GovermentType

@@ -130,17 +130,17 @@ export const combineRoot = <S>(reducers: { [K in keyof S]: ReducerWithParam<S[K]
 
   return (state: S = {} as S, action) => {
     let nextState = {} as S
-    const settings: ReducerParams = { mode: (state as any)?.settings?.mode }
+    const ui: ReducerParams = { mode: (state as any)?.ui?.mode }
 
     let invalidated = false
     for (const key of reducerKeys) {
       const reducer = reducers[key] as any
-      nextState[key] = reducer(state[key], action, settings)
+      nextState[key] = reducer(state[key], action, ui)
       if (action.type && nextState[key] !== state[key] && key !== 'ui' && key !== 'transfer') invalidated = true
     }
     if (invalidated) {
       nextState = produce(nextState, (draft: any) => {
-        draft['battle'][settings.mode].outdated = true
+        draft['battle'][ui.mode].outdated = true
       })
     }
     return nextState

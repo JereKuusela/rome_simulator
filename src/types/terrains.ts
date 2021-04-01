@@ -1,5 +1,5 @@
-import { Definition } from 'types'
-import { DefinitionValues, calculateValue } from 'definition_values'
+import { Data } from 'types'
+import { DataValues, calculateValue } from 'data_values'
 
 // Only listed what are required by code. There is actually a lot more terrains.
 export enum TerrainType {
@@ -25,15 +25,15 @@ export enum TerrainCalc {
   CombatWidth = 'CombatWidth'
 }
 
-export type TerrainDefinitions = Record<TerrainType, Terrain>
+export type TerrainsData = Record<TerrainType, TerrainData>
 
 export type TerrainValueType = TerrainCalc
 
-export interface Terrain extends Definition<TerrainType>, DefinitionValues<TerrainValueType> {
+export interface TerrainData extends Data<TerrainType>, DataValues<TerrainValueType> {
   location: LocationType
 }
 
-export const terrainValueToString = (definition: Terrain, type: TerrainValueType): string => {
-  const value = calculateValue(definition, type)
+export const terrainValueToString = (data: TerrainData, type: TerrainValueType): string => {
+  const value = calculateValue(data, type)
   return String(value)
 }

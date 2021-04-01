@@ -2,19 +2,19 @@ import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { Image, Table } from 'semantic-ui-react'
 
-import { useSelectedTerrains, useSiteSettings, useTerrainsAtLocation } from 'state'
 import IconDice from 'images/chance.png'
 import StyledNumber from 'components/Utils/StyledNumber'
-import { Terrain, TerrainCalc, TerrainType } from 'types'
-import { calculateValue } from 'definition_values'
+import { TerrainData, TerrainCalc, TerrainType } from 'types'
+import { calculateValue } from 'data_values'
 import { addSign } from 'formatters'
 import { selectTerrain } from 'reducers'
 import DropdownTerrain from 'components/Dropdowns/DropdownTerrain'
+import { useSelectedTerrains, useCombatSettings, useTerrainsArray } from 'selectors'
 
 /**
  * Table with row types and flank sizes.
  */
-const TerrainSelector = (): JSX.Element => {
+const TerrainSelector = () => {
   const terrains = useSelectedTerrains()
   return (
     <Table celled unstackable>
@@ -35,10 +35,10 @@ const TerrainSelector = (): JSX.Element => {
   )
 }
 
-const RenderTerrain = ({ terrain, index }: { terrain: Terrain; index: number }) => {
+const RenderTerrain = ({ terrain, index }: { terrain: TerrainData; index: number }) => {
   const dispatch = useDispatch()
-  const terrains = useTerrainsAtLocation(terrain.location)
-  const settings = useSiteSettings()
+  const terrains = useTerrainsArray(terrain.location)
+  const settings = useCombatSettings()
 
   const handleSelect = useCallback(
     (type: TerrainType): void => {

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import { UnitType, UnitAttribute, CombatPhase, SiteSettings, UnitDefinition } from 'types'
+import { UnitType, UnitAttribute, CombatPhase, CombatSharedSettings, UnitDefinition } from 'types'
 import DropdownTable from './DropdownTable'
-import { calculateValue } from 'definition_values'
+import { calculateValue } from 'data_values'
 
 interface IProps {
   value: UnitType
   values: UnitDefinition[]
   onSelect: (type: UnitType) => void
-  settings: SiteSettings
+  settings: CombatSharedSettings
 }
 
 export default class DropdownArchetype extends Component<IProps> {

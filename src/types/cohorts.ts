@@ -10,10 +10,10 @@ import {
   UnitRole,
   Army
 } from 'types'
-import { DefinitionValues } from 'definition_values'
+import { DataValues } from 'data_values'
 
 /** An identity of a cohort. Used to store data but shouldn't be used for anything else. */
-export interface CohortData extends DefinitionValues<UnitValueType> {
+export interface CohortData extends DataValues<UnitValueType> {
   type: UnitType
   isLoyal?: boolean
 }

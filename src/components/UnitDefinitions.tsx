@@ -11,10 +11,10 @@ import {
   UnitAttribute,
   UnitDefinition,
   filterAttributes,
-  SiteSettings,
+  CombatSharedSettings,
   Setting
 } from 'types'
-import { calculateValue } from 'definition_values'
+import { calculateValue } from 'data_values'
 import { toPercent, toManpower, toSignedPercent } from 'formatters'
 
 import StyledNumber from './Utils/StyledNumber'
@@ -26,7 +26,7 @@ interface IProps {
   mode: Mode
   country: CountryName
   units: UnitDefinition[]
-  settings: SiteSettings
+  settings: CombatSharedSettings
   images: { [key in UnitType]: string[] }
   unitTypes: UnitType[]
   terrains: TerrainType[]

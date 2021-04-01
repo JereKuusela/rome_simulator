@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { SiteSettings, DataEntry } from 'types'
+import { CombatSharedSettings, DataEntry } from 'types'
 import DropdownTable from './DropdownTable'
 import ListModifier from 'components/Utils/ListModifier'
 
 type IProps = {
   value: string
   values: DataEntry[]
-  settings?: SiteSettings
+  settings?: CombatSharedSettings
   onSelect: (key: string) => void
   type: string
 }

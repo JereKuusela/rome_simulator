@@ -9,7 +9,7 @@ import Headers from './Utils/Headers'
 
 import {
   ValuesType,
-  Terrain,
+  TerrainData,
   TerrainType,
   LocationType,
   TerrainCalc,
@@ -17,11 +17,11 @@ import {
   terrainValueToString
 } from 'types'
 import { values } from 'utils'
-import { getValue, explainShort } from 'definition_values'
+import { getValue, explainShort } from 'data_values'
 
 interface IProps {
   customValueKey: string
-  terrain: Terrain
+  terrain: TerrainData
   onCustomValueChange: (key: string, attribute: TerrainValueType, value: number) => void
   onTypeChange: (type: TerrainType) => void
   onLocationChange: (location: LocationType) => void
@@ -58,7 +58,7 @@ export default class TerrainDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (terrain: Terrain, attribute: TerrainValueType) => {
+  renderRow = (terrain: TerrainData, attribute: TerrainValueType) => {
     const { customValueKey, onCustomValueChange } = this.props
     const value = getValue(ValuesType.Base, terrain, attribute, customValueKey)
 

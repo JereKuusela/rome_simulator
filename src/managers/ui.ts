@@ -1,4 +1,4 @@
-import { UI, ModalType, Modals, SideType } from 'types'
+import { UI, ModalType, Modals, SideType, Mode } from 'types'
 import { has } from 'lodash'
 
 export const closeModal = (ui: UI) => {
@@ -16,4 +16,27 @@ export const selectParticipant = (ui: UI, side: SideType, index: number) => {
 export const toggleAccordion = (ui: UI, key: string) => {
   if (has(ui.accordions, key)) delete ui.accordions[key]
   else ui.accordions[key] = true
+}
+
+export const toggleFilterNonCombat = (ui: UI) => {
+  ui.filterNonCombat = !ui.filterNonCombat
+}
+
+export const setMode = (ui: UI, mode: Mode) => {
+  ui.mode = mode
+  ui.selectedCountryIndex = 0
+  ui.selectedParticipantIndex = {
+    [SideType.A]: 0,
+    [SideType.B]: 0
+  }
+  ui.selectedArmyIndex = 0
+}
+
+export const selectCountry = (ui: UI, countryIndex: number) => {
+  ui.selectedCountryIndex = countryIndex
+  ui.selectedArmyIndex = 0
+}
+
+export const selectArmy = (ui: UI, armyIndex: number) => {
+  ui.selectedArmyIndex = armyIndex
 }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, getTerrainTypes, getCohortForEachRound, getMode, getSiteSettings, getCohortDefinition } from 'state'
+import { AppState, getCohortForEachRound, getCohortDefinition } from 'state'
 import {
   ValuesType,
   CountryName,
@@ -14,14 +14,15 @@ import {
   UnitValueType,
   Cohort,
   ModalType,
-  SiteSettings,
+  CombatSharedSettings,
   ArmyName
 } from 'types'
-import { addValue, addValues } from 'definition_values'
+import { addValue, addValues } from 'data_values'
 import { deleteCohort, setCohortValue, changeCohortType, toggleCohortLoyality, closeModal } from 'reducers'
 import { applyDynamicAttributes } from 'managers/units'
 import BaseModal from './BaseModal'
 import { toArr } from 'utils'
+import { getCombatSettings, getMode, getTerrainTypes } from 'selectors'
 const CUSTOM_VALUE_KEY = 'Unit'
 
 class ModalCohortDetail extends Component<IProps> {
@@ -83,7 +84,7 @@ class ModalCohortDetail extends Component<IProps> {
 }
 
 const convertCohort = (
-  settings: SiteSettings,
+  settings: CombatSharedSettings,
   definition: CohortDefinition | null,
   rounds: (Cohort | null)[]
 ): CohortDefinition | null => {
@@ -129,14 +130,14 @@ const convertCohort = (
 
 const mapStateToProps = (state: AppState) => {
   const data = state.ui.modals[ModalType.CohortDetail]
-  const settings = getSiteSettings(state)
+  const settings = getCombatSettings(state)
   const mode = getMode(state)
   if (data) {
     const cohort = getCohortDefinition(state, data.country, data.army, data.index)
     if (cohort) {
       return {
         index: data.index,
-        terrainTypes: getTerrainTypes(state),
+        terrainTypes: getTerrainTypes(state, undefined),
         country: data.country,
         army: data.army,
         unitTypes: toArr(state.countries[CountryName.Country1].units, unit => unit.type),
@@ -152,7 +153,7 @@ const mapStateToProps = (state: AppState) => {
   }
   return {
     index: 0,
-    terrainTypes: getTerrainTypes(state),
+    terrainTypes: getTerrainTypes(state, undefined),
     country: CountryName.Country1,
     army: ArmyName.Army,
     mode,

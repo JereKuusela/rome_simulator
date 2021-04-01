@@ -1,42 +1,24 @@
-import { SettingsAndOptions, CombatSettings, SiteSettings, Setting, Mode, CountryName } from 'types'
+import { Settings, CombatModeSettings, CombatSharedSettings, Setting, Mode } from 'types'
 import { speedValues } from 'data'
 
 export const changeCombatParameter = (
-  settings: SettingsAndOptions,
+  settings: Settings,
   mode: Mode,
-  key: keyof CombatSettings,
+  key: keyof CombatModeSettings,
   value: number | boolean | string
 ) => {
-  settings.combatSettings[mode][key] = value as never
+  settings.modeSettings[mode][key] = value as never
 }
 
 export const changeSiteParameter = (
-  settings: SettingsAndOptions,
-  key: keyof SiteSettings,
+  settings: Settings,
+  key: keyof CombatSharedSettings,
   value: number | boolean | string
 ) => {
   if (key === Setting.Performance && typeof value === 'string' && speedValues[value]) {
-    settings.siteSettings[Setting.PhasesPerRoll] = speedValues[value][0]
-    settings.siteSettings[Setting.MaxPhases] = speedValues[value][1]
-    settings.siteSettings[Setting.ReduceRolls] = speedValues[value][2]
+    settings.sharedSettings[Setting.PhasesPerRoll] = speedValues[value][0]
+    settings.sharedSettings[Setting.MaxPhases] = speedValues[value][1]
+    settings.sharedSettings[Setting.ReduceRolls] = speedValues[value][2]
   }
-  settings.siteSettings[key] = value as never
-}
-
-export const setMode = (settings: SettingsAndOptions, mode: Mode) => {
-  settings.mode = mode
-  settings.army = 0
-}
-
-export const selectCountry = (settings: SettingsAndOptions, countryName: CountryName) => {
-  settings.country = countryName
-  settings.army = 0
-}
-
-export const toggleFilterNonCombat = (settings: SettingsAndOptions) => {
-  settings.filterNonCombat = !settings.filterNonCombat
-}
-
-export const selectArmy = (settings: SettingsAndOptions, army: number) => {
-  settings.army = army
+  settings.sharedSettings[key] = value as never
 }

@@ -1,5 +1,5 @@
-import { UnitType, Definition, Mode } from 'types'
-import { DefinitionValues } from 'definition_values'
+import { UnitType, Data, Mode } from 'types'
+import { DataValues } from 'data_values'
 
 export enum TacticCalc {
   Casualties = 'Casualties'
@@ -23,11 +23,11 @@ export enum TacticType {
   ProbingAttack = 'Probing Attack'
 }
 
-export type TacticDefinitions = { [key in TacticType]: TacticDefinition }
+export type TacticsData = Record<TacticType, TacticData>
 
 export type TacticValueType = UnitType | TacticCalc | TacticType
 
-export interface TacticDefinition extends Definition<TacticType>, DefinitionValues<TacticValueType> {
+export interface TacticData extends Data<TacticType>, DataValues<TacticValueType> {
   mode: Mode
 }
 

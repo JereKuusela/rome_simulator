@@ -24,11 +24,11 @@ import {
   CountryDefinitions,
   ArmyName,
   ModeState,
-  SettingsAndOptions,
-  Side,
   Settings,
-  TacticDefinitions,
-  TerrainDefinitions,
+  Side,
+  CombatSettings,
+  TacticsData,
+  TerrainsData,
   CohortData,
   Environment,
   DisciplineValue,
@@ -48,10 +48,10 @@ import { getLeadingArmy, selectTerrain } from 'managers/battle'
  */
 export interface TestState {
   battle: ModeState
-  settings: SettingsAndOptions
+  settings: Settings
   countries: CountryDefinitions
-  tactics: TacticDefinitions
-  terrains: TerrainDefinitions
+  tactics: TacticsData
+  terrains: TerrainsData
 }
 /**
  * Returns initial state for a test.
@@ -71,13 +71,15 @@ export const initState = (): TestState => {
  */
 export const initCleanState = (): TestState => {
   const settings = getDefaultSettings()
-  settings.siteSettings = map(settings.siteSettings, item => (typeof item === 'boolean' ? false : item)) as Settings
-  settings.siteSettings[Setting.MoraleHitForNonSecondaryReinforcement] = 0
-  settings.siteSettings[Setting.FixFlankTargeting] = true
-  settings.siteSettings[Setting.CustomDeployment] = true
-  settings.siteSettings[Setting.AttackerSwapping] = true
-  settings.siteSettings[Setting.AttributeDiscipline] = DisciplineValue.Off
-  settings.siteSettings[Setting.BaseCombatWidth] = 30
+  settings.sharedSettings = map(settings.sharedSettings, item =>
+    typeof item === 'boolean' ? false : item
+  ) as CombatSettings
+  settings.sharedSettings[Setting.MoraleHitForNonSecondaryReinforcement] = 0
+  settings.sharedSettings[Setting.FixFlankTargeting] = true
+  settings.sharedSettings[Setting.CustomDeployment] = true
+  settings.sharedSettings[Setting.AttackerSwapping] = true
+  settings.sharedSettings[Setting.AttributeDiscipline] = DisciplineValue.Off
+  settings.sharedSettings[Setting.BaseCombatWidth] = 30
 
   const state = {
     battle: getDefaultBattle(1),
@@ -111,7 +113,7 @@ export const createArmyTest = (state: TestState, side: SideType, daysUntilBattle
   })
 }
 
-export const getSettingsTest = (state: TestState) => state.settings.siteSettings
+export const getSettingsTest = (state: TestState) => state.settings.sharedSettings
 
 export const createCohort = (type: UnitType): CohortDefinition => {
   const cohort = {

@@ -6,9 +6,10 @@ import IconEmpty from 'images/empty.png'
 import { SideType, UnitType, UnitAttribute, isAttributeEnabled, Cohorts, Cohort } from 'types'
 import { strengthToValue, toNumber } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
-import { AppState, getCohorts, getMode, getBattle, getSiteSettings } from 'state'
+import { AppState, getCohorts } from 'state'
 import { flatten, uniq } from 'lodash'
 import AttributeImage from 'components/Utils/AttributeImage'
+import { getBattle, getMode, getCombatSettings } from 'selectors'
 
 class TableStats extends Component<IProps> {
   shouldComponentUpdate(prevProps: IProps) {
@@ -202,7 +203,7 @@ const mapStateToProps = (state: AppState) => ({
   cohortsA: getCohorts(state, SideType.A),
   cohortsD: getCohorts(state, SideType.B),
   mode: getMode(state),
-  settings: getSiteSettings(state),
+  settings: getCombatSettings(state),
   timestamp: getBattle(state).timestamp
 })
 

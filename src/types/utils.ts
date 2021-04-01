@@ -1,6 +1,6 @@
 import { CombatPhase, CharacterAttribute, CountryAttribute, UnitAttribute, Setting, Mode, ValuesType } from 'types'
 import { toPercent } from 'formatters'
-import { SiteSettings, DisciplineValue } from './settings'
+import { CombatSharedSettings, DisciplineValue } from './settings'
 
 export const formatAttribute = (value: number, attribute: string) => {
   if (
@@ -20,7 +20,7 @@ export const formatAttribute = (value: number, attribute: string) => {
 
 export const filterAttributes = <T extends string>(
   attributes: T[],
-  settings: SiteSettings,
+  settings: CombatSharedSettings,
   mode?: Mode,
   showStatistics?: boolean
 ): T[] => attributes.filter(attribute => isAttributeEnabled(attribute, settings, mode, showStatistics))
@@ -30,7 +30,7 @@ export const getAttributeValuesType = (attribute: UnitAttribute) =>
 
 export const isAttributeEnabled = (
   attribute: string,
-  settings: SiteSettings,
+  settings: CombatSharedSettings,
   mode?: Mode,
   showStatistics?: boolean
 ) => {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { TacticType, Tactic, SiteSettings, TacticMatch } from 'types'
+import { TacticType, Tactic, CombatSharedSettings, TacticMatch } from 'types'
 import DropdownTable from './DropdownTable'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { toPercent, toSignedPercent } from 'formatters'
@@ -8,7 +8,7 @@ import LabelItem from 'components/Utils/LabelUnit'
 type IProps = {
   value: TacticType
   values: Tactic[]
-  settings: SiteSettings
+  settings: CombatSharedSettings
   onSelect: (type: TacticType) => void
 }
 

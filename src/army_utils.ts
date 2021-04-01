@@ -8,24 +8,24 @@ import {
   UnitDefinitions,
   UnitDefinition,
   Cohorts,
-  SiteSettings,
+  CombatSharedSettings,
   ReserveDefinition,
   CohortDefinition,
   CohortData
 } from 'types'
-import { mergeValues, shrinkValues } from 'definition_values'
+import { mergeValues, shrinkValues } from 'data_values'
 import { map, filter } from 'utils'
 import { applyDynamicAttributes } from 'managers/units'
 
 /** Merges cohort definitions with their units to get actual cohorts. */
 export const convertReserveDefinitions = (
-  settings: SiteSettings,
+  settings: CombatSharedSettings,
   reserve: ReserveDefinition,
   units: UnitDefinitions
 ): ReserveDefinition => reserve.map(cohort => convertCohortDefinition(settings, cohort, units))
 
 export const convertCohortDefinition = (
-  settings: SiteSettings,
+  settings: CombatSharedSettings,
   cohort: CohortData,
   units: UnitDefinitions
 ): CohortDefinition => applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings)
@@ -35,7 +35,7 @@ export const shrinkUnits = <T extends UnitsData | UnitDefinitions>(definitions: 
   map(definitions, unit => shrinkValues(unit, unit.type)) as T
 
 export const convertUnitDefinitions = (
-  settings: SiteSettings,
+  settings: CombatSharedSettings,
   definitions: UnitsData,
   general: UnitValues
 ): UnitDefinitions => {
@@ -45,7 +45,7 @@ export const convertUnitDefinitions = (
 }
 
 export const convertUnitDefinition = (
-  settings: SiteSettings,
+  settings: CombatSharedSettings,
   definitions: UnitsData,
   parents: UnitsData,
   general: UnitValues,

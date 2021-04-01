@@ -12,7 +12,7 @@ import {
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { map } from 'utils'
-import { CountryDefinitions, ModeState, SettingsAndOptions, TacticDefinitions, TerrainDefinitions } from 'types'
+import { CountryDefinitions, ModeState, Settings, TacticsData, TerrainsData } from 'types'
 import { initialize } from 'managers/combat'
 import { PersistPartial } from 'redux-persist/es/persistReducer'
 import { Reducer } from 'react'
@@ -20,13 +20,13 @@ import { Action } from 'reducers/utils'
 
 const TacticsTransform = createTransform(
   inboundState => inboundState,
-  (outboundState: TacticDefinitions) => restoreDefaultTactics(outboundState),
+  (outboundState: TacticsData) => restoreDefaultTactics(outboundState),
   { whitelist: ['tactics'] }
 )
 
 const TerrainsTransform = createTransform(
   inboundState => inboundState,
-  (outboundState: TerrainDefinitions) => restoreDefaultTerrains(outboundState),
+  (outboundState: TerrainsData) => restoreDefaultTerrains(outboundState),
   { whitelist: ['terrains'] }
 )
 
@@ -45,7 +45,7 @@ const CountriesTransform = createTransform(
 
 const SettingsTransform = createTransform(
   inboundState => inboundState,
-  (outboundState: SettingsAndOptions) => restoreDefaultSettings(outboundState),
+  (outboundState: Settings) => restoreDefaultSettings(outboundState),
   { whitelist: ['settings'] }
 )
 

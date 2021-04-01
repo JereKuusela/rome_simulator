@@ -16,15 +16,7 @@ import {
   CultureType
 } from 'types'
 import { getImage, mapRange } from 'utils'
-import {
-  useArmyData,
-  useWeariness,
-  useUnitDefinitions,
-  useSiteSettings,
-  useMode,
-  useCountry,
-  useTechLevel
-} from 'state'
+import { useArmyData, useUnitDefinitions, useCountry, useTechLevel } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
 import { getArchetypes, getActualUnits, getLatestUnits, getChildUnits, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
@@ -34,6 +26,7 @@ import { applyLosses } from 'managers/units'
 import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
 import { getCultures } from 'data'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
+import { useMode, useCombatSettings, useWeariness } from 'selectors'
 
 type Props = {
   side: SideType
@@ -61,7 +54,7 @@ const TableUnitTypes = (props: Props): JSX.Element | null => {
   const { countryName, armyName, side } = props
   const dispatch = useDispatch()
   const units = useUnitDefinitions(countryName, armyName)
-  const settings = useSiteSettings()
+  const settings = useCombatSettings()
   const mode = useMode()
   const preferences = useArmyData(countryName, armyName).unitPreferences
   const techLevel = useTechLevel(countryName)
@@ -113,7 +106,7 @@ const TableUnitTypes = (props: Props): JSX.Element | null => {
 
 const RootUnitRow = (props: { unit: UnitDefinition } & Props) => {
   const { unit, countryName, armyName, onRowClick } = props
-  const settings = useSiteSettings()
+  const settings = useCombatSettings()
   const mode = useMode()
   const culture = useCountry(countryName).modifiers.culture
   const dispatch = useDispatch()
@@ -160,7 +153,7 @@ const RoleRow = (props: { role: UnitRole; archetypes: UnitDefinition[] } & Props
   const { countryName, armyName, onRowClick, archetypes, role } = props
   const dispatch = useDispatch()
   const units = useUnitDefinitions(countryName, armyName)
-  const settings = useSiteSettings()
+  const settings = useCombatSettings()
   const mode = useMode()
   const preferences = useArmyData(countryName, armyName).unitPreferences
   const techLevel = useTechLevel(countryName)
@@ -216,7 +209,7 @@ const RoleRow = (props: { role: UnitRole; archetypes: UnitDefinition[] } & Props
 
 const UnitRow = (props: { unit: UnitDefinition } & Props) => {
   const { unit, countryName, armyName, onRowClick } = props
-  const settings = useSiteSettings()
+  const settings = useCombatSettings()
   const mode = useMode()
 
   const handleRowCLick = useCallback(() => onRowClick(countryName, armyName, unit.type), [

@@ -12,7 +12,7 @@ import {
   CombatPhase,
   getTerrainAttributes
 } from 'types'
-import { addValues } from 'definition_values'
+import { addValues } from 'data_values'
 import { toObj, removeUndefined, filter, toArr, values } from 'utils'
 import { uniq } from 'lodash'
 

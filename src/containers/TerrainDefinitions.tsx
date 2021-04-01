@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
 import { Table, Button, Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getMode } from 'state'
+import { AppState } from 'state'
 
 import Headers from '../components/Utils/Headers'
 import StyledNumber from '../components/Utils/StyledNumber'
 
-import { Terrain, TerrainType, TerrainCalc, ModalType } from 'types'
-import { keys, getImage, toArr } from 'utils'
-import { calculateValue } from 'definition_values'
+import { TerrainData, TerrainType, TerrainCalc, ModalType } from 'types'
+import { keys, getImage } from 'utils'
+import { calculateValue } from 'data_values'
 import { openModal, createTerrain } from 'reducers'
 import { addSign } from 'formatters'
+import { getMode, getTerrainsArray } from 'selectors'
 
 // Display component for showing unit definitions for an army.
 class TerrainDefinitions extends Component<IProps> {
@@ -40,7 +41,7 @@ class TerrainDefinitions extends Component<IProps> {
       initial: ''
     })
 
-  renderRow = (definition: Terrain) => {
+  renderRow = (definition: TerrainData) => {
     return (
       <Table.Row key={definition.type} onClick={() => this.openModal(definition)}>
         <Table.Cell>
@@ -53,18 +54,18 @@ class TerrainDefinitions extends Component<IProps> {
     )
   }
 
-  renderAttributes = (definition: Terrain) =>
+  renderAttributes = (definition: TerrainData) =>
     this.attributes.map(type => (
       <Table.Cell key={type}>
         <StyledNumber value={calculateValue(definition, type)} formatter={addSign} hideZero />
       </Table.Cell>
     ))
 
-  openModal = (definition: Terrain) => this.props.openModal(ModalType.TerrainDetail, { type: definition.type })
+  openModal = (definition: TerrainData) => this.props.openModal(ModalType.TerrainDetail, { type: definition.type })
 }
 
 const mapStateToProps = (state: AppState) => ({
-  terrains: toArr(state.terrains),
+  terrains: getTerrainsArray(state, undefined),
   mode: getMode(state)
 })
 

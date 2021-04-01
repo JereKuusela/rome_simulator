@@ -3,41 +3,42 @@ import {
   TacticValueType,
   ValuesType,
   Mode,
-  TacticDefinition,
-  TacticDefinitions,
+  TacticData,
+  TacticsData,
   Cohorts,
   Tactic,
   TacticCalc
 } from 'types'
-import { addValuesWithMutate, calculateValue } from 'definition_values'
+import { addValuesWithMutate, calculateValue } from 'data_values'
 import { getTacticIcon } from 'data'
 import { calculateTactic, getTacticMatch } from 'combat'
+import { filter } from 'utils'
 
-export const setTacticValue = (tactic: TacticDefinition, key: string, attribute: TacticValueType, value: number) => {
+export const setTacticValue = (tactic: TacticData, key: string, attribute: TacticValueType, value: number) => {
   addValuesWithMutate(tactic, ValuesType.Base, key, [[attribute, value]])
 }
 
-export const deleteTactic = (tactics: TacticDefinitions, type: TacticType) => {
+export const deleteTactic = (tactics: TacticsData, type: TacticType) => {
   delete tactics[type]
 }
 
-export const createTactic = (tactics: TacticDefinitions, type: TacticType, mode: Mode) => {
+export const createTactic = (tactics: TacticsData, type: TacticType, mode: Mode) => {
   tactics[type] = { type, mode, image: getTacticIcon(type) }
 }
 
-export const setTacticType = (tactics: TacticDefinitions, oldType: TacticType, type: TacticType) => {
+export const setTacticType = (tactics: TacticsData, oldType: TacticType, type: TacticType) => {
   delete Object.assign(tactics, { [type]: { ...tactics[oldType], type } })[oldType]
 }
 
-export const setTacticImage = (tactic: TacticDefinition, image: string) => {
+export const setTacticImage = (tactic: TacticData, image: string) => {
   tactic.image = image
 }
 
-export const setTacticMode = (tactic: TacticDefinition, mode: Mode) => {
+export const setTacticMode = (tactic: TacticData, mode: Mode) => {
   tactic.mode = mode
 }
 
-export const convertTactic = (tactic: TacticDefinition, cohorts: Cohorts, opposingTactic: TacticDefinition): Tactic => {
+export const convertTactic = (tactic: TacticData, cohorts: Cohorts, opposingTactic: TacticData): Tactic => {
   return {
     type: tactic.type,
     effect: calculateTactic(cohorts, tactic),
@@ -47,3 +48,7 @@ export const convertTactic = (tactic: TacticDefinition, cohorts: Cohorts, opposi
     match: getTacticMatch(tactic, opposingTactic)
   }
 }
+
+const filterTactic = (tactic: TacticData, mode: Mode) => tactic.mode === mode
+
+export const filterTactics = (tactics: TacticsData, mode: Mode) => filter(tactics, tactic => filterTactic(tactic, mode))

@@ -5,7 +5,7 @@ import {
   filterValues,
   addValue,
   clearAllValuesWithMutate
-} from 'definition_values'
+} from 'data_values'
 import {
   Mode,
   CharacterAttribute,
@@ -27,12 +27,12 @@ import {
   Setting,
   UnitRole,
   UnitDefinition,
-  SiteSettings,
+  CombatSharedSettings,
   ModifierWithKey,
   ModifierType,
   Selections,
   SelectionType,
-  TacticDefinitions
+  TacticsData
 } from 'types'
 import { toObj, toArr, toSet, ObjSet, values } from 'utils'
 import { findLastIndex, sortBy } from 'lodash'
@@ -41,9 +41,9 @@ import { getRootParent } from './units'
 const BASE_STAT_KEY = 'Custom'
 
 export const convertGeneralDefinition = (
-  settings: SiteSettings,
+  settings: CombatSharedSettings,
   general: GeneralData,
-  tactics: TacticDefinitions
+  tactics: TacticsData
 ): GeneralDefinition => {
   const base = filterValues(general, BASE_STAT_KEY)
   const attributes = [
@@ -99,7 +99,12 @@ export const overrideRoleWithPreferences = (
   })
 }
 
-export const getUnitList = (units: UnitDefinitions, mode: Mode, filterParents: boolean, settings: SiteSettings) => {
+export const getUnitList = (
+  units: UnitDefinitions,
+  mode: Mode,
+  filterParents: boolean,
+  settings: CombatSharedSettings
+) => {
   const parents = getParents(units)
   let list = settings[Setting.Tech]
     ? [units[UnitType.Land]].concat(getArchetypes(units, mode))

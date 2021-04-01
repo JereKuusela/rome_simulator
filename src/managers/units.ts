@@ -11,12 +11,12 @@ import {
   WearinessAttributes,
   ReserveData,
   ModifierWithKey,
-  SiteSettings,
+  CombatSharedSettings,
   SideType,
   GeneralData,
   CountryDefinition
 } from 'types'
-import { addValuesWithMutate, calculateValue, addValues, addValue } from 'definition_values'
+import { addValuesWithMutate, calculateValue, addValues, addValue } from 'data_values'
 import { getUnitIcon } from 'data'
 import { toArr, round, randomWithinRange } from 'utils'
 import { getCountryModifiers, getGeneralModifiers, mapModifiersToUnits2 } from './modifiers'
@@ -62,7 +62,7 @@ export const changeParent = (unit: UnitData, parent: UnitType) => {
 
 export const getRootParent = (mode: Mode) => (mode === Mode.Naval ? UnitType.Naval : UnitType.Land)
 
-export const applyDynamicAttributes = <T extends UnitData>(definition: T, settings: SiteSettings) => {
+export const applyDynamicAttributes = <T extends UnitData>(definition: T, settings: CombatSharedSettings) => {
   if (settings[Setting.AttributeDrill]) {
     const drill = 0.1 * calculateValue(definition, UnitAttribute.Drill)
     definition = addValues(definition, ValuesType.Base, 'From drill', [

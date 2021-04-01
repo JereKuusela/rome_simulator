@@ -2,17 +2,7 @@ import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import {
-  AppState,
-  mergeUnitTypes,
-  getTerrainTypes,
-  getUnitImages,
-  getMode,
-  getCountries,
-  getSiteSettings,
-  getUnitDefinitions,
-  getSelectedArmy
-} from 'state'
+import { AppState, mergeUnitTypes, getUnitImages, getUnitDefinitions } from 'state'
 import { createUnit, deleteUnit, changeUnitType, changeWeariness, openModal } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import CountryManager from 'containers/CountryManager'
@@ -22,6 +12,14 @@ import { getAllUnitList } from 'managers/army'
 import AccordionToggle from 'containers/AccordionToggle'
 import TerrainDefinitions from 'containers/TerrainDefinitions'
 import TacticDefinitions from 'containers/TacticDefinitions'
+import {
+  getMode,
+  getCombatSettings,
+  getTerrainTypes,
+  getSelectedArmy,
+  getSelectedCountry,
+  getWeariness
+} from 'selectors'
 
 interface IState {
   modalCountry: CountryName | undefined
@@ -95,12 +93,12 @@ const mapStateToProps = (state: AppState) => ({
   units: getAllUnitList(getUnitDefinitions(state), getMode(state)),
   images: getUnitImages(state),
   unitTypes: mergeUnitTypes(state),
-  terrains: getTerrainTypes(state),
+  terrains: getTerrainTypes(state, undefined),
   mode: getMode(state),
-  country: state.settings.country,
+  country: getSelectedCountry(state),
   army: getSelectedArmy(state),
-  settings: getSiteSettings(state),
-  weariness: getCountries(state)[state.settings.country].weariness
+  settings: getCombatSettings(state),
+  weariness: getWeariness(state, getSelectedCountry(state))
 })
 
 const actions = {

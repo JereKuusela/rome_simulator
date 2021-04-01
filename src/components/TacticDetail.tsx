@@ -6,14 +6,14 @@ import Headers from './Utils/Headers'
 import DetailDropdownRow from './Detail/DetailDropdownRow'
 import DetailInputRow from './Detail/DetailInputRow'
 import Images from './Utils/Images'
-import { Mode, ValuesType, TacticType, UnitType, TacticDefinition, TacticCalc, TacticValueType } from 'types'
+import { Mode, ValuesType, TacticType, UnitType, TacticData, TacticCalc, TacticValueType } from 'types'
 import { values, getImage } from 'utils'
-import { getValue, calculateValue, explainShort } from 'definition_values'
+import { getValue, calculateValue, explainShort } from 'data_values'
 import { toSignedPercent, toPercent } from 'formatters'
 
 interface IProps {
-  tactics: TacticDefinition[]
-  tactic: TacticDefinition
+  tactics: TacticData[]
+  tactic: TacticData
   unitTypes: UnitType[]
   images: { [key in UnitType]: string[] }
   customValueKey: string
@@ -51,7 +51,7 @@ export default class TacticDetail extends Component<IProps> {
     )
   }
 
-  renderRow = (tactic: TacticDefinition, attribute: TacticValueType, relative: boolean, images: string[]) => {
+  renderRow = (tactic: TacticData, attribute: TacticValueType, relative: boolean, images: string[]) => {
     const { customValueKey, onCustomValueChange } = this.props
     const baseValue = getValue(ValuesType.Base, tactic, attribute, customValueKey)
     const value = calculateValue(tactic, attribute)

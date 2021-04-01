@@ -1,11 +1,11 @@
 import { sumBy, values } from 'lodash'
 import {
-  Terrain,
+  TerrainData,
   UnitType,
   CohortDefinition,
   UnitAttribute,
   Setting,
-  Settings,
+  CombatSettings,
   CombatPhase,
   UnitValueType,
   Cohort,
@@ -17,7 +17,7 @@ import {
   getTerrainAttributes
 } from 'types'
 import { toObj, map, noZero } from 'utils'
-import { calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier } from 'definition_values'
+import { calculateValue, calculateValueWithoutLoss, calculateBase, calculateModifier } from 'data_values'
 import { calculateExperienceReduction } from './combat_utils'
 import { getConfig } from 'data/config'
 
@@ -26,8 +26,8 @@ export const getProperties = (
   armyName: ArmyName,
   participantIndex: number,
   index: number,
-  settings: Settings,
-  terrains: Terrain[],
+  settings: CombatSettings,
+  terrains: TerrainData[],
   unitTypes: UnitType[],
   cohort: CohortDefinition
 ): CohortProperties => {
@@ -84,8 +84,8 @@ export const getCombatUnit = (
   armyName: ArmyName,
   participantIndex: number,
   index: number,
-  settings: Settings,
-  terrains: Terrain[],
+  settings: CombatSettings,
+  terrains: TerrainData[],
   unitTypes: UnitType[],
   cohort: CohortDefinition
 ): Cohort => ({
@@ -137,7 +137,7 @@ const applyPhaseDamage = (unit: CohortDefinition, value: number) => ({
 const applyUnitTypes = (
   unit: CohortDefinition,
   unitTypes: UnitType[],
-  settings: Settings,
+  settings: CombatSettings,
   values: { [key in CombatPhase]: number }
 ) =>
   toObj(
@@ -148,7 +148,7 @@ const applyUnitTypes = (
 
 const applyDamageTypes = (
   unit: CohortDefinition,
-  settings: Settings,
+  settings: CombatSettings,
   values: { [key in UnitType]: { [key in CombatPhase]: number } }
 ) => {
   const moraleDone =
@@ -166,7 +166,12 @@ const applyDamageTypes = (
   }
 }
 
-const getDamages = (settings: Settings, terrains: Terrain[], unitTypes: UnitType[], cohort: CohortDefinition) =>
+const getDamages = (
+  settings: CombatSettings,
+  terrains: TerrainData[],
+  unitTypes: UnitType[],
+  cohort: CohortDefinition
+) =>
   applyDamageTypes(
     cohort,
     settings,
@@ -187,7 +192,7 @@ const getBase = (unit: CohortDefinition, attribute: UnitValueType, enabled: bool
 const getModifier = (unit: CohortDefinition, attribute: UnitValueType, enabled: boolean) =>
   enabled ? calculateModifier(unit, attribute) : 0
 
-const precalculateDamage = (terrains: Terrain[], unit: CohortDefinition, settings: Settings) =>
+const precalculateDamage = (terrains: TerrainData[], unit: CohortDefinition, settings: CombatSettings) =>
   settings[Setting.Precision] *
   applyTerrain(unit, terrains, UnitAttribute.Damage, settings) *
   getValue(
@@ -200,7 +205,12 @@ const precalculateDamage = (terrains: Terrain[], unit: CohortDefinition, setting
   getValue(unit, UnitAttribute.DamageDone, settings[Setting.AttributeDamage]) *
   (1.0 + (settings[Setting.AttributeLoyal] && unit.isLoyal ? getConfig().LoyalDamage : 0))
 
-const applyTerrain = (unit: CohortDefinition, terrains: Terrain[], attribute: UnitAttribute, settings: Settings) => {
+const applyTerrain = (
+  unit: CohortDefinition,
+  terrains: TerrainData[],
+  attribute: UnitAttribute,
+  settings: CombatSettings
+) => {
   const base =
     calculateBase(unit, attribute) +
     sumBy(terrains, terrain =>
@@ -213,7 +223,7 @@ const applyTerrain = (unit: CohortDefinition, terrains: Terrain[], attribute: Un
     )
   return base * (1 + multiplier)
 }
-const precalculateDamageReduction = (unit: CohortDefinition, settings: Settings) =>
+const precalculateDamageReduction = (unit: CohortDefinition, settings: CombatSettings) =>
   ((settings[Setting.AttributeExperience] ? 1.0 + calculateExperienceReduction(settings, unit) : 1.0) *
     getValue(unit, UnitAttribute.DamageTaken, settings[Setting.AttributeDamage])) /
   noZero(getValue(unit, UnitAttribute.Discipline, settings[Setting.AttributeDiscipline] === DisciplineValue.Both)) /

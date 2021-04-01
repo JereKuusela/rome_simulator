@@ -13,6 +13,7 @@ import {
 const countriesMapping: ActionToFunction<Countries> = {}
 
 export const createCountry = makeActionRemoveFirst(manager.createCountry, countriesMapping)
+export const importCountry = makeActionRemoveFirst(manager.importCountry, countriesMapping)
 export const deleteCountry = makeActionRemoveFirst(manager.deleteCountry, countriesMapping)
 export const changeCountryName = makeActionRemoveFirst(manager.changeCountryName, countriesMapping)
 

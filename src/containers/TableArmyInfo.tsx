@@ -16,7 +16,7 @@ import {
   UnitAttribute
 } from 'types'
 import { keys } from 'utils'
-import { useGeneral, useCountries, useMode, useSide, useSiteSettings, useArmies, useUnitDefinition } from 'state'
+import { useCountries, useUnitDefinition } from 'state'
 import {
   selectParticipantCountry,
   selectParticipantArmy,
@@ -37,16 +37,16 @@ import UnitValueInput from './UnitValueInput'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { getDefaultArmyName } from 'data'
+import { useGeneral, useMode, useSide, useCombatSettings, useArmies } from 'selectors'
 
 type Props = {
   type: SideType
 }
 
 const TableArmyInfo = ({ type }: Props): JSX.Element => {
-  const settings = useSiteSettings()
+  const settings = useCombatSettings()
   const dispatch = useDispatch()
   const participants = useSide(type).participants
-
   const last = participants[participants.length - 1]
 
   const handleAddParticipant = () => {
@@ -105,7 +105,7 @@ const ArmyInfo = ({ type, participant, index }: ArmyInfoProps) => {
   const countries = useCountries()
   const mode = useMode()
   const side = useSide(type)
-  const settings = useSiteSettings()
+  const settings = useCombatSettings()
   const armies = useArmies(countryName)
   const artillery = useUnitDefinition(countryName, armyName, UnitType.Artillery)
 
@@ -119,7 +119,9 @@ const ArmyInfo = ({ type, participant, index }: ArmyInfoProps) => {
         type,
         index,
         name,
-        countries[name] ? (Object.keys(filterArmies(countries[name], mode))[0] as ArmyName) : getDefaultArmyName(mode)
+        countries[name]
+          ? (Object.keys(filterArmies(countries[name].armies, mode))[0] as ArmyName)
+          : getDefaultArmyName(mode)
       )
     )
   }

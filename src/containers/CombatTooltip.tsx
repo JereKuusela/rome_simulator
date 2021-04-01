@@ -26,9 +26,10 @@ import {
   getDefensiveSupportCohortPips
 } from 'combat'
 import { toSignedPercent, strengthToValue, toNumber, addSign, toMultiplier, toMorale } from 'formatters'
-import { AppState, getSettings, getSelectedTerrains, getCohort, getCombatSide, getMode } from 'state'
+import { AppState, getCohort } from 'state'
 import { noZero } from 'utils'
 import { getCohortName } from 'managers/units'
+import { getCombatSettings, getCombatSide, getMode, getSelectedTerrains } from 'selectors'
 
 type Props = {
   row: number | null
@@ -360,7 +361,7 @@ const mapStateToProps = (state: AppState, props: Props) => ({
       ? convertUnit(getCohort(state, props.side, props.part, props.row, props.column))
       : null,
   results: getCombatSide(state, props.side).results,
-  settings: getSettings(state),
+  settings: getCombatSettings(state),
   terrains: getSelectedTerrains(state),
   mode: getMode(state)
 })

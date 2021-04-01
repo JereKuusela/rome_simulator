@@ -11,12 +11,12 @@ export enum ValuesType {
   LossModifier = 'LossModifier'
 }
 
-type BD = DefinitionValues<any>
+type BD = DataValues<any>
 
 type ValuesSub = { [key: string]: number }
 type Values<S extends string> = { [key in S]: ValuesSub }
 
-export interface DefinitionValues<S extends string> {
+export interface DataValues<S extends string> {
   baseValues?: Values<S>
   modifierValues?: Values<S>
   gainValues?: Values<S>

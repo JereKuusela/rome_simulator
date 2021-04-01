@@ -1,9 +1,9 @@
 import {
-  TacticDefinition,
+  TacticData,
   UnitAttribute,
   Setting,
   UnitRole,
-  Settings,
+  CombatSettings,
   CombatPhase,
   Cohorts,
   Cohort,
@@ -17,7 +17,7 @@ import {
   FlankRatioPenalty
 } from 'types'
 import { keys, map, multiplyChance, noZero, toArr, toObj } from 'utils'
-import { calculateValue } from 'definition_values'
+import { calculateValue } from 'data_values'
 import {
   getCombatPhase,
   calculateCohortPips,
@@ -198,7 +198,7 @@ const pickTargets = (environment: Environment, source: Frontline, target: Frontl
 /**
  * Calculates effectiveness of a tactic against another tactic with a given army.
  */
-export const calculateTactic = (army: Cohorts, tactic: TacticDefinition, counterTactic?: TacticDefinition): number => {
+export const calculateTactic = (army: Cohorts, tactic: TacticData, counterTactic?: TacticData): number => {
   const versusDamage = counterTactic ? calculateValue(tactic, counterTactic.type) : 1.0
   let averageEffectiveness = 1.0
   if (versusDamage > 0 && tactic && army) {
@@ -219,14 +219,14 @@ export const calculateTactic = (army: Cohorts, tactic: TacticDefinition, counter
   )
 }
 
-export const getTacticMatch = (tactic: TacticDefinition, counterTactic?: TacticDefinition): TacticMatch => {
+export const getTacticMatch = (tactic: TacticData, counterTactic?: TacticData): TacticMatch => {
   const effectiveness = counterTactic ? calculateValue(tactic, counterTactic.type) : 1.0
   if (effectiveness > 0) return TacticMatch.Positive
   if (effectiveness < 0) return TacticMatch.Negative
   return TacticMatch.Neutral
 }
 
-const calculateFlankRatioPenalty = (armies: Army[], cohorts: Cohorts, setting: Settings) => {
+const calculateFlankRatioPenalty = (armies: Army[], cohorts: Cohorts, setting: CombatSettings) => {
   const ratios = calculateFlankRatios(cohorts)
   return toObj(
     armies,
@@ -367,7 +367,7 @@ const attackSub = (
   strengthMultiplier: number,
   phase: CombatPhase,
   flankRatioPenalty: FlankRatioPenalty,
-  settings: Settings
+  settings: CombatSettings
 ) => {
   for (let i = 0; i < frontline.length; i++) {
     for (let j = 0; j < frontline[i].length; j++) {
@@ -392,7 +392,12 @@ const attackSub = (
   }
 }
 
-const calculateCohortDamageMultiplier = (source: Cohort, target: Cohort, isSupport: boolean, settings: Settings) => {
+const calculateCohortDamageMultiplier = (
+  source: Cohort,
+  target: Cohort,
+  isSupport: boolean,
+  settings: CombatSettings
+) => {
   const definitionS = source.properties
   const definitionT = target.properties
 
@@ -412,7 +417,7 @@ const calculateDamageMultiplier = (
   dynamicMultiplier: number,
   isSupport: boolean,
   phase: CombatPhase,
-  settings: Settings
+  settings: CombatSettings
 ) => {
   dynamicMultiplier *= calculateCohortDamageMultiplier(source, target, isSupport, settings)
   if (settings[Setting.DamageLossForMissingMorale]) {
@@ -459,7 +464,7 @@ const calculateMoraleLosses = (
   roll: number,
   dynamicMultiplier: number,
   phase: CombatPhase,
-  settings: Settings
+  settings: CombatSettings
 ) => {
   const pips = calculateTotalPips(roll, settings[Setting.MaxPips], source, target, targetSupport, UnitAttribute.Morale)
   const morale = settings[Setting.UseMaxMorale] ? source.properties.maxMorale : source[UnitAttribute.Morale]
@@ -485,7 +490,7 @@ const calculateStrengthLosses = (
   roll: number,
   dynamicMultiplier: number,
   phase: CombatPhase,
-  settings: Settings
+  settings: CombatSettings
 ) => {
   const pips = calculateTotalPips(
     roll,
@@ -540,7 +545,7 @@ const sumArchetypeCounter = (frontline: Frontline, archetypes: UnitType[]) => {
 const calculateCounterPenalty = (
   archetypes: { [key in UnitType]: number },
   counters: { [key in UnitType]: number },
-  settings: Settings
+  settings: CombatSettings
 ) => {
   return map(
     archetypes,
@@ -555,7 +560,7 @@ const calculateDamages = (
   frontline: Frontline,
   counterPenalties: { [key in UnitType]: number },
   pips: number,
-  settings: Settings
+  settings: CombatSettings
 ) => {
   const multiplier = pips * settings[Setting.StrengthLostMultiplier]
   let total = 0
@@ -595,7 +600,7 @@ const calculateKills = (frontline: Frontline, totalKills: number, totalDamage: n
 /**
  * CK3 damage formula. Only uses CK3 stuff.
  */
-export const attackGlobalSub = (a: Frontline, b: Frontline, pipsA: number, pipsB: number, settings: Settings) => {
+export const attackGlobalSub = (a: Frontline, b: Frontline, pipsA: number, pipsB: number, settings: CombatSettings) => {
   const archetypesA = sumArchetypeStrength(a)
   const strengthA = sum(toArr(archetypesA))
   const archetypesB = sumArchetypeStrength(b)

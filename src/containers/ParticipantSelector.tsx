@@ -1,42 +1,36 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
 
-import { AppState, getSide } from 'state'
 import { selectParticipant } from 'reducers'
 import { SideType } from 'types'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import { getParticipantName } from 'managers/battle'
+import { useParticipants, useSelectedParticipantIndex } from 'selectors'
+import { useDispatch } from 'react-redux'
 
 type Props = {
-  side: SideType
+  sideType: SideType
 }
 
 /**
- * Selector for battle participant.
+ * Selector for an active participant.
  */
-class ParticipantSelector extends Component<IProps> {
-  render() {
-    const { value, values, selectParticipant, side } = this.props
-    return (
-      <span>
-        <span>Edit army: </span>
-        <SimpleDropdown value={value} values={values} onChange={value => selectParticipant(side, value)} />
-      </span>
-    )
-  }
-}
-
-const mapStateToProps = (state: AppState, props: Props) => ({
-  value: state.ui.selectedParticipantIndex[props.side],
-  values: getSide(state, props.side).participants.map((item, index) => ({
+const ParticipantSelector = ({ sideType }: Props) => {
+  const participants = useParticipants(sideType)
+  const value = useSelectedParticipantIndex(sideType)
+  const values = participants.map((item, index) => ({
     value: index,
     text: getParticipantName(item)
   }))
-})
 
-const actions = { selectParticipant }
+  const dispatch = useDispatch()
+  const handleChange = (value: number) => dispatch(selectParticipant(sideType, value))
 
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D {}
-export default connect(mapStateToProps, actions)(ParticipantSelector)
+  return (
+    <span>
+      <span>Edit army: </span>
+      <SimpleDropdown value={value} values={values} onChange={handleChange} />
+    </span>
+  )
+}
+
+export default ParticipantSelector

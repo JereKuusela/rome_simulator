@@ -6,9 +6,9 @@ import { Input } from './Utils/Inputs'
 import Headers from './Utils/Headers'
 
 import { ValuesType, formatAttribute } from 'types'
-import { getValue, explainShort, DefinitionValues, calculateValue } from 'definition_values'
+import { getValue, explainShort, DataValues, calculateValue } from 'data_values'
 
-interface IProps<D extends DefinitionValues<T>, T extends string> {
+interface IProps<D extends DataValues<T>, T extends string> {
   customValueKey: string
   definition: D
   attributes: T[]
@@ -16,7 +16,7 @@ interface IProps<D extends DefinitionValues<T>, T extends string> {
 }
 
 // Display component for showing and changing some country details.
-export default class TableAttributes<D extends DefinitionValues<T>, T extends string> extends Component<IProps<D, T>> {
+export default class TableAttributes<D extends DataValues<T>, T extends string> extends Component<IProps<D, T>> {
   headers = ['Attribute', 'Value', 'Custom value', 'Explained']
 
   CELLS = 4

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Dropdown, DropdownOnSearchChangeData, Table } from 'semantic-ui-react'
 import AttributeImage from '../Utils/AttributeImage'
-import { SiteSettings } from 'types'
+import { CombatSharedSettings } from 'types'
 
 interface IProps<T extends string, E> {
   value: T
@@ -15,7 +15,7 @@ interface IProps<T extends string, E> {
   isActive: (value: E) => boolean
   getValue: (value: E) => T
   onSelect: (type: T) => void
-  settings?: SiteSettings
+  settings?: CombatSharedSettings
   clearable?: boolean
   search?: boolean
   placeholder?: string
@@ -98,7 +98,7 @@ const DropdownTable = <T extends string, E>(props: IProps<T, E>): JSX.Element =>
   )
 }
 
-const Header = ({ headers, settings }: { headers: string[]; settings?: SiteSettings }) => (
+const Header = ({ headers, settings }: { headers: string[]; settings?: CombatSharedSettings }) => (
   <Table.Header>
     <Table.Row>
       {headers.map(header => (

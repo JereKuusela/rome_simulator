@@ -5,7 +5,7 @@ import { Grid, Tab } from 'semantic-ui-react'
 import { AppState } from 'state'
 
 import { filterKeys } from 'utils'
-import { CombatSettings, Mode, Setting, SiteSettings } from 'types'
+import { CombatModeSettings, Mode, Setting, CombatSharedSettings } from 'types'
 import { changeCombatParameter, changeSiteParameter } from 'reducers'
 import Transfer from 'containers/Transfer'
 import GridSettings from 'components/GridSettings'
@@ -82,14 +82,16 @@ const attributes = [
 ]
 
 const Settings = () => {
-  const { combatSettings, siteSettings } = useSelector((state: AppState) => state.settings)
+  const { modeSettings: combatSettings, sharedSettings: siteSettings } = useSelector(
+    (state: AppState) => state.settings
+  )
   const dispatch = useDispatch()
   const onChangeSiteParameter = useCallback(
-    (key: keyof SiteSettings, value: string | number | boolean) => dispatch(changeSiteParameter(key, value)),
+    (key: keyof CombatSharedSettings, value: string | number | boolean) => dispatch(changeSiteParameter(key, value)),
     [dispatch]
   )
   const onChangeCombatParameter = useCallback(
-    (mode: Mode, key: keyof CombatSettings, value: string | number | boolean) =>
+    (mode: Mode, key: keyof CombatModeSettings, value: string | number | boolean) =>
       dispatch(changeCombatParameter(mode, key, value)),
     [dispatch]
   )

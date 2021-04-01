@@ -10,7 +10,7 @@ import {
   Country,
   isAttributeEnabled,
   ModifierWithKey,
-  SiteSettings,
+  CombatSharedSettings,
   ModifierType,
   SelectionType,
   Selections,
@@ -21,12 +21,15 @@ import {
   CountryData
 } from 'types'
 import { getDefaultUnits, getDefaultArmies, getDefaultCountry } from 'data'
-import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'definition_values'
+import { addValuesWithMutate, clearAllValuesWithMutate, calculateValue, addValue } from 'data_values'
 import { toObj, values, filter } from 'utils'
 import { getCountryModifiers } from './modifiers'
 
-export const createCountry = (countries: Countries, country: CountryName, source?: CountryDefinition): void => {
-  countries[country] = source ?? getDefaultCountry(country)
+export const createCountry = (countries: Countries, country: CountryName, source?: CountryName): void => {
+  countries[country] = source ? countries[source] : getDefaultCountry(country)
+}
+export const importCountry = (countries: Countries, country: CountryData): void => {
+  countries[country.name] = country
 }
 
 export const deleteCountry = (countries: Countries, country: CountryName): void => {
@@ -98,7 +101,7 @@ export const convertCountryData = (country: CountryData) => {
   return { ...country, modifiers: applyCountryModifiers(country.modifiers, modifiers) }
 }
 
-export const convertCountryDefinition = (country: CountryDefinition, settings?: SiteSettings): Country => {
+export const convertCountryDefinition = (country: CountryDefinition, settings?: CombatSharedSettings): Country => {
   const attributes = values(CountryAttribute)
   const calculated = toObj(
     attributes,
@@ -129,5 +132,4 @@ export const changeArmyName = (country: CountryDefinition, oldArmyName: ArmyName
   delete Object.assign(country.armies, { [armyName]: country.armies[oldArmyName] })[oldArmyName]
 }
 
-export const filterArmies = (country: CountryDefinition, mode: Mode): Armies =>
-  filter(country.armies, army => army.mode === mode)
+export const filterArmies = (armies: Armies, mode: Mode) => filter(armies, army => army.mode === mode)

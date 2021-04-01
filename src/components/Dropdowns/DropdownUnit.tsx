@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { UnitDefinition, UnitType, SiteSettings } from 'types'
+import { UnitDefinition, UnitType, CombatSharedSettings } from 'types'
 import DropdownTable from './DropdownTable'
 import LabelItem from 'components/Utils/LabelUnit'
 
@@ -7,7 +7,7 @@ type IProps = {
   value: UnitType
   values: UnitDefinition[]
   onSelect: (type: UnitType) => void
-  settings: SiteSettings
+  settings: CombatSharedSettings
 }
 
 export default class DropdownUnit extends Component<IProps> {

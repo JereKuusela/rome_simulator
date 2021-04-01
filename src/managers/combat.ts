@@ -1,10 +1,11 @@
-import { AppState, getMode, getCombatSide, getCombatEnvironment, convertSides } from 'state'
+import { AppState, getCombatEnvironment, convertSides } from 'state'
 import { doCombatRound, removeDefeated, getCombatPhaseNumber } from 'combat'
 import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve, Mode } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
 import { getDay, getStartingPhaseNumber, getRound } from './battle'
 import produce from 'immer'
+import { getCombatSide, getMode } from 'selectors'
 
 const copyCohorts = (cohorts: Cohorts): Cohorts => ({
   frontline: cohorts.frontline.map(row => row.map(value => (value ? { ...value, state: { ...value.state } } : null))),

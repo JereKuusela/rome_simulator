@@ -1,23 +1,23 @@
 import { getDefaultTactic, getDefaultTerrain, getDefaultUnit, getDefaultSettings } from 'data'
 import { map } from 'utils'
-import { mergeValues, clearAllValues } from 'definition_values'
-import { ModeState, TacticDefinitions, TerrainDefinitions, SettingsAndOptions, UnitsData } from 'types'
+import { mergeValues, clearAllValues } from 'data_values'
+import { ModeState, TacticsData, TerrainsData, Settings, UnitsData } from 'types'
 
-export const restoreDefaultTactics = (state: TacticDefinitions): TacticDefinitions =>
+export const restoreDefaultTactics = (state: TacticsData): TacticsData =>
   map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultTactic(definition.type)))
-export const restoreDefaultTerrains = (state: TerrainDefinitions): TerrainDefinitions =>
+export const restoreDefaultTerrains = (state: TerrainsData): TerrainsData =>
   map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultTerrain(definition.type)))
 export const restoreDefaultUnits = (state: UnitsData): UnitsData =>
   map(state, definition => mergeValues(clearAllValues(definition, definition.type), getDefaultUnit(definition.type)))
-export const restoreDefaultSettings = (state: SettingsAndOptions): SettingsAndOptions => {
+export const restoreDefaultSettings = (state: Settings): Settings => {
   const defaultSettings = getDefaultSettings()
   return {
     ...defaultSettings,
     ...state,
-    siteSettings: { ...defaultSettings.siteSettings, ...state.siteSettings },
-    combatSettings: map(defaultSettings.combatSettings, (_, mode) => ({
-      ...defaultSettings.combatSettings[mode],
-      ...state.combatSettings[mode]
+    sharedSettings: { ...defaultSettings.sharedSettings, ...state.sharedSettings },
+    modeSettings: map(defaultSettings.modeSettings, (_, mode) => ({
+      ...defaultSettings.modeSettings[mode],
+      ...state.modeSettings[mode]
     }))
   }
 }

@@ -1,12 +1,12 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getMode } from 'state'
+import { useDispatch } from 'react-redux'
 import { setMode } from 'reducers'
 import { Menu, Image, Button } from 'semantic-ui-react'
 import IconLand from 'images/land_combat.png'
 import IconNaval from 'images/naval_combat.png'
 import { Mode } from 'types'
 import { useHistory } from 'react-router-dom'
+import { useMode } from 'selectors'
 
 /**
  * Navigation menu for different pages.
@@ -16,7 +16,7 @@ const Navigation = () => {
   const history = useHistory()
   const path = history.location.pathname
 
-  const currentMode = useSelector(getMode)
+  const currentMode = useMode()
 
   const renderModeButton = (mode: Mode) => {
     return (

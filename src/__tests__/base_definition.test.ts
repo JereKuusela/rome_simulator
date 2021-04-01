@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Mode, Setting, SiteSettings } from 'types'
+import { Mode, Setting, CombatSharedSettings } from 'types'
 import {
   mergeValues,
   addValues,
@@ -14,9 +14,9 @@ import {
   calculateLoss,
   explainShort,
   getValue,
-  DefinitionValues,
+  DataValues,
   shrinkValues
-} from 'definition_values'
+} from 'data_values'
 import EmptyIcon from 'images/empty.png'
 import UnknownIcon from 'images/unknown.png'
 import { size } from 'lodash'
@@ -24,7 +24,7 @@ import { strengthToValue } from 'formatters'
 import { getImage } from 'utils'
 
 type Values = { [key: string]: { [key: string]: number } }
-type BD = DefinitionValues<any>
+type BD = DataValues<any>
 
 describe('getImage', () => {
   it('returns image', () => {
@@ -523,12 +523,12 @@ describe('explainShort', () => {
 
 describe('strengthToValue', () => {
   it('works for naval', () => {
-    const settings = {} as SiteSettings
+    const settings = {} as CombatSharedSettings
     const result = strengthToValue(settings, Mode.Naval, 0.75)
     expect(result).toEqual('75%')
   })
   it('works for land', () => {
-    const settings = { [Setting.CohortSize]: 500 } as SiteSettings
+    const settings = { [Setting.CohortSize]: 500 } as CombatSharedSettings
     const result = strengthToValue(settings, Mode.Land, 0.75)
     expect(result).toEqual('375')
   })

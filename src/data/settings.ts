@@ -1,27 +1,22 @@
 import {
   Mode,
-  CombatSettings,
+  CombatModeSettings,
   Setting,
-  SiteSettings,
+  CombatSharedSettings,
   SimulationSpeed,
-  CountryName,
-  SettingsAndOptions,
+  Settings,
   DisciplineValue,
   SupportDeployValue,
   CounteringMode
 } from 'types'
 import { getConfig } from './config'
 
-export const getDefaultSettings = (): SettingsAndOptions => ({
-  combatSettings: { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() },
-  siteSettings: getDefaultSiteSettings(),
-  mode: Mode.Land,
-  army: 0,
-  filterNonCombat: true,
-  country: CountryName.Country1
+export const getDefaultSettings = (): Settings => ({
+  modeSettings: { [Mode.Land]: getDefaultLandSettings(), [Mode.Naval]: getDefaultNavalSettings() },
+  sharedSettings: getDefaultSharedSettings()
 })
 
-export const getDefaultLandSettings = (): CombatSettings => {
+export const getDefaultLandSettings = (): CombatModeSettings => {
   if (process.env.REACT_APP_GAME === 'EU4') {
     return {
       [Setting.StrengthLostMultiplier]: 5,
@@ -37,7 +32,7 @@ export const getDefaultLandSettings = (): CombatSettings => {
   }
 }
 
-export const getDefaultNavalSettings = (): CombatSettings => {
+export const getDefaultNavalSettings = (): CombatModeSettings => {
   if (process.env.REACT_APP_GAME === 'EU4') {
     return {
       [Setting.StrengthLostMultiplier]: 5,
@@ -53,7 +48,7 @@ export const getDefaultNavalSettings = (): CombatSettings => {
   }
 }
 
-export const getDefaultSiteSettings = (): SiteSettings => {
+export const getDefaultSharedSettings = (): CombatSharedSettings => {
   if (process.env.REACT_APP_GAME === 'EU4') {
     return {
       [Setting.GlobalTargeting]: false,

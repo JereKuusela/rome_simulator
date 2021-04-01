@@ -4,7 +4,7 @@ import {
   UnitPreferenceType,
   UnitRole,
   Setting,
-  Settings,
+  CombatSettings,
   Reserve,
   Cohorts,
   Cohort,
@@ -29,7 +29,7 @@ const deployFront = (
   row: (Cohort | null)[],
   center: number,
   flank: number,
-  settings: Settings,
+  settings: CombatSettings,
   preferences?: UnitPreferences
 ) => {
   for (let index = center; index !== flank; index = nextIndex(index, center)) {
@@ -47,7 +47,7 @@ const deployFlanks = (
   row: (Cohort | null)[],
   center: number,
   flank: number,
-  settings: Settings,
+  settings: CombatSettings,
   preferences?: UnitPreferences
 ) => {
   for (let index = flank; index >= 0 && index < row.length; index = nextIndex(index, center)) {
@@ -65,7 +65,7 @@ const deployBoth = (
   row: (Cohort | null)[],
   center: number,
   limit: number,
-  settings: Settings,
+  settings: CombatSettings,
   preferences?: UnitPreferences
 ) => {
   for (
@@ -87,14 +87,14 @@ const applyLateDeploymentPenaltySub = (cohort: Cohort, percent: number) => {
   cohort.properties.deploymentPenalty += percent
 }
 
-const applyLateDeploymentPenalty = (reserve: Reserve, round: number, settings: Settings) => {
+const applyLateDeploymentPenalty = (reserve: Reserve, round: number, settings: CombatSettings) => {
   if (round < settings[Setting.StackwipeRounds] || !settings[Setting.MoraleHitForLateDeployment]) return
   reserve.front.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
   reserve.flank.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
   reserve.support.forEach(cohort => applyLateDeploymentPenaltySub(cohort, settings[Setting.MoraleHitForLateDeployment]))
 }
 
-const applyReinforcementPenalty = (cohort: Cohort, preferences: UnitPreferences, settings: Settings) => {
+const applyReinforcementPenalty = (cohort: Cohort, preferences: UnitPreferences, settings: CombatSettings) => {
   if (
     cohort.properties.type !== preferences[UnitPreferenceType.Secondary] &&
     settings[Setting.MoraleHitForNonSecondaryReinforcement]
@@ -110,7 +110,7 @@ const deployCohorts = (
   reserve: Reserve,
   leftFlank: number,
   rightFlank: number,
-  settings: Settings,
+  settings: CombatSettings,
   preferences?: UnitPreferences
 ) => {
   const frontline = target.frontline[0]
@@ -223,7 +223,7 @@ const calculateFlankSizes = (
   return [leftFlankSize, rightFlankSize]
 }
 
-const calculatePreferredFlankSize = (settings: Settings, customValue: number, reserve: Reserve) => {
+const calculatePreferredFlankSize = (settings: CombatSettings, customValue: number, reserve: Reserve) => {
   return settings[Setting.CustomDeployment]
     ? customValue
     : Math.min(armyFlankCount(reserve) / 2, Math.floor(settings[Setting.BaseCombatWidth] / 4))
@@ -301,7 +301,7 @@ const applyWinningMoraleBonusSub = (cohort: Cohort, percent: number) => {
   cohort.properties.winningMoraleBonus += bonus
 }
 
-const applyWinningMoraleBonus = (reserve: Reserve, settings: Settings) => {
+const applyWinningMoraleBonus = (reserve: Reserve, settings: CombatSettings) => {
   if (!settings[Setting.MoraleGainForWinning]) return
   reserve.front.forEach(cohort => applyWinningMoraleBonusSub(cohort, settings[Setting.MoraleGainForWinning]))
   reserve.flank.forEach(cohort => applyWinningMoraleBonusSub(cohort, settings[Setting.MoraleGainForWinning]))
@@ -326,7 +326,7 @@ const getDeployingArmies = (day: number, side: Side) => {
   return armies
 }
 
-const deploySub = (side: Side, deploying: Army[], settings: Settings, round: number, enemyArmySize?: number) => {
+const deploySub = (side: Side, deploying: Army[], settings: CombatSettings, round: number, enemyArmySize?: number) => {
   const pool: Cohort[] = []
   deploying.forEach(army => {
     const [leftFlank, rightFlank] = calculateFlankSizes(

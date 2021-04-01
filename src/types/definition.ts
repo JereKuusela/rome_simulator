@@ -11,8 +11,10 @@ export enum Mode {
   Naval = 'Naval'
 }
 
-export interface Definition<T extends string> {
+export type Data<T extends string> = {
   type: T
   image: string
+}
+export type DataWithMode<T extends string> = Data<T> & {
   mode?: Mode
 }

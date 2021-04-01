@@ -8,17 +8,17 @@ import {
   CharacterAttribute,
   LocationType,
   CohortProperties,
-  SiteSettings,
+  CombatSharedSettings,
   Cohorts,
   Cohort,
   Frontline,
   Reserve,
   GeneralValues,
   Environment,
-  Settings,
+  CombatSettings,
   Army
 } from 'types'
-import { calculateValue } from 'definition_values'
+import { calculateValue } from 'data_values'
 import { multiplyChance } from 'utils'
 
 /**
@@ -96,7 +96,7 @@ export const getDefensiveSupportCohortPips = (
   return cohort ? Math.ceil(cohort[UnitAttribute.DefensiveSupport] * getDefensiveCohortPips(cohort, type, phase)) : 0
 }
 
-export const calculateExperienceReduction = (settings: SiteSettings, target: UnitData) => {
+export const calculateExperienceReduction = (settings: CombatSharedSettings, target: UnitData) => {
   let damageReductionPerExperience = settings[Setting.ExperienceDamageReduction]
   // Bug in game which makes morale damage taken and strength damage taken affect damage reduction from experience.
   if (!settings[Setting.FixExperience])
@@ -108,7 +108,7 @@ export const calculateExperienceReduction = (settings: SiteSettings, target: Uni
   return -damageReductionPerExperience * calculateValue(target, UnitAttribute.Experience)
 }
 
-export const getCombatPhase = (round: number, settings: SiteSettings) => {
+export const getCombatPhase = (round: number, settings: CombatSharedSettings) => {
   if (settings[Setting.FireAndShock]) {
     const phase = getCombatPhaseNumber(round, settings)
     if (phase) return phase % 2 ? CombatPhase.Fire : CombatPhase.Shock
@@ -116,17 +116,18 @@ export const getCombatPhase = (round: number, settings: SiteSettings) => {
   return CombatPhase.Default
 }
 
-export const getCombatPhaseByPhaseNumber = (phase: number, settings: SiteSettings) => {
+export const getCombatPhaseByPhaseNumber = (phase: number, settings: CombatSharedSettings) => {
   if (settings[Setting.FireAndShock]) {
     if (phase) return phase % 2 ? CombatPhase.Fire : CombatPhase.Shock
   }
   return CombatPhase.Default
 }
 
-export const getCombatPhaseNumber = (round: number, settings: SiteSettings) =>
+export const getCombatPhaseNumber = (round: number, settings: CombatSharedSettings) =>
   Math.ceil(round / settings[Setting.PhaseLength])
 
-export const getDailyIncrease = (round: number, settings: SiteSettings) => settings[Setting.DailyDamageIncrease] * round
+export const getDailyIncrease = (round: number, settings: CombatSharedSettings) =>
+  settings[Setting.DailyDamageIncrease] * round
 
 export const calculateTotalStrength = (cohorts: Cohorts, includeDefeated: boolean) => {
   let strength = 0.0
@@ -202,6 +203,6 @@ export const uncaptureCohort = (cohort: Cohort) => {
   cohort.state.captureChance = 0
 }
 
-export const isAlive = (unit: Cohort, settings: Settings) =>
+export const isAlive = (unit: Cohort, settings: CombatSettings) =>
   unit[UnitAttribute.Morale] > settings[Setting.MinimumMorale] &&
   unit[UnitAttribute.Strength] > settings[Setting.MinimumStrength]

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
-import { AppState, getMode, getSiteSettings, getCombatEnvironment, convertSides } from 'state'
+import { AppState, getCombatEnvironment, convertSides } from 'state'
 import { interrupt, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress, filterKeys } from 'utils'
 import {
@@ -13,7 +13,7 @@ import {
   ResourceLosses,
   WinRateProgress,
   ResourceLossesProgress,
-  SiteSettings
+  CombatSharedSettings
 } from 'types'
 import { toPercent, toNumber, toFlooredPercent } from 'formatters'
 import SimpleRange from 'components/SimpleRange'
@@ -23,6 +23,7 @@ import { changeSiteParameter, refreshBattle } from 'reducers'
 import HelpTooltip from 'components/HelpTooltip'
 import AccordionToggle from 'containers/AccordionToggle'
 import GridSettings from 'components/GridSettings'
+import { getMode, getCombatSettings } from 'selectors'
 
 interface IState extends CasualtiesProgress {
   attackerWinChance: number
@@ -177,7 +178,7 @@ class Analyze extends Component<IProps, IState> {
     )
   }
 
-  changeAnalyzeParameter = (key: keyof SiteSettings, value: string | number | boolean) => {
+  changeAnalyzeParameter = (key: keyof CombatSharedSettings, value: string | number | boolean) => {
     const { changeSiteParameter } = this.props
     changeSiteParameter(Setting.Performance, SimulationSpeed.Custom)
     changeSiteParameter(key, value)
@@ -474,7 +475,7 @@ class Analyze extends Component<IProps, IState> {
 const mapStateToProps = (state: AppState) => {
   return {
     state,
-    settings: getSiteSettings(state),
+    settings: getCombatSettings(state),
     mode: getMode(state)
   }
 }

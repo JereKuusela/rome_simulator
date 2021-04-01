@@ -5,13 +5,14 @@ import VersusList from '../components/VersusList'
 import StyledNumber from '../components/Utils/StyledNumber'
 
 import Headers from '../components/Utils/Headers'
-import { TacticDefinition, TacticType, TacticCalc, ModalType } from 'types'
-import { calculateValue } from 'definition_values'
+import { TacticData, TacticType, TacticCalc, ModalType } from 'types'
+import { calculateValue } from 'data_values'
 import { openModal, createTactic } from 'reducers'
 import { toSignedPercent } from 'formatters'
-import { getImage } from 'utils'
+import { getImage, toArr } from 'utils'
 import { connect } from 'react-redux'
-import { AppState, getMode, getTacticDefinitions, getUnitImages, mergeUnitTypes } from 'state'
+import { AppState, getUnitImages, mergeUnitTypes } from 'state'
+import { getMode, getTacticsData } from 'selectors'
 
 /**
  * Shows tactic definitions for both sides.
@@ -41,7 +42,7 @@ class TacticDefinitions extends Component<IProps> {
       initial: ''
     })
 
-  renderRow = (definition: TacticDefinition) => {
+  renderRow = (definition: TacticData) => {
     const { images, unitTypes } = this.props
     return (
       <Table.Row key={definition.type} onClick={() => this.openModal(definition)}>
@@ -67,7 +68,7 @@ class TacticDefinitions extends Component<IProps> {
     )
   }
 
-  renderVersus = (definition: TacticDefinition) => {
+  renderVersus = (definition: TacticData) => {
     const filtered = this.props.tactics.filter(versus => calculateValue(definition, versus.type))
     return filtered.map(versus => (
       <List.Item key={versus.type} style={{ marginLeft: 0, marginRight: '1em' }}>
@@ -77,11 +78,11 @@ class TacticDefinitions extends Component<IProps> {
     ))
   }
 
-  openModal = (definition: TacticDefinition) => this.props.openModal(ModalType.TacticDetail, { type: definition.type })
+  openModal = (definition: TacticData) => this.props.openModal(ModalType.TacticDetail, { type: definition.type })
 }
 
 const mapStateToProps = (state: AppState) => ({
-  tactics: getTacticDefinitions(state),
+  tactics: toArr(getTacticsData(state)),
   images: getUnitImages(state),
   unitTypes: mergeUnitTypes(state),
   mode: getMode(state)

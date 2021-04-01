@@ -1,26 +1,32 @@
-import { TerrainValueType, ValuesType, Terrain, LocationType, TerrainDefinitions, TerrainType } from 'types'
-import { addValuesWithMutate } from 'definition_values'
+import { TerrainValueType, ValuesType, TerrainData, LocationType, TerrainsData, TerrainType } from 'types'
+import { addValuesWithMutate } from 'data_values'
+import { filter } from 'utils'
 
-export const setTerrainValue = (terrain: Terrain, key: string, attribute: TerrainValueType, value: number) => {
+export const setTerrainValue = (terrain: TerrainData, key: string, attribute: TerrainValueType, value: number) => {
   addValuesWithMutate(terrain, ValuesType.Base, key, [[attribute, value]])
 }
 
-export const setTerrainLocation = (terrain: Terrain, location: LocationType) => {
+export const setTerrainLocation = (terrain: TerrainData, location: LocationType) => {
   terrain.location = location
 }
 
-export const setTerrainImage = (terrain: Terrain, image: string) => {
+export const setTerrainImage = (terrain: TerrainData, image: string) => {
   terrain.image = image
 }
 
-export const deleteTerrain = (terrains: TerrainDefinitions, type: TerrainType) => {
+export const deleteTerrain = (terrains: TerrainsData, type: TerrainType) => {
   delete terrains[type]
 }
 
-export const createTerrain = (terrains: TerrainDefinitions, type: TerrainType) => {
+export const createTerrain = (terrains: TerrainsData, type: TerrainType) => {
   terrains[type] = { type, image: '', location: LocationType.Border }
 }
 
-export const setTerrainType = (terrains: TerrainDefinitions, oldType: TerrainType, type: TerrainType) => {
+export const setTerrainType = (terrains: TerrainsData, oldType: TerrainType, type: TerrainType) => {
   delete Object.assign(terrains, { [type]: { ...terrains[oldType], type } })[oldType]
 }
+
+const filterTerrain = (terrain: TerrainData, location: LocationType) => terrain.location === location
+
+export const filterTerrains = (terrains: TerrainsData, location: LocationType) =>
+  filter(terrains, terrain => filterTerrain(terrain, location))

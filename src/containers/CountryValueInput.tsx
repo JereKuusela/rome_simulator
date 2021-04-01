@@ -1,13 +1,13 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { CountryName, CountryAttribute, countryAttributeToEffect } from 'types'
 import { setCountryAttribute } from 'reducers'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
-import { filterValues, calculateBase } from 'definition_values'
-import { AppState, getCountryDefinition } from 'state'
+import { filterValues, calculateBase } from 'data_values'
 import ListModifier from 'components/Utils/ListModifier'
 import { getDynamicEffect } from 'managers/modifiers'
+import { useCountryDefinition } from 'selectors'
 
 type Props = {
   country: CountryName
@@ -33,7 +33,7 @@ const CountryValueInput = ({ attribute, percent, country, showEffect }: Props) =
     dispatch(setCountryAttribute(country, attribute, value - base))
   }
 
-  const definition = useSelector((state: AppState) => getCountryDefinition(state, country))
+  const definition = useCountryDefinition(country)
 
   const value = calculateBase(definition.modifiers, attribute)
   return (

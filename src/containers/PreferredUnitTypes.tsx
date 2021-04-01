@@ -2,19 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import {
-  AppState,
-  getUnitPreferences,
-  getFlankSize,
-  getMode,
-  getUnitList,
-  getSiteSettings,
-  getParticipantSafely
-} from 'state'
+import { AppState, getUnitPreferences, getFlankSize, getUnitList } from 'state'
 import { setFlankSize, setUnitPreference } from 'reducers'
 import { getUnitIcon } from 'data'
 import { UnitPreferenceType, SideType, UnitType, UnitDefinition } from 'types'
 import DropdownUnit from 'components/Dropdowns/DropdownUnit'
+import { getMode, getCombatSettings, getParticipant } from 'selectors'
 
 /**Table with row types and flank sizes. */
 export default class PreferredUnitTypes extends Component {
@@ -103,7 +96,7 @@ class Row extends Component<IProps> {
 }
 
 const mapStateToProps = (state: AppState, props: Props) => {
-  const participant = getParticipantSafely(state, props.side, state.ui.selectedParticipantIndex[props.side])
+  const participant = getParticipant(state, props.side, state.ui.selectedParticipantIndex[props.side])
   const { countryName, armyName } = participant
   return {
     units: getUnitList(state, true, countryName, armyName),
@@ -112,7 +105,7 @@ const mapStateToProps = (state: AppState, props: Props) => {
     flankSize: getFlankSize(state, countryName, armyName),
     preferences: getUnitPreferences(state, countryName, armyName),
     mode: getMode(state),
-    settings: getSiteSettings(state)
+    settings: getCombatSettings(state)
   }
 }
 

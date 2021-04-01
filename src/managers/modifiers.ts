@@ -15,7 +15,7 @@ import {
 } from 'types'
 import { getRootParent } from './units'
 import { ObjSet, keys } from 'utils'
-import { calculateValue } from 'definition_values'
+import { calculateValue } from 'data_values'
 import {
   techEU4,
   inventionsIR,

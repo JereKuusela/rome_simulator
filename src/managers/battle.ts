@@ -3,8 +3,8 @@ import {
   TerrainType,
   SideType,
   CountryName,
-  Terrain,
-  Settings,
+  TerrainData,
+  CombatSettings,
   Setting,
   Army,
   UnitType,
@@ -89,7 +89,7 @@ export const getDefaultCombatResults = () => ({
   actualBonusPips: 0
 })
 
-export const convertSide = (side: SideData, armies: Army[], settings: Settings): Side => {
+export const convertSide = (side: SideData, armies: Army[], settings: CombatSettings): Side => {
   const width = settings[Setting.BaseCombatWidth]
   return {
     armiesRemaining: true,
@@ -116,8 +116,8 @@ export const convertArmy = (
   participant: Participant,
   army: ArmyDefinition,
   enemyTypes: UnitType[],
-  terrains: Terrain[],
-  settings: Settings
+  terrains: TerrainData[],
+  settings: CombatSettings
 ): Army => {
   const reserve = army.reserve.map((cohort, index) =>
     getCombatUnit(

@@ -28,8 +28,8 @@ if (process.env.REACT_APP_GAME === 'IR') {
       getSettingsTest(state)[Setting.Tactics] = true
       getSettingsTest(state)[Setting.DefenderAdvantage] = false
       getSettingsTest(state)[Setting.Martial] = true
-      state.settings.combatSettings[Mode.Land][Setting.MoraleLostMultiplier] = 50 / 3000
-      state.settings.combatSettings[Mode.Land][Setting.StrengthLostMultiplier] = 50 / 3000
+      state.settings.modeSettings[Mode.Land][Setting.MoraleLostMultiplier] = 50 / 3000
+      state.settings.modeSettings[Mode.Land][Setting.StrengthLostMultiplier] = 50 / 3000
     })
 
     it('mixed casualties add up correctly', () => {

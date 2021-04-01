@@ -1,41 +1,26 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { AppState, getSelectedTactic, getSiteSettings, getParticipant, getTactics } from 'state'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import { selectTactic } from 'reducers'
 import { SideType, TacticType } from 'types'
 import DropdownTactic from 'components/Dropdowns/DropdownTactic'
+import { useGeneral, useParticipant, useCombatSettings, useTactics } from 'selectors'
 
 type Props = {
   side: SideType
   index: number
 }
 
-class TacticSelector extends Component<IProps> {
-  render() {
-    const { tactic, tactics, settings } = this.props
-    return <DropdownTactic values={tactics} value={tactic} onSelect={this.selectTactic} settings={settings} />
-  }
+const TacticSelector = ({ index, side }: Props) => {
+  const tactics = useTactics(side)
+  const settings = useCombatSettings()
+  const { countryName, armyName } = useParticipant(side, index)
+  const tactic = useGeneral(countryName, armyName).tactic.type
 
-  selectTactic = (type: TacticType) => {
-    const { participant, selectTactic } = this.props
-    selectTactic(participant.countryName, participant.armyName, type)
+  const dispatch = useDispatch()
+  const handleSelect = (type: TacticType) => {
+    dispatch(selectTactic(countryName, armyName, type))
   }
+  return <DropdownTactic values={tactics} value={tactic} onSelect={handleSelect} settings={settings} />
 }
 
-const mapStateToProps = (state: AppState, props: Props) => {
-  const tactic = getSelectedTactic(state, props.side, props.index)
-  return {
-    tactics: getTactics(state, props.side),
-    tactic: tactic.type,
-    participant: getParticipant(state, props.side, props.index),
-    settings: getSiteSettings(state)
-  }
-}
-
-const actions = { selectTactic }
-
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-type IProps = Props & S & D
-
-export default connect(mapStateToProps, actions)(TacticSelector)
+export default TacticSelector

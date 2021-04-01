@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getMode } from 'state'
+import { AppState } from 'state'
 import TerrainDetail from 'components/TerrainDetail'
 import { TerrainType, LocationType, TerrainValueType, ModalType } from 'types'
 import {
@@ -13,6 +13,7 @@ import {
 } from 'reducers'
 import BaseModal from './BaseModal'
 import ItemRemover from 'components/ItemRemover'
+import { getMode } from 'selectors'
 
 const CUSTOM_VALUE_KEY = 'Custom'
 

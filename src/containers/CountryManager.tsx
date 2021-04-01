@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { PropsWithChildren } from 'react'
+import { useDispatch } from 'react-redux'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import ValueDropdownModal from 'components/ValueDropdownModal'
-import { AppState, getArmies, getMode } from 'state'
 import { Grid, Button } from 'semantic-ui-react'
 import { CountryName, ModalType, ArmyName } from 'types'
-import { keys } from 'utils'
 import {
   createCountry,
   changeCountryName,
@@ -17,180 +15,186 @@ import {
   selectArmy,
   openModal
 } from 'reducers'
+import {
+  useArmyNames,
+  useCountryNames,
+  useMode,
+  useSelectedArmyIndex,
+  useSelectedCountry,
+  useSelectedCountryIndex
+} from 'selectors'
+import { useBooleanState } from 'components/hooks'
 
-interface IState {
-  openCreateCountry: boolean
-  openCreateArmy: boolean
+const CountryManager = ({ children }: PropsWithChildren<unknown>) => {
+  return (
+    <Grid>
+      <RenderCountryRow>{children}</RenderCountryRow>
+      <RenderArmyRow />
+    </Grid>
+  )
 }
 
-class CountryManager extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props)
-    this.state = this.initialState
+const useCountryEditors = (countryName: CountryName, index: number, length: number) => {
+  const dispatch = useDispatch()
+
+  const handleSelect = (index: number) => dispatch(selectCountry(index))
+
+  const handleChangeName = (name: string) => {
+    dispatch(changeCountryName(countryName, name as CountryName))
+  }
+  const handleEdit = () =>
+    dispatch(
+      openModal(ModalType.Value, {
+        onSuccess: handleChangeName,
+        message: 'Rename country',
+        buttonMessage: 'Edit',
+        initial: countryName
+      })
+    )
+
+  const handleDelete = () => {
+    dispatch(deleteCountry(countryName))
+    dispatch(handleSelect(index - 1))
   }
 
-  initialState = { openCreateCountry: false, openCreateArmy: false }
+  const handleCreate = (country: CountryName, source?: CountryName) => {
+    dispatch(createCountry(country, source))
+    dispatch(selectCountry(length))
+  }
+  return { handleCreate, handleDelete, handleEdit, handleSelect }
+}
 
-  render() {
-    const { countries, selectedCountry, selectedArmy, selectCountry, armies, selectArmy, children } = this.props
-    const { openCreateCountry, openCreateArmy } = this.state
-    return (
-      <Grid>
-        <ValueDropdownModal
-          value={'' as CountryName}
-          selected={'' as CountryName}
-          open={openCreateCountry}
-          onSuccess={this.createCountry}
-          onClose={this.onClose}
-          items={keys(countries)}
-          message='New country'
-          buttonMessage='Create'
-          valueLabel='Name '
-          dropdownLabel='Copy country: '
-        />
-        <ValueDropdownModal
-          value={'' as ArmyName}
-          selected={'' as ArmyName}
-          open={openCreateArmy}
-          onSuccess={this.createArmy}
-          onClose={this.onClose}
-          items={armies}
-          message='New army'
-          buttonMessage='Create'
-          valueLabel='Name '
-          dropdownLabel='Copy army: '
-        />
-        <Grid.Row columns='5'>
-          <Grid.Column>
-            <SimpleDropdown values={keys(countries)} value={selectedCountry} onChange={name => selectCountry(name)} />
-          </Grid.Column>
-          <Grid.Column>
-            <Button primary onClick={() => this.setState({ openCreateCountry: true })}>
-              New country
-            </Button>
-          </Grid.Column>
-          {selectedCountry && (
-            <Grid.Column>
-              <Button primary onClick={this.openEditCountry}>
-                Rename country
-              </Button>
-            </Grid.Column>
-          )}
-          {selectedCountry && (
-            <Grid.Column>
-              <Button primary onClick={this.deleteCountry}>
-                Delete country
-              </Button>
-            </Grid.Column>
-          )}
-          {React.Children.map(children, elem => (
-            <Grid.Column>{elem}</Grid.Column>
-          ))}
-        </Grid.Row>
-        <Grid.Row columns='5'>
-          <Grid.Column>
-            <SimpleDropdown
-              values={armies.map((key, index) => ({ text: key, value: index }))}
-              value={selectedArmy}
-              onChange={selectArmy}
-            />
-          </Grid.Column>
-          <Grid.Column>
-            <Button primary onClick={() => this.setState({ openCreateArmy: true })}>
-              New army
-            </Button>
-          </Grid.Column>
-          <Grid.Column>
-            <Button primary onClick={this.openEditArmy}>
-              Rename army
-            </Button>
-          </Grid.Column>
-          <Grid.Column>
-            <Button primary onClick={this.deleteArmy} disabled={armies.length < 2}>
-              Delete army
-            </Button>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+const RenderCountryRow = ({ children }: PropsWithChildren<unknown>) => {
+  const [open, toggleOpen] = useBooleanState(false)
+  const country = useSelectedCountryIndex()
+  const countryNames = useCountryNames()
+  const values = countryNames.map((name, index) => ({ text: name, value: index }))
+
+  const { handleCreate, handleDelete, handleEdit, handleSelect } = useCountryEditors(
+    countryNames[country],
+    country,
+    countryNames.length
+  )
+  return (
+    <Grid.Row columns='5'>
+      <ValueDropdownModal
+        value={'' as CountryName}
+        selected={'' as CountryName}
+        open={open}
+        onSuccess={handleCreate}
+        onClose={toggleOpen}
+        items={countryNames}
+        message='New country'
+        buttonMessage='Create'
+        valueLabel='Name '
+        dropdownLabel='Copy country: '
+      />
+      <Grid.Column>
+        <SimpleDropdown values={values} value={country} onChange={handleSelect} />
+      </Grid.Column>
+      <Grid.Column>
+        <Button primary onClick={toggleOpen}>
+          New country
+        </Button>
+      </Grid.Column>
+      <Grid.Column>
+        <Button primary onClick={handleEdit}>
+          Rename country
+        </Button>
+      </Grid.Column>
+      <Grid.Column>
+        <Button primary onClick={handleDelete} disabled={countryNames.length < 2}>
+          Delete country
+        </Button>
+      </Grid.Column>
+      {React.Children.map(children, elem => (
+        <Grid.Column>{elem}</Grid.Column>
+      ))}
+    </Grid.Row>
+  )
+}
+
+const useArmyEditors = (countryName: CountryName, armyName: ArmyName, index: number, length: number) => {
+  const dispatch = useDispatch()
+  const mode = useMode()
+
+  const handleSelect = (index: number) => dispatch(selectArmy(index))
+
+  const handleChangeName = (name: string) => {
+    dispatch(changeArmyName(countryName, armyName, name as ArmyName))
+  }
+
+  const handleEdit = () => {
+    dispatch(
+      openModal(ModalType.Value, {
+        onSuccess: handleChangeName,
+        message: 'Rename army',
+        buttonMessage: 'Edit',
+        initial: armyName
+      })
     )
   }
 
-  openEditCountry = () =>
-    this.props.openModal(ModalType.Value, {
-      onSuccess: country => this.changeCountryName(country as CountryName),
-      message: 'Rename country',
-      buttonMessage: 'Edit',
-      initial: this.props.selectedCountry
-    })
-
-  openEditArmy = () =>
-    this.props.openModal(ModalType.Value, {
-      onSuccess: army => this.changeArmyName(army as ArmyName),
-      message: 'Rename army',
-      buttonMessage: 'Edit',
-      initial: this.props.armies[this.props.selectedArmy]
-    })
-
-  onClose = () => this.setState(this.initialState)
-
-  createCountry = (country: CountryName, source?: CountryName) => {
-    const { selectCountry, createCountry } = this.props
-    createCountry(country, source && this.props.countries[source])
-    selectCountry(country)
+  const handleCreate = (army: ArmyName, sourceArmy?: ArmyName) => {
+    dispatch(createArmy(countryName, army, mode, sourceArmy))
+    dispatch(selectArmy(length))
   }
 
-  deleteCountry = () => {
-    const { selectCountry, deleteCountry, selectedCountry } = this.props
-    deleteCountry(selectedCountry)
-    selectCountry('' as CountryName)
+  const handleDelete = () => {
+    dispatch(deleteArmy(countryName, armyName))
+    handleSelect(index - 1)
   }
 
-  changeCountryName = (country: CountryName) => {
-    const { selectCountry, changeCountryName, selectedCountry } = this.props
-    changeCountryName(selectedCountry, country)
-    selectCountry(country)
-  }
-
-  createArmy = (army: ArmyName, sourceArmy?: ArmyName) => {
-    const { createArmy, selectArmy, mode, selectedCountry, armies } = this.props
-    createArmy(selectedCountry, army, mode, sourceArmy)
-    selectArmy(armies.length)
-  }
-
-  deleteArmy = () => {
-    const { selectArmy, deleteArmy, selectedArmy, selectedCountry, armies } = this.props
-    deleteArmy(selectedCountry, armies[selectedArmy])
-    selectArmy(selectedArmy - 1)
-  }
-
-  changeArmyName = (army: ArmyName) => {
-    const { changeArmyName, armies, selectedArmy, selectedCountry } = this.props
-    changeArmyName(selectedCountry, armies[selectedArmy], army)
-  }
+  return { handleCreate, handleDelete, handleEdit, handleSelect }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  selectedCountry: state.settings.country,
-  countries: state.countries,
-  selectedArmy: state.settings.army,
-  armies: keys(getArmies(state)),
-  mode: getMode(state)
-})
+const RenderArmyRow = () => {
+  const [open, toggleOpen] = useBooleanState(false)
+  const countryName = useSelectedCountry()
+  const army = useSelectedArmyIndex()
+  const armyNames = useArmyNames(countryName)
+  const values = armyNames.map((name, index) => ({ text: name, value: index }))
 
-const actions = {
-  selectCountry,
-  createCountry,
-  changeCountryName,
-  deleteCountry,
-  openModal,
-  selectArmy,
-  deleteArmy,
-  changeArmyName,
-  createArmy
+  const { handleCreate, handleDelete, handleEdit, handleSelect } = useArmyEditors(
+    countryName,
+    armyNames[army],
+    army,
+    armyNames.length
+  )
+  return (
+    <Grid.Row columns='5'>
+      <ValueDropdownModal
+        value={'' as ArmyName}
+        selected={'' as ArmyName}
+        open={open}
+        onSuccess={handleCreate}
+        onClose={toggleOpen}
+        items={armyNames}
+        message='New army'
+        buttonMessage='Create'
+        valueLabel='Name '
+        dropdownLabel='Copy army: '
+      />
+      <Grid.Column>
+        <SimpleDropdown values={values} value={army} onChange={handleSelect} />
+      </Grid.Column>
+      <Grid.Column>
+        <Button primary onClick={toggleOpen}>
+          New army
+        </Button>
+      </Grid.Column>
+      <Grid.Column>
+        <Button primary onClick={handleEdit}>
+          Rename army
+        </Button>
+      </Grid.Column>
+      <Grid.Column>
+        <Button primary onClick={handleDelete} disabled={armyNames.length < 2}>
+          Delete army
+        </Button>
+      </Grid.Column>
+    </Grid.Row>
+  )
 }
 
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-interface IProps extends React.PropsWithChildren<S>, D {}
-
-export default connect(mapStateToProps, actions)(CountryManager)
+export default CountryManager

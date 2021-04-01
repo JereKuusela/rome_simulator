@@ -5,7 +5,7 @@ import {
   Mode,
   CombatPhase,
   CountryAttribute,
-  SiteSettings,
+  CombatSharedSettings,
   isAttributeEnabled,
   Setting,
   DisciplineValue,
@@ -36,7 +36,7 @@ import IconFertility from 'images/fertility.png'
 
 type IProps = {
   attribute: string
-  settings?: SiteSettings
+  settings?: CombatSharedSettings
   mode?: Mode
 }
 
@@ -131,7 +131,7 @@ const getText = (attribute: string) => {
   }
 }
 
-const getExplanation = (attribute: string, settings?: SiteSettings, mode?: Mode) => {
+const getExplanation = (attribute: string, settings?: CombatSharedSettings, mode?: Mode) => {
   if (settings && !isAttributeEnabled(attribute, settings)) return 'This attribute is currently disabled'
   switch (attribute) {
     case UnitAttribute.AttritionWeight:

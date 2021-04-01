@@ -1,6 +1,6 @@
-import { DefinitionValues } from 'definition_values'
+import { DataValues } from 'data_values'
 import { Mode } from 'types/definition'
-import { TacticType, TacticDefinition } from './tactics'
+import { TacticType, TacticData } from './tactics'
 import { CombatPhase } from './battle'
 import {
   Selections,
@@ -42,7 +42,7 @@ export const filterStatAttributes = (attributes: Record<CharacterAttribute, numb
   filter(attributes, (_, attribute) => isStatAttribute(attribute))
 
 export type GeneralDefinition = {
-  tactic: TacticDefinition
+  tactic: TacticData
   selections: Selections
   enabled: boolean
   baseValues: GeneralValues
@@ -56,7 +56,7 @@ export type GeneralValueType = CharacterAttribute | CombatPhase
 
 export type Armies = { [key in ArmyName]: ArmyData }
 
-export interface GeneralData extends DefinitionValues<GeneralValueType> {
+export interface GeneralData extends DataValues<GeneralValueType> {
   tactic: TacticType
   selections: Selections
   enabled: boolean
@@ -110,7 +110,7 @@ export type Army = {
   priority: number
   crossingSupport: number
   armySize: number
-  tactic: TacticDefinition
+  tactic: TacticData
   participantIndex: number
   general: { [key in GeneralValueType]: number }
 }

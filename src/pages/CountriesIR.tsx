@@ -1,14 +1,7 @@
 import React, { Component, useEffect, useState } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox, Button, Tab } from 'semantic-ui-react'
 import { connect, useDispatch } from 'react-redux'
-import {
-  AppState,
-  getGeneral,
-  getGeneralDefinition,
-  getSiteSettings,
-  getSelectedArmy,
-  getCountryDefinition
-} from 'state'
+import { AppState, getGeneral, getGeneralDefinition } from 'state'
 import { mapRange, values, keys, toArr, ObjSet } from '../utils'
 
 import { addSignWithZero } from 'formatters'
@@ -48,7 +41,6 @@ import CountryManager from 'containers/CountryManager'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import StyledNumber from 'components/Utils/StyledNumber'
 import TableAttributes from 'components/TableAttributes'
-import { convertCountryDefinition } from 'managers/countries'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
 import DropdownListDefinition from 'components/Dropdowns/DropdownListDefinition'
@@ -72,6 +64,7 @@ import { TableModifierList } from 'components/TableModifierList'
 import { groupBy, maxBy, noop } from 'lodash'
 import { Tech } from 'types/generated'
 import { getSelections } from 'managers/modifiers'
+import { getCombatSettings, getCountry, getCountryDefinition, getSelectedArmy, getSelectedCountry } from 'selectors'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
@@ -426,15 +419,15 @@ class CountriesIR extends Component<IProps> {
 
 const mapStateToProps = (state: AppState) => {
   const selectedArmy = getSelectedArmy(state)
-  const countryDefinition = getCountryDefinition(state, state.settings.country)
+  const selectedCountry = getSelectedCountry(state)
   return {
-    countryDefinition,
-    country: convertCountryDefinition(countryDefinition, state.settings.siteSettings),
-    filterNonCombat: state.settings.filterNonCombat,
+    countryDefinition: getCountryDefinition(state, selectedCountry),
+    country: getCountry(state, selectedCountry),
+    filterNonCombat: state.ui.filterNonCombat,
     selectedArmy,
-    generalDefinition: getGeneralDefinition(state, state.settings.country, selectedArmy),
-    general: getGeneral(state, state.settings.country, selectedArmy),
-    settings: getSiteSettings(state)
+    generalDefinition: getGeneralDefinition(state, selectedCountry, selectedArmy),
+    general: getGeneral(state, selectedCountry, selectedArmy),
+    settings: getCombatSettings(state)
   }
 }
 

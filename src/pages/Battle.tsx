@@ -9,7 +9,7 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import { clearCohorts, changeSiteParameter, refreshBattle, resetState, openModal, battle, undo } from 'reducers'
-import { useParticipant, useSiteSettings, useBattle, useCombatWidth } from 'state'
+import { useParticipant, useCombatWidth } from 'state'
 import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
@@ -18,6 +18,7 @@ import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
 import { getDay, getRound } from 'managers/battle'
 import ParticipantSelector from 'containers/ParticipantSelector'
+import { useBattle, useOutdated, useRound, useCombatSettings } from 'selectors'
 
 const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
@@ -42,13 +43,13 @@ const Battle = (): JSX.Element | null => {
 
 const useRefresher = () => {
   const dispatch = useDispatch()
-  const settings = useSiteSettings()
-  const battle = useBattle()
-  const round = getRound(battle)
+  const settings = useCombatSettings()
+  const outdated = useOutdated()
+  const round = useRound()
   const autoRefresh = settings[Setting.AutoRefresh]
   useEffect(() => {
-    if (battle.outdated && (autoRefresh || round < 0)) dispatch(refreshBattle())
-  }, [battle.outdated, round, dispatch, autoRefresh])
+    if (outdated && (autoRefresh || round < 0)) dispatch(refreshBattle())
+  }, [outdated, round, dispatch, autoRefresh])
 }
 
 const getRoundName = (day: number, round: number, fightOver: boolean, phase: CombatPhase): string => {
@@ -90,7 +91,7 @@ const RenderFrontline = ({ sideType }: { sideType: SideType }) => {
 
 const Frontline = () => {
   const dispatch = useDispatch()
-  const settings = useSiteSettings()
+  const settings = useCombatSettings()
   const battleState = useBattle()
   const { outdated, fightOver } = battleState
   const day = getDay(battleState)
@@ -198,7 +199,7 @@ const Frontline = () => {
 const BattleSetup = () => {
   const participantA = useParticipant(SideType.A)
   const participantB = useParticipant(SideType.B)
-  const settings = useSiteSettings()
+  const settings = useCombatSettings()
   const dispatch = useDispatch()
 
   const handleRowCLick = useCallback(
@@ -221,7 +222,7 @@ const BattleSetup = () => {
         </Grid.Row>
         <Grid.Row columns={2}>
           <Grid.Column>
-            <ParticipantSelector side={SideType.A} />
+            <ParticipantSelector sideType={SideType.A} />
             <TableUnitTypes
               side={SideType.A}
               countryName={participantA.countryName}
@@ -230,7 +231,7 @@ const BattleSetup = () => {
             />
           </Grid.Column>
           <Grid.Column>
-            <ParticipantSelector side={SideType.B} />
+            <ParticipantSelector sideType={SideType.B} />
             <TableUnitTypes
               side={SideType.B}
               countryName={participantB.countryName}
