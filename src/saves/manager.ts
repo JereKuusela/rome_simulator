@@ -30,7 +30,8 @@ import {
   SaveCohort,
   SaveArmy,
   SaveDataUnitName,
-  SaveDataCountry
+  SaveDataCountry,
+  Identity
 } from './types'
 
 const getCharacterBaseAttribute = (character: SaveDataCharacter, attribute: CharacterAttribute) => {
@@ -185,6 +186,12 @@ const countSurplus = (file: Save, capital: number, pops: { [key: number]: SavePo
   return keys(filter(counts, item => item > 1))
 }
 
+export const getPregnancyString = (items?: { father: Identity; birthDate: string }[]) => {
+  if (!items) return ''
+  const dates = items.map(item => item.birthDate).join(' and ')
+  return `${dates} with ${items[0].father.name} (${items[0].father.id})`
+}
+
 const getGovernor = (save: Save, countryId: number, region: string) => {
   const jobs = save.jobs?.province_job
   const country = save.country?.country_database?.[countryId]
@@ -327,6 +334,15 @@ const getCharacterName = (character: SaveDataCharacter, familyName?: string) => 
   return character.first_name_loc.name + (surname ? ' ' + surname : '')
 }
 
+const getCharacterIdentity = (save: Save, id: number) => {
+  const character = save.character?.character_database[id]
+  const familyName = save.family?.families[character?.family ?? -1]?.key
+  return {
+    id,
+    name: character ? getCharacterName(character, familyName) : ''
+  }
+}
+
 const loadCharacter = (save: Save, id: number | undefined): SaveCharacter | undefined => {
   const countries = save.country?.country_database
   const character = save.character?.character_database[id ?? -1]
@@ -360,7 +376,11 @@ const loadCharacter = (save: Save, id: number | undefined): SaveCharacter | unde
       country: character.country,
       alive: !character.death_date,
       monthlyHealth: getTraitEffect(character.traits, CharacterAttribute.Health),
-      gender: character.female === 'yes' ? 'Female' : 'Male'
+      gender: character.female === 'yes' ? 'Female' : 'Male',
+      pregnant: character.unborn?.map(item => ({
+        father: getCharacterIdentity(save, item.father),
+        birthDate: item.date
+      }))
     }
   }
 }
@@ -451,9 +471,7 @@ export const loadCountryList = (save: Save | undefined) => {
 }
 
 export const loadCharacters = (save: Save | undefined) => {
-  if (save)
-    return toArr(save.character?.character_database ?? {}, (_, id) => loadCharacter(save, Number(id))).filter(
-      item => item
-    ) as SaveCharacter[]
+  const data = save?.character?.character_database
+  if (save && data) return excludeMissing(toArr(data, (_, id) => loadCharacter(save, Number(id))))
   return []
 }

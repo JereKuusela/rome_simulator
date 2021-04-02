@@ -1,9 +1,10 @@
 import { getOpponent } from 'army_utils'
 import { convertTactic, filterTactics } from 'managers/tactics'
-import { AppState, getCohorts } from 'state'
+import { AppState } from 'state'
 import { SideType } from 'types'
 import { toArr } from 'utils'
 import { getLeadingArmy } from './armies'
+import { getCohorts } from './battle'
 import { getMode } from './ui'
 import { useSelector } from './utils'
 

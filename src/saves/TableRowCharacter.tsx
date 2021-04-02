@@ -3,6 +3,7 @@ import { toPercent } from 'formatters'
 import React, { memo } from 'react'
 import { Table } from 'semantic-ui-react'
 import { CharacterAttribute } from 'types'
+import { getPregnancyString } from './manager'
 import { SaveCharacter } from './types'
 
 type RenderAttributeProps = {
@@ -53,6 +54,7 @@ const TableRowCharacter = ({ character }: { character: SaveCharacter }) => {
         <RenderAttribute character={character} attribute={CharacterAttribute.Zeal} />
       </Table.Cell>
       <Table.Cell>{character.traits.map(key => traitsIR.get(key)?.name).join(', ')}</Table.Cell>
+      <Table.Cell>{getPregnancyString(character.pregnant)}</Table.Cell>
     </Table.Row>
   )
 }

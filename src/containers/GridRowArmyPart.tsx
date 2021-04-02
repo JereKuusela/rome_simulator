@@ -1,14 +1,13 @@
 import React, { useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Grid } from 'semantic-ui-react'
 
 import { UnitAttribute, Cohort } from 'types'
-import { AppState, getCohorts } from 'state'
 import { getArmyPart } from 'army_utils'
 import { deleteCohort } from 'reducers'
 import { flatten } from 'lodash'
 import TableArmyPart, { ICohort, SharedProps } from 'components/TableArmyPart'
-import { useTimestamp } from 'selectors'
+import { useCohorts, useTimestamp } from 'selectors'
 
 type Props = SharedProps & {
   hideIfEmpty?: boolean
@@ -19,9 +18,8 @@ type Props = SharedProps & {
  * Also supports hiding the table and parent grid row if no cohorts.
  */
 const GridRowArmyPart = (props: Props): JSX.Element | null => {
-  const { hideIfEmpty } = props
   const dispatch = useDispatch()
-
+  const { hideIfEmpty, part, side } = props
   const handleDeleteCohort = useCallback(
     (cohort: ICohort) => {
       if (!cohort) return
@@ -30,11 +28,11 @@ const GridRowArmyPart = (props: Props): JSX.Element | null => {
     [dispatch]
   )
 
-  const rawCohorts = useSelector((state: AppState) => getCohorts(state, props.side))
+  const rawCohorts = useCohorts(side)
   const timestamp = useTimestamp()
   const cohorts = useMemo(() => {
-    return convertCohorts(getArmyPart(rawCohorts, props.part))
-  }, [rawCohorts, props.part])
+    return convertCohorts(getArmyPart(rawCohorts, part))
+  }, [rawCohorts, part])
 
   if (hideIfEmpty && !flatten(cohorts).length) return null
   return (

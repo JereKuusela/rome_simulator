@@ -19,6 +19,8 @@ export const getCombatSide = (state: AppState, sideType: SideType) => {
 }
 export const getSelectedTerrainTypes = (state: AppState) => getBattle(state).terrains
 
+export const getCohorts = (state: AppState, sideType: SideType) => getCombatSide(state, sideType).cohorts
+
 export const getSelectedTerrains = createSelector([getSelectedTerrainTypes, getTerrainsData], (selected, terrains) =>
   selected.map(item => terrains[item])
 )
@@ -32,3 +34,4 @@ export const useRound = () => useSelector(getRound)
 export const useOutdated = () => useSelector(getOutdated)
 export const useCombatSide = (sideType: SideType) => useSelector(state => getCombatSide(state, sideType))
 export const useSelectedTerrains = () => useSelector(getSelectedTerrains)
+export const useCohorts = (sideType: SideType) => useSelector(state => getCohorts(state, sideType))

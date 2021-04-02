@@ -1,60 +1,80 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { memo, useMemo } from 'react'
 import LineTo from 'react-lineto'
 
-import { AppState, getCohorts } from 'state'
 import { ArmyPart, SideType, Cohort } from 'types'
 import { getArmyPart, getOpponent } from 'army_utils'
 import { getCohortId } from 'managers/units'
+import { useCohorts } from 'selectors'
 
 type Props = {
-  type: ArmyPart
+  armyPart: ArmyPart
   visible: boolean
   attackerColor: string
   defenderColor: string
 }
 
+const useData = (sideType: SideType, armyPart: ArmyPart) => {
+  const cohorts = useCohorts(sideType)
+  return useMemo(() => convertUnits(sideType, getArmyPart(cohorts, armyPart)), [sideType, armyPart, cohorts])
+}
+
 /**
  * Display component for showing attack targets for both sides.
  */
-class TargetArrows extends Component<IProps> {
-  render() {
-    const { attacker, defender, attackerColor, defenderColor, visible } = this.props
-    if (!visible) return null
-    return (
-      <>
-        {attacker.map(row => row.map(unit => this.renderAttacker(unit, attackerColor)))}
-        {defender.map(row => row.map(unit => this.renderDefender(unit, defenderColor)))}
-      </>
-    )
-  }
-  renderAttacker = (unit: IUnit, color: string) => {
-    if (!unit || !unit.target) return null
-    const fromStr = unit.id
-    const toStr = unit.target
-    return this.renderArrow(fromStr, toStr, 'bottom', 'top', color)
-  }
-
-  renderDefender = (unit: IUnit, color: string) => {
-    if (!unit || !unit.target) return null
-    const fromStr = unit.id
-    const toStr = unit.target
-    return this.renderArrow(fromStr, toStr, 'top', 'bottom', color)
-  }
-
-  renderArrow = (from: string, to: string, fromAnchor: string, toAnchor: string, borderColor: string) => (
-    <LineTo
-      key={from + '_' + to}
-      borderColor={borderColor}
-      from={from}
-      fromAnchor={fromAnchor}
-      to={to}
-      toAnchor={toAnchor}
-      delay={true}
-      zIndex={-1}
-    />
+const TargetArrows = ({ armyPart, visible, attackerColor, defenderColor }: Props) => {
+  const attacker = useData(SideType.A, armyPart)
+  const defender = useData(SideType.B, armyPart)
+  if (!visible) return null
+  return (
+    <>
+      {attacker.map(row =>
+        row.map((unit, index) => <RenderAttacker key={unit?.id ?? index} unit={unit} color={attackerColor} />)
+      )}
+      {defender.map(row =>
+        row.map((unit, index) => <RenderDefender key={unit?.id ?? index} unit={unit} color={defenderColor} />)
+      )}
+    </>
   )
 }
+
+type SubProps = { unit: IUnit; color: string }
+
+const RenderAttacker = ({ unit, color }: SubProps) => {
+  if (!unit || !unit.target) return null
+  const fromStr = unit.id
+  const toStr = unit.target
+  return <MemoizedRenderArrow from={fromStr} to={toStr} fromAnchor='bottom' toAnchor='top' borderColor={color} />
+}
+
+const RenderDefender = ({ unit, color }: SubProps) => {
+  if (!unit || !unit.target) return null
+  const fromStr = unit.id
+  const toStr = unit.target
+  return <MemoizedRenderArrow from={fromStr} to={toStr} fromAnchor='top' toAnchor='bottom' borderColor={color} />
+}
+
+type RenderArrowProps = {
+  from: string
+  to: string
+  fromAnchor: string
+  toAnchor: string
+  borderColor: string
+}
+
+const RenderArrow = ({ from, to, fromAnchor, toAnchor, borderColor }: RenderArrowProps) => (
+  <LineTo
+    key={from + '_' + to}
+    borderColor={borderColor}
+    from={from}
+    fromAnchor={fromAnchor}
+    to={to}
+    toAnchor={toAnchor}
+    delay={true}
+    zIndex={-1}
+  />
+)
+
+const MemoizedRenderArrow = memo(RenderArrow)
 
 type IUnit = {
   id: string
@@ -73,15 +93,5 @@ const convertUnits = (side: SideType, units: (Cohort | null)[][]): IUnit[][] =>
     )
   )
 
-const mapStateToProps = (state: AppState, props: Props) => ({
-  attacker: convertUnits(SideType.A, getArmyPart(getCohorts(state, SideType.A), props.type)),
-  defender: convertUnits(SideType.B, getArmyPart(getCohorts(state, SideType.B), props.type))
-})
-
-const actions = {}
-
-type S = ReturnType<typeof mapStateToProps>
-type D = typeof actions
-interface IProps extends React.PropsWithChildren<Props>, S, D {}
-
-export default connect(mapStateToProps, actions)(TargetArrows)
+const MemoizedTargetArrows = memo(TargetArrows)
+export default MemoizedTargetArrows

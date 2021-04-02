@@ -7,11 +7,13 @@ type Props<T extends string> = {
   disabled?: boolean
   onBlur?: () => void
   style?: unknown
+  placeholder?: string
 }
 
-export const Input = <T extends string>({ value, onChange, onBlur, style }: Props<T>) => {
+export const Input = <T extends string>({ placeholder, value, onChange, onBlur, style }: Props<T>) => {
   return (
     <InputUI
+      placeholder={placeholder}
       size='mini'
       style={style}
       defaultValue={value}
@@ -32,10 +34,11 @@ export const FileInput = ({ onChange, style }: { onChange: (file: File) => void;
 interface InputDelayedProps<T extends string> {
   value: T
   onChange: (value: T) => void
+  placeholder?: string
   style?: unknown
 }
 
-export const InputDelayed = <T extends string>({ value, onChange, style }: InputDelayedProps<T>) => {
+export const InputDelayed = <T extends string>({ placeholder, value, onChange, style }: InputDelayedProps<T>) => {
   const [currentValue, setCurrentValue] = useState(value)
   useEffect(() => {
     setCurrentValue(value)
@@ -44,5 +47,5 @@ export const InputDelayed = <T extends string>({ value, onChange, style }: Input
   const handleBlur = () => {
     onChange(currentValue)
   }
-  return <Input onBlur={handleBlur} style={style} value={value} onChange={setCurrentValue} />
+  return <Input placeholder={placeholder} onBlur={handleBlur} style={style} value={value} onChange={setCurrentValue} />
 }

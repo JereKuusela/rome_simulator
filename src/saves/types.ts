@@ -143,6 +143,11 @@ export type SaveDataCharacter = {
     }
     start_date: string
   }
+  unborn?: {
+    mother: number
+    father: number
+    date: string
+  }[]
   variables?: {
     list: {
       name: string
@@ -171,6 +176,11 @@ export type SaveCountryDeity = {
   deity: number
 }
 
+export type Identity = {
+  id: number
+  name: string
+}
+
 export type SaveCharacter = Record<CharacterAttribute, number> & {
   id: number
   name: string
@@ -181,6 +191,10 @@ export type SaveCharacter = Record<CharacterAttribute, number> & {
   alive: boolean
   monthlyHealth: number
   gender: 'Female' | 'Male'
+  pregnant?: {
+    father: Identity
+    birthDate: string
+  }[]
 }
 
 export type SaveArmy = {

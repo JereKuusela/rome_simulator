@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button, Checkbox, Grid, Table } from 'semantic-ui-react'
-import { loadCharacters, loadCountryList } from './manager'
+import { getPregnancyString, loadCharacters, loadCountryList } from './manager'
 import { useBooleanState, useOptionalState } from 'components/hooks'
 import { Save, SaveCharacter } from './types'
 import TableRowCharacter from './TableRowCharacter'
@@ -27,22 +27,22 @@ const headers = [
   CharacterAttribute.Finesse,
   CharacterAttribute.Charisma,
   CharacterAttribute.Zeal,
-  'Traits'
+  'Traits',
+  'Pregnancy'
 ] as const
 
 const sep = ','
 
 const exportCharacter = (item: SaveCharacter) =>
-  headers
-    .map(header => {
-      if (header === 'Id') return item.id
-      if (header === 'Country') return item.countryName
-      if (header === 'Name') return item.name
-      if (header === 'Gender') return item.gender
-      if (header === 'Traits') return item.traits.map(key => traitsIR.get(key)?.name).join(' ')
-      return item[header]
-    })
-    .join(sep)
+  headers.map(header => {
+    if (header === 'Id') return item.id
+    if (header === 'Country') return item.countryName
+    if (header === 'Name') return item.name
+    if (header === 'Gender') return item.gender
+    if (header === 'Traits') return item.traits.map(key => traitsIR.get(key)?.name).join(' ')
+    if (header === 'Pregnancy') return getPregnancyString(item.pregnant)
+    return item[header]
+  })
 
 const exportCharacters = (items: SaveCharacter[]) => {
   let data = `sep=${sep}\n${headers.join(sep)}\n`
@@ -99,21 +99,28 @@ const Filters = ({ save, onChange }: FiltersProps) => {
   const [countries, setCountries] = useState<string[]>(emptyArray)
   const countryList = useMemo(() => loadCountryList(save), [save])
 
+  const [search, setSearch] = useState('')
   const [traits, setTraits] = useState<string[]>(emptyArray)
   const [male, setMale] = useBooleanState(true)
   const [female, setFemale] = useBooleanState(true)
   const [alive, setAlive] = useBooleanState(true)
+  const [pregnant, setPregnant] = useBooleanState(false)
 
   const createFilterSorter = useCallback(() => {
     const filterer = (item: SaveCharacter) => {
       if (countries.length > 0 && !countries.includes(String(item.country))) return false
       if (traits.length > 0 && item.traits.every(trait => !traits.includes(trait))) return false
-
+      if (search.length > 0) {
+        const id = Number(search)
+        if (id && item.id !== id) return false
+        if (!id && !item.name.includes(search)) return false
+      }
       if (values(CharacterAttribute).some(attribute => !verifyValue(item[attribute], filters.current[attribute])))
         return false
       if (!male && item.gender === 'Male') return false
       if (!female && item.gender === 'Female') return false
       if (alive !== item.alive) return false
+      if (pregnant && !item.pregnant?.length) return false
       return true
     }
     const sorter = (a: SaveCharacter, b: SaveCharacter) => {
@@ -129,7 +136,7 @@ const Filters = ({ save, onChange }: FiltersProps) => {
     }
     const filterSorter = (items: SaveCharacter[]) => items.filter(filterer).sort(sorter)
     onChange(filterSorter)
-  }, [onChange, countries, traits, male, female, alive])
+  }, [onChange, countries, traits, search, male, female, alive, pregnant])
 
   useEffect(createFilterSorter, [createFilterSorter])
 
@@ -142,6 +149,10 @@ const Filters = ({ save, onChange }: FiltersProps) => {
   )
   return (
     <>
+      <SimpleGridRow>
+        <InputDelayed style={{ width: '100%' }} placeholder='Id or name' value={search} onChange={setSearch} />
+        <span />
+      </SimpleGridRow>
       <SimpleGridRow>
         <SimpleMultiDropdown
           value={countries}
@@ -165,7 +176,7 @@ const Filters = ({ save, onChange }: FiltersProps) => {
         <Checkbox label={'Male'} checked={male} onChange={setMale} />
         <Checkbox label={'Female'} checked={female} onChange={setFemale} />
         <Checkbox label={'Alive'} checked={alive} onChange={setAlive} />
-        <span />
+        <Checkbox label={'Only pregnant'} checked={pregnant} onChange={setPregnant} />
         <span />
         <span />
         <span />

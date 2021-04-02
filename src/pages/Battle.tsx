@@ -9,7 +9,7 @@ import TargetArrows from 'containers/TargetArrows'
 import TerrainSelector from 'containers/TerrainSelector'
 import WinRate from 'containers/WinRate'
 import { clearCohorts, changeSiteParameter, refreshBattle, resetState, openModal, battle, undo } from 'reducers'
-import { useParticipant, useCombatWidth } from 'state'
+import { useParticipant } from 'state'
 import { ArmyPart, CountryName, Setting, SideType, CombatPhase, UnitType, ModalType, ArmyName } from 'types'
 import TableUnitTypes from 'containers/TableUnitTypes'
 import TableArmyInfo from 'containers/TableArmyInfo'
@@ -18,7 +18,7 @@ import TableDamageAttributes from 'containers/TableDamageAttributes'
 import AccordionToggle from 'containers/AccordionToggle'
 import { getDay, getRound } from 'managers/battle'
 import ParticipantSelector from 'containers/ParticipantSelector'
-import { useBattle, useOutdated, useRound, useCombatSettings } from 'selectors'
+import { useBattle, useOutdated, useRound, useCombatSettings, useCombatWidth } from 'selectors'
 
 const ATTACKER_COLOR = '#FFAA00AA'
 const DEFENDER_COLOR = '#00AAFFAA'
@@ -172,7 +172,7 @@ const Frontline = () => {
       <Grid.Row columns={1} style={{ padding: 0 }}>
         <Grid.Column>
           <TargetArrows
-            type={ArmyPart.Frontline}
+            armyPart={ArmyPart.Frontline}
             visible={!fightOver}
             attackerColor={ATTACKER_COLOR}
             defenderColor={DEFENDER_COLOR}

@@ -44,8 +44,10 @@ Changelog:
  * Removed army selector as it no longer has any purpose.
 
 "Export from save" page: 
+ * Added a tool for finding and exporting characters.
+  - Allows filtering by id, name, country, traits, attributes, age, fertility, health, alive and pregnancy.
+  - Compared to in-game tools: trait searching, shows exact health values, shows pregnancy.
  * Added a tool for exporting a table with territories and their pops.
- * Added a tool for finding characters.
 
 Todo: 
 

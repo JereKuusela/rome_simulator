@@ -6,10 +6,10 @@ import IconEmpty from 'images/empty.png'
 import { SideType, UnitType, UnitAttribute, isAttributeEnabled, Cohorts, Cohort } from 'types'
 import { strengthToValue, toNumber } from 'formatters'
 import { getImage, round, sumArr } from 'utils'
-import { AppState, getCohorts } from 'state'
+import { AppState } from 'state'
 import { flatten, uniq } from 'lodash'
 import AttributeImage from 'components/Utils/AttributeImage'
-import { getBattle, getMode, getCombatSettings } from 'selectors'
+import { getBattle, getMode, getCombatSettings, getCohorts } from 'selectors'
 
 class TableStats extends Component<IProps> {
   shouldComponentUpdate(prevProps: IProps) {

@@ -16,7 +16,7 @@ import {
   CultureType
 } from 'types'
 import { getImage, mapRange } from 'utils'
-import { useArmyData, useUnitDefinitions, useCountry, useTechLevel } from 'state'
+import { useUnitDefinitions, useTechLevel } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
 import { getArchetypes, getActualUnits, getLatestUnits, getChildUnits, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
@@ -26,7 +26,7 @@ import { applyLosses } from 'managers/units'
 import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
 import { getCultures } from 'data'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
-import { useMode, useCombatSettings, useWeariness } from 'selectors'
+import { useMode, useCombatSettings, useWeariness, useCulture, useArmyData } from 'selectors'
 
 type Props = {
   side: SideType
@@ -108,7 +108,7 @@ const RootUnitRow = (props: { unit: UnitDefinition } & Props) => {
   const { unit, countryName, armyName, onRowClick } = props
   const settings = useCombatSettings()
   const mode = useMode()
-  const culture = useCountry(countryName).modifiers.culture
+  const culture = useCulture(countryName)
   const dispatch = useDispatch()
 
   const handleRowCLick = useCallback(() => onRowClick(countryName, armyName, unit.type), [

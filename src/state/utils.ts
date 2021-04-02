@@ -26,16 +26,11 @@ import {
   UnitDefinitions,
   UnitDefinition,
   GeneralData,
-  CountryDefinition,
   Cohort,
-  Cohorts,
   SideData,
   Side,
   Environment,
-  ArmyDefinition,
-  ArmyData,
-  CountryDefinitions,
-  TerrainCalc
+  ArmyDefinition
 } from 'types'
 import {
   getDefaultBattle,
@@ -45,7 +40,7 @@ import {
   getDefaultTacticState,
   getDefaultTerrainState
 } from 'data'
-import { uniq, flatten, sumBy } from 'lodash'
+import { uniq, flatten } from 'lodash'
 import * as manager from 'managers/army'
 import { getGeneralModifiers } from 'managers/modifiers'
 import { convertUnitsData } from 'managers/units'
@@ -54,10 +49,8 @@ import { iterateCohorts } from 'combat'
 import { calculateValue } from 'data_values'
 import { useSelector } from 'react-redux'
 import * as selectors from 'selectors/units'
-import { getParticipant } from 'selectors/armies'
 import {
   getBattle,
-  getCombatSide,
   getMode,
   getSide,
   getCombatSettings,
@@ -66,31 +59,10 @@ import {
   getSelectedTerrains,
   getSelectedArmy,
   getSelectedCountry,
-  getArmyNames
+  getArmyNames,
+  getCohorts
 } from 'selectors'
 
-export const useArmyData = (countryName: CountryName, armyName: ArmyName): ArmyData => {
-  return useSelector((state: AppState) => state.countries[countryName].armies[armyName])
-}
-
-export const useCountry = (countryName: CountryName): CountryDefinition => {
-  return useSelector((state: AppState) => state.countries[countryName])
-}
-
-const calculateCombatWidth = (state: AppState) => {
-  const settings = state.settings.sharedSettings
-  const attacker = getCountry(state, getParticipant(state, SideType.A, 0).countryName)
-  const defender = getCountry(state, getParticipant(state, SideType.B, 0).countryName)
-  const terrains = sumBy(getSelectedTerrains(state), terrain => calculateValue(terrain, TerrainCalc.CombatWidth))
-  return (
-    settings[Setting.BaseCombatWidth] +
-    terrains +
-    Math.max(attacker[CountryAttribute.CombatWidth], defender[CountryAttribute.CombatWidth])
-  )
-}
-
-export const useCountries = (): CountryDefinitions => useSelector((state: AppState) => state.countries)
-export const useCombatWidth = (): number => useSelector(calculateCombatWidth)
 export const useTechLevel = (countryName: CountryName): number => {
   return useSelector((state: AppState) => {
     const country = getCountry(state, countryName)
@@ -141,8 +113,6 @@ export const mergeUnitTypes = (state: AppState): UnitType[] => {
     }, new Set<UnitType>())
   )
 }
-
-export const getCohorts = (state: AppState, sideType: SideType): Cohorts => getCombatSide(state, sideType).cohorts
 
 const getArmy = (state: AppState, countryName: CountryName, armyName: ArmyName): ArmyDefinition => {
   const army = getArmyDefinition(state, countryName, armyName)

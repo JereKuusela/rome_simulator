@@ -8,7 +8,7 @@ import { getParticipants, getSelectedTerrains } from './battle'
 import { getCountry } from './countries'
 import { getMode } from './ui'
 
-const getSharedSettings = (state: AppState) => state.settings.sharedSettings
+export const getSharedSettings = (state: AppState) => state.settings.sharedSettings
 const getModeSettings = (state: AppState) => state.settings.modeSettings[getMode(state)]
 
 // Todo: This should be cached.
@@ -35,3 +35,4 @@ export const getCombatSettings = createSelector(
 )
 
 export const useCombatSettings = () => useSelector(getCombatSettings)
+export const useCombatWidth = () => useSelector(getCombatWidth)

@@ -9,7 +9,8 @@ export const getSelectedParticipantIndex = (state: AppState, sideType: SideType)
 export const getMode = (state: AppState) => state.ui.mode
 export const getSelectedArmyIndex = (state: AppState) => state.ui.selectedArmyIndex
 export const getSelectedCountryIndex = (state: AppState) => state.ui.selectedCountryIndex
-// TODO: Cache
+
+// No need to cache these because strings are returned and not used for combat calculations.
 export const getSelectedCountry = (state: AppState) => keys(getCountries(state))[getSelectedCountryIndex(state)]
 export const getSelectedArmy = (state: AppState) =>
   keys(getArmies(state, getSelectedCountry(state)))[getSelectedArmyIndex(state)]

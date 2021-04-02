@@ -6,10 +6,16 @@ import { AppState } from 'state'
 import { ArmyName, CountryName, GeneralDefinition, Mode, Participant, SideType } from 'types'
 import { getArmyKey, ArmyKey, useSelector } from './utils'
 import { getParticipantName } from 'managers/battle'
-import { getCountryData } from './countries'
+import { getArmies, getCountryData } from './countries'
 import { getCombatSettings } from './settings'
 import { getTacticsData } from './tactics'
 import { getCombatSide, getSide } from './battle'
+
+const getArmyData = (state: AppState, countryName: CountryName, armyName: ArmyName) =>
+  getArmies(state, countryName)[armyName]
+
+const getUnitPreferences = (state: AppState, countryName: CountryName, armyName: ArmyName) =>
+  getArmyData(state, countryName, armyName).unitPreferences
 
 const getGeneral = (state: AppState, key: ArmyKey) =>
   getCountryData(state, key.countryName).armies[key.armyName].general
@@ -47,3 +53,9 @@ export const useGeneral = (countryName: CountryName, armyName: ArmyName): Genera
 }
 
 export const useLeadingArmy = (sideType: SideType) => useSelector(state => getLeadingArmy(state, sideType))
+
+export const useArmyData = (countryName: CountryName, armyName: ArmyName) =>
+  useSelector(state => getArmyData(state, countryName, armyName))
+
+export const useUnitPrefences = (countryName: CountryName, armyName: ArmyName) =>
+  useSelector(state => getUnitPreferences(state, countryName, armyName))
