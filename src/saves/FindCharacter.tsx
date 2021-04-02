@@ -111,9 +111,9 @@ const Filters = ({ save, onChange }: FiltersProps) => {
       if (countries.length > 0 && !countries.includes(String(item.country))) return false
       if (traits.length > 0 && item.traits.every(trait => !traits.includes(trait))) return false
       if (search.length > 0) {
-        const id = Number(search)
-        if (id && item.id !== id) return false
-        if (!id && !item.name.includes(search)) return false
+        const isId = Number.isInteger(search)
+        if (isId && item.id !== Number(search)) return false
+        if (!isId && !item.name.includes(search)) return false
       }
       if (values(CharacterAttribute).some(attribute => !verifyValue(item[attribute], filters.current[attribute])))
         return false
