@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import ItemRemover from 'components/ItemRemover'
 import UnitDetail from 'components/UnitDetail'
 
-import { AppState, getCohortForEachRound, getCohortDefinition } from 'state'
+import type { AppState } from 'reducers'
 import {
   ValuesType,
   CountryName,
@@ -22,7 +22,7 @@ import { deleteCohort, setCohortValue, changeCohortType, toggleCohortLoyality, c
 import { applyDynamicAttributes } from 'managers/units'
 import BaseModal from './BaseModal'
 import { toArr } from 'utils'
-import { getCombatSettings, getMode, getTerrainTypes } from 'selectors'
+import { getCohortDefinition, getCohortForEachRound, getCombatSettings, getMode, getTerrainTypes } from 'selectors'
 const CUSTOM_VALUE_KEY = 'Unit'
 
 class ModalCohortDetail extends Component<IProps> {

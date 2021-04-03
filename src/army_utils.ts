@@ -8,10 +8,15 @@ import {
   UnitDefinitions,
   UnitDefinition,
   Cohorts,
-  CombatSharedSettings,
+  CombatSettings,
   ReserveDefinition,
   CohortDefinition,
-  CohortData
+  CohortData,
+  ReserveData,
+  ArmyData,
+  GeneralDefinition,
+  Setting,
+  UnitPreferences
 } from 'types'
 import { mergeValues, shrinkValues } from 'data_values'
 import { map, filter } from 'utils'
@@ -19,13 +24,13 @@ import { applyDynamicAttributes } from 'managers/units'
 
 /** Merges cohort definitions with their units to get actual cohorts. */
 export const convertReserveDefinitions = (
-  settings: CombatSharedSettings,
-  reserve: ReserveDefinition,
+  settings: CombatSettings,
+  reserve: ReserveData,
   units: UnitDefinitions
 ): ReserveDefinition => reserve.map(cohort => convertCohortDefinition(settings, cohort, units))
 
 export const convertCohortDefinition = (
-  settings: CombatSharedSettings,
+  settings: CombatSettings,
   cohort: CohortData,
   units: UnitDefinitions
 ): CohortDefinition => applyDynamicAttributes(mergeValues(units[cohort.type], cohort), settings)
@@ -35,7 +40,7 @@ export const shrinkUnits = <T extends UnitsData | UnitDefinitions>(definitions: 
   map(definitions, unit => shrinkValues(unit, unit.type)) as T
 
 export const convertUnitDefinitions = (
-  settings: CombatSharedSettings,
+  settings: CombatSettings,
   definitions: UnitsData,
   general: UnitValues
 ): UnitDefinitions => {
@@ -45,13 +50,14 @@ export const convertUnitDefinitions = (
 }
 
 export const convertUnitDefinition = (
-  settings: CombatSharedSettings,
+  settings: CombatSettings,
   definitions: UnitsData,
   parents: UnitsData,
   general: UnitValues,
   type: UnitType
-): UnitDefinition => {
+) => {
   let unit = mergeValues(definitions[type], general[type])
+  if (!unit) return undefined
   let parent = unit.parent
   const merged = [type]
   while (parent && !merged.includes(parent)) {
@@ -78,3 +84,19 @@ export const getArmyPart = (units: Cohorts, type: ArmyPart) => {
 }
 
 export const getOpponent = (side: SideType) => (side === SideType.A ? SideType.B : SideType.A)
+
+export const convertArmyData = (
+  army: ArmyData,
+  unitDefinitions: UnitDefinitions,
+  reserve: ReserveDefinition,
+  general: GeneralDefinition,
+  settings: CombatSettings,
+  flankRatio: number
+) => ({
+  reserve,
+  general,
+  flankSize: army.flankSize,
+  unitPreferences: settings[Setting.CustomDeployment] ? army.unitPreferences : ({} as UnitPreferences),
+  unitDefinitions,
+  flankRatio
+})

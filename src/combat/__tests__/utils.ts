@@ -37,7 +37,7 @@ import {
   GeneralValueType
 } from 'types'
 import { doCombatRound } from 'combat'
-import { convertSides, getCombatEnvironment } from 'state'
+import { convertSides, getCombatEnvironment } from 'store'
 import { addToReserve, selectTactic, setGeneralAttribute } from 'managers/army'
 import { createArmy } from 'managers/countries'
 import { flatten, noop } from 'lodash'

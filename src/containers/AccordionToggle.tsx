@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Accordion, Icon, Header } from 'semantic-ui-react'
 
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 import { toggleAccordion } from 'reducers'
 
 type Props = {

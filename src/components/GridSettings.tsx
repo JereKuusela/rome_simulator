@@ -9,7 +9,7 @@ import { getDefaultLandSettings, getDefaultSharedSettings } from 'data'
 type Values = string | number | boolean
 
 type IProps<T extends Setting> = {
-  settings: { [key in T]: Values }
+  settings: Record<T, Values>
   onChange: (key: T, str: Values) => void
 }
 

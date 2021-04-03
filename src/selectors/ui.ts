@@ -1,4 +1,4 @@
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 import { SideType } from 'types'
 import { keys } from 'utils'
 import { getArmies, getCountries } from './countries'

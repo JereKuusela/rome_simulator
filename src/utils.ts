@@ -80,13 +80,17 @@ export const multiplyChance = (chance1?: number, chance2?: number) =>
     ? chance2
     : 0
 
+// Typings get bit complicated to work with partial and complete records.
+type Rec<K extends string, V> = Partial<Record<K, V>> | Record<K, V>
+type Exc<T> = Exclude<T, null | undefined>
+
 export const keys = <K extends string>(object: Record<K, any> | undefined) =>
   object ? (Object.keys(object) as K[]) : []
 const entries = <K extends string, V>(object: Record<K, V>) => Object.entries(object) as [K, V][]
 export const values = <V>(object: Record<string, V>) => Object.values(object) as V[]
 
-export const map = <K extends string, V, R>(object: Record<K, V>, callback: (item: V, key: K) => R): Record<K, R> =>
-  Object.assign({}, ...entries(object).map(([k, v]) => ({ [k]: callback(v, k) })))
+export const map = <K extends string, V, R>(object: Rec<K, V>, callback: (item: Exc<V>, key: K) => R): Record<K, R> =>
+  Object.assign({}, ...entries(object as Record<K, V>).map(([k, v]) => ({ [k]: callback(v as Exc<V>, k) })))
 
 export const forEach2 = <K extends string, V, R>(
   object: Record<K, Record<K, V>>,
@@ -103,10 +107,10 @@ export const every = <K extends string, V>(object: Record<K, V>, callback: (item
 export const excludeMissing = <T>(arr: T[]): Exclude<T, null | undefined>[] =>
   arr.filter(item => item) as Exclude<T, null | undefined>[]
 
-export const filter = <K extends string, V>(object: Record<K, V>, callback?: (item: V, key: K) => any): Record<K, V> =>
+export const filter = <K extends string, V>(object: Rec<K, V>, callback?: (item: V, key: K) => any): Record<K, V> =>
   Object.assign(
     {},
-    ...entries(object)
+    ...entries(object as Record<K, V>)
       .filter(([k, v]) => (callback ? callback(v, k) : object[k]))
       .map(([k, v]) => ({ [k]: v }))
   )
@@ -118,10 +122,10 @@ export const filterKeys = <K extends string, V>(object: Record<K, V>, callback?:
       .map(([k, v]) => ({ [k]: v }))
   )
 
-export function toArr<K extends string, V>(object: Record<K, V>): V[]
-export function toArr<K extends string, V, R>(object: Record<K, V>, callback: (value: V, key: K) => R): R[]
-export function toArr<K extends string, V, R>(object: Record<K, V>, callback?: (value: V, key: K) => R): (R | V)[] {
-  return entries(object).map(([k, v]) => (callback ? callback(v, k) : v))
+export function toArr<K extends string, V>(object: Rec<K, V>): V[]
+export function toArr<K extends string, V, R>(object: Rec<K, V>, callback: (value: V, key: K) => R): R[]
+export function toArr<K extends string, V, R>(object: Rec<K, V>, callback?: (value: V, key: K) => R): (R | V)[] {
+  return entries(object as Record<K, V>).map(([k, v]) => (callback ? callback(v, k) : v))
 }
 
 export function mapKeys<K extends string>(object: Record<K, any>): K[]
@@ -166,8 +170,8 @@ export function toObj<K extends string, V, R>(
 
 export type ObjSet<K extends string = string> = Record<K, true>
 
-export const toSet = <V, R extends string>(object: Record<string, V>, key: (value: V) => R): ObjSet<R> =>
-  Object.assign({}, ...values(object).map(v => ({ [key(v)]: true })))
+export const toSet = <V, R extends string>(object: Rec<string, V>, key: (value: V) => R): ObjSet<R> =>
+  Object.assign({}, ...values(object as Record<string, V>).map(v => ({ [key(v)]: true })))
 
 export const merge = <K extends string, V>(object1: Record<K, V>, object2: Record<K, V>): Record<K, V> => ({
   ...object1,

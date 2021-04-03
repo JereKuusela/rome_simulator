@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import { AppState, mergeUnitTypes, getUnitImages, getUnitDefinitions } from 'state'
+import type { AppState } from 'reducers'
 import { createUnit, deleteUnit, changeUnitType, changeWeariness, openModal } from 'reducers'
 import UnitDefinitions from 'components/UnitDefinitions'
 import CountryManager from 'containers/CountryManager'
@@ -18,7 +18,10 @@ import {
   getTerrainTypes,
   getSelectedArmy,
   getSelectedCountry,
-  getWeariness
+  getWeariness,
+  getUnitDefinitions,
+  getUnitImages,
+  getMergedUnitTypes
 } from 'selectors'
 
 interface IState {
@@ -89,17 +92,21 @@ class Definitions extends Component<IProps, IState> {
     })
 }
 
-const mapStateToProps = (state: AppState) => ({
-  units: getAllUnitList(getUnitDefinitions(state), getMode(state)),
-  images: getUnitImages(state),
-  unitTypes: mergeUnitTypes(state),
-  terrains: getTerrainTypes(state, undefined),
-  mode: getMode(state),
-  country: getSelectedCountry(state),
-  army: getSelectedArmy(state),
-  settings: getCombatSettings(state),
-  weariness: getWeariness(state, getSelectedCountry(state))
-})
+const mapStateToProps = (state: AppState) => {
+  const countryName = getSelectedCountry(state)
+  const armyName = getSelectedArmy(state)
+  return {
+    units: getAllUnitList(getUnitDefinitions(state, { countryName, armyName }), getMode(state)),
+    images: getUnitImages(state),
+    unitTypes: getMergedUnitTypes(state),
+    terrains: getTerrainTypes(state, undefined),
+    mode: getMode(state),
+    country: countryName,
+    army: armyName,
+    settings: getCombatSettings(state),
+    weariness: getWeariness(state, countryName)
+  }
+}
 
 const actions = {
   openModal,

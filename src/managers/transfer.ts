@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  getDefaultTacticState,
+  getDefaultTerrainState,
+  getDefaultBattle,
+  getDefaultMode,
+  getDefaultCountryDefinitions,
+  getDefaultSettings
+} from 'data'
 import { saveAs } from 'file-saver'
-import { AppState, stripRounds, resetMissing, resetAll } from 'state'
+import type { AppState } from 'reducers'
+import { stripRounds } from 'store/transforms'
 import { Mode, ExportKey, ExportKeys, TransferState } from 'types'
 
 const filterState = (state: AppState, exportKeys?: ExportKeys): any => {
@@ -56,6 +65,33 @@ export const resetState = (state: AppState) => {
 }
 
 const combine = (a: any, b: any) => ({ ...(a ?? {}), ...(b ?? {}) })
+
+/**
+ * Resets missing data by using the default data.
+ * @param data
+ */
+export const resetMissing = (data: AppState) => {
+  data.tactics = data.tactics || getDefaultTacticState()
+  data.terrains = data.terrains || getDefaultTerrainState()
+  data.battle = data.battle || getDefaultBattle()
+  if (!data.battle[Mode.Land]) data.battle[Mode.Land] = getDefaultMode(Mode.Land)
+  if (!data.battle[Mode.Naval]) data.battle[Mode.Naval] = getDefaultMode(Mode.Naval)
+  data.settings = data.settings || getDefaultSettings()
+  data.countries = data.countries || getDefaultCountryDefinitions()
+  return data
+}
+
+/**
+ * Resets all data.
+ * @param data
+ */
+export const resetAll = (data: AppState) => {
+  data.tactics = getDefaultTacticState()
+  data.terrains = getDefaultTerrainState()
+  data.battle = getDefaultBattle()
+  data.settings = getDefaultSettings()
+  data.countries = getDefaultCountryDefinitions()
+}
 
 export const importState = (state: AppState, imported: any, resetMissing: boolean) => {
   if (resetMissing) {

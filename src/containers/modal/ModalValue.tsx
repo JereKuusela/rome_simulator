@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Input, Grid, Button } from 'semantic-ui-react'
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 import { ModalType } from 'types'
 import { closeModal } from 'reducers'
 import { connect } from 'react-redux'

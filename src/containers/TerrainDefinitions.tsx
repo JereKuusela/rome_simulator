@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Button, Image } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 
 import Headers from '../components/Utils/Headers'
 import StyledNumber from '../components/Utils/StyledNumber'

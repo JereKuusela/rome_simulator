@@ -16,7 +16,6 @@ import {
   UnitAttribute
 } from 'types'
 import { keys } from 'utils'
-import { useUnitDefinition } from 'state'
 import {
   selectParticipantCountry,
   selectParticipantArmy,
@@ -37,7 +36,7 @@ import UnitValueInput from './UnitValueInput'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
 import { getDefaultArmyName } from 'data'
-import { useGeneral, useMode, useSide, useCombatSettings, useArmies, useCountries } from 'selectors'
+import { useGeneral, useMode, useSide, useCombatSettings, useArmies, useCountries, useUnitDefinition } from 'selectors'
 
 type Props = {
   type: SideType

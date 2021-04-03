@@ -3,15 +3,13 @@ import { useDispatch } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 
 import { SideType, CountryName, UnitAttribute, CombatPhase, GeneralDefinition, GeneralValueType, ArmyName } from 'types'
-import { useUnitDefinition } from 'state'
 import { setGeneralAttribute } from 'reducers'
 import AttributeImage from 'components/Utils/AttributeImage'
 import StyledNumber from 'components/Utils/StyledNumber'
 import { addSign } from 'formatters'
 import UnitValueInput from './UnitValueInput'
 import DelayedNumericInput from 'components/Detail/DelayedNumericInput'
-import { getRootParent } from 'managers/units'
-import { useGeneral, useMode, useCombatSettings } from 'selectors'
+import { useGeneral, useCombatSettings, useRootUnitDefinition } from 'selectors'
 
 type Props = {
   side: SideType
@@ -21,8 +19,7 @@ type Props = {
 
 const TableDamageAttributes = ({ side, countryName, armyName }: Props): JSX.Element | null => {
   const settings = useCombatSettings()
-  const mode = useMode()
-  const unit = useUnitDefinition(countryName, armyName, getRootParent(mode))
+  const unit = useRootUnitDefinition(countryName, armyName)
   const general = useGeneral(countryName, armyName)
   if (!unit || !general) return null
   return (

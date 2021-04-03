@@ -1,11 +1,11 @@
-import { AppState, getCombatEnvironment, convertSides } from 'state'
+import type { AppState } from 'reducers'
 import { doCombatRound, removeDefeated, getCombatPhaseNumber } from 'combat'
 import { Battle, SideType, Setting, Cohorts, SideData, Side, Environment, Army, Reserve, Mode } from 'types'
 import { createEntropy, MersenneTwister19937, Random } from 'random-js'
 import { forEach } from 'utils'
 import { getDay, getStartingPhaseNumber, getRound } from './battle'
 import produce from 'immer'
-import { getCombatSide, getMode } from 'selectors'
+import { getSide, getMode, getInitialSides, getCombatEnvironment } from 'selectors'
 
 const copyCohorts = (cohorts: Cohorts): Cohorts => ({
   frontline: cohorts.frontline.map(row => row.map(value => (value ? { ...value, state: { ...value.state } } : null))),
@@ -111,13 +111,7 @@ export const battle = (pair: [AppState, AppState], steps: number) => {
   const [state, draft] = pair
   const mode = getMode(state)
   const battle = draft.battle[mode]
-  subBattle(
-    battle,
-    getCombatEnvironment(state),
-    getCombatSide(state, SideType.A),
-    getCombatSide(state, SideType.B),
-    steps
-  )
+  subBattle(battle, getCombatEnvironment(state), getSide(state, SideType.A), getSide(state, SideType.B), steps)
 }
 
 export const refreshBattle = (pair: [AppState, AppState], mode?: Mode) => {
@@ -126,7 +120,7 @@ export const refreshBattle = (pair: [AppState, AppState], mode?: Mode) => {
   const battle = draft.battle[mode]
   const steps = getDay(battle)
   battle.days = []
-  const [attacker, defender] = convertSides(state)
+  const [attacker, defender] = getInitialSides(state)
   subBattle(battle, getCombatEnvironment(draft), attacker, defender, steps)
 }
 

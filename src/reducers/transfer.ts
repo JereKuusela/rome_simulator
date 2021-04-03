@@ -2,7 +2,7 @@ import * as manager from 'managers/transfer'
 import { TransferState } from 'types'
 import { getDefaultTransferState } from 'data'
 import { makeContainerReducer, ActionToFunction, makeActionRemoveFirst } from './utils'
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 
 const transferMapping: ActionToFunction<TransferState> = {}
 

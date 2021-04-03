@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import 'semantic-ui-css/semantic.min.css'
 import './index.css'
 import Main from './Root'
-import configureStore from './store'
+import configureStore from 'store/store'
 
 const store = configureStore()
 

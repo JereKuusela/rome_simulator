@@ -13,10 +13,10 @@ import {
   UnitDefinition,
   Mode,
   ArmyName,
-  CultureType
+  CultureType,
+  CountryAttribute
 } from 'types'
 import { getImage, mapRange } from 'utils'
-import { useUnitDefinitions, useTechLevel } from 'state'
 import { addToReserve, removeFromReserve, setUnitPreference, selectCulture } from 'reducers'
 import { getArchetypes, getActualUnits, getLatestUnits, getChildUnits, getRootUnit } from 'managers/army'
 import UnitValueInput from './UnitValueInput'
@@ -26,7 +26,15 @@ import { applyLosses } from 'managers/units'
 import DropdownArchetype from 'components/Dropdowns/DropdownArchetype'
 import { getCultures } from 'data'
 import SimpleDropdown from 'components/Dropdowns/SimpleDropdown'
-import { useMode, useCombatSettings, useWeariness, useCulture, useArmyData } from 'selectors'
+import {
+  useMode,
+  useCombatSettings,
+  useWeariness,
+  useCulture,
+  useArmyData,
+  useCountryAttribute,
+  useUnitDefinitions
+} from 'selectors'
 
 type Props = {
   side: SideType
@@ -57,13 +65,13 @@ const TableUnitTypes = (props: Props): JSX.Element | null => {
   const settings = useCombatSettings()
   const mode = useMode()
   const preferences = useArmyData(countryName, armyName).unitPreferences
-  const techLevel = useTechLevel(countryName)
+  const techLevel = useCountryAttribute(countryName, CountryAttribute.MartialTech)
 
   const checkPreference = useCallback(
     (role: UnitRole) => {
       if (!units) return
       const preference = preferences[role]
-      const techRequirement = preference && units[preference] && units[preference].tech
+      const techRequirement = preference && units[preference] && units[preference]?.tech
       if (techRequirement && techRequirement > techLevel) {
         dispatch(setUnitPreference(countryName, armyName, role, null))
       }
@@ -80,6 +88,8 @@ const TableUnitTypes = (props: Props): JSX.Element | null => {
   if (!units) return null
 
   const unitList = settings[Setting.Tech] ? getArchetypes(units, mode) : getActualUnits(units, mode)
+  const rootUnit = getRootUnit(units, mode)
+  if (!rootUnit) return null
   return (
     <Table celled key={side} singleLine>
       <Table.Header>
@@ -94,7 +104,7 @@ const TableUnitTypes = (props: Props): JSX.Element | null => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        <RootUnitRow unit={getRootUnit(units, mode)} {...props} />
+        <RootUnitRow unit={rootUnit} {...props} />
         {!settings[Setting.Tech] && unitList.map(unit => <UnitRow unit={unit} key={unit.type} {...props} />)}
         {settings[Setting.Tech] && <RoleRow role={UnitRole.Front} archetypes={unitList} {...props} />}
         {settings[Setting.Tech] && <RoleRow role={UnitRole.Flank} archetypes={unitList} {...props} />}
@@ -156,15 +166,17 @@ const RoleRow = (props: { role: UnitRole; archetypes: UnitDefinition[] } & Props
   const settings = useCombatSettings()
   const mode = useMode()
   const preferences = useArmyData(countryName, armyName).unitPreferences
-  const techLevel = useTechLevel(countryName)
+  const techLevel = useCountryAttribute(countryName, CountryAttribute.MartialTech)
 
   // List of archetypes -> get archetype -> get image
   const archetype = archetypes.find(unit => unit.role === role)
   const preference = preferences[role]
   const children = useMemo(() => {
-    if (!archetype || !units) return null
+    if (!archetype || !units) return undefined
     const latestType = getLatestUnits(units, techLevel)
-    const latest = { ...units[latestType[role] || archetype.type], type: UnitType.Latest }
+    const unit = units[latestType[role] || archetype.type]
+    if (!unit) return undefined
+    const latest = { ...unit, type: UnitType.Latest }
     return [latest].concat(...getChildUnits(units, techLevel, archetype.type))
   }, [archetype, units, role, techLevel])
 

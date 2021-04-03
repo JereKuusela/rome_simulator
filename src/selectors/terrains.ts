@@ -1,6 +1,6 @@
 import { filterTerrains } from 'managers/terrains'
 import createCachedSelector from 're-reselect'
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 import { LocationType } from 'types'
 import { toArr } from 'utils'
 import { useSelector } from './utils'

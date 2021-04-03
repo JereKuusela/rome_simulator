@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 import TerrainDetail from 'components/TerrainDetail'
 import { TerrainType, LocationType, TerrainValueType, ModalType } from 'types'
 import {

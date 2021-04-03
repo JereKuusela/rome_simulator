@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Input } from 'semantic-ui-react'
 
-import { AppState, getUnitPreferences, getFlankSize, getUnitList } from 'state'
+import type { AppState } from 'reducers'
 import { setFlankSize, setUnitPreference } from 'reducers'
 import { getUnitIcon } from 'data'
 import { UnitPreferenceType, SideType, UnitType, UnitDefinition } from 'types'
 import DropdownUnit from 'components/Dropdowns/DropdownUnit'
-import { getMode, getCombatSettings, getParticipant } from 'selectors'
+import { getMode, getCombatSettings, getParticipant, getUnitList, getFlankSize, getUnitPreferences } from 'selectors'
 
 /**Table with row types and flank sizes. */
 export default class PreferredUnitTypes extends Component {

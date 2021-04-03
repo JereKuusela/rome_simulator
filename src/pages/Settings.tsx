@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Tab } from 'semantic-ui-react'
 
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 
 import { filterKeys } from 'utils'
 import { CombatModeSettings, Mode, Setting, CombatSharedSettings } from 'types'

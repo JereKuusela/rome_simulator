@@ -1,61 +1,48 @@
-import { applyGeneralModifiers, convertGeneralDefinition } from 'managers/army'
-import * as manager from 'managers/modifiers'
 import * as battleManager from 'managers/battle'
-import createCachedSelector from 're-reselect'
-import { AppState } from 'state'
-import { ArmyName, CountryName, GeneralDefinition, Mode, Participant, SideType } from 'types'
-import { getArmyKey, ArmyKey, useSelector } from './utils'
+import type { AppState } from 'reducers'
+import { ArmyName, ArmyPart, CountryName, Mode, SideType } from 'types'
+import { ArmyKey, useSelector } from './utils'
 import { getParticipantName } from 'managers/battle'
-import { getArmies, getCountryData } from './countries'
-import { getCombatSettings } from './settings'
-import { getTacticsData } from './tactics'
-import { getCombatSide, getSide } from './battle'
+import { getArmies } from './countries'
+import { getCohorts, getParticipants, getSide, getSideData } from './battle'
+import { getArmyPart } from 'army_utils'
+import { iterateCohorts } from 'combat/combat_utils'
+import { getSelectedParticipantIndex } from './ui'
 
-const getArmyData = (state: AppState, countryName: CountryName, armyName: ArmyName) =>
-  getArmies(state, countryName)[armyName]
+export const getArmyData = (state: AppState, key: ArmyKey) => getArmies(state, key.countryName)[key.armyName]
 
-const getUnitPreferences = (state: AppState, countryName: CountryName, armyName: ArmyName) =>
-  getArmyData(state, countryName, armyName).unitPreferences
-
-const getGeneral = (state: AppState, key: ArmyKey) =>
-  getCountryData(state, key.countryName).armies[key.armyName].general
-
-export const getGeneralModifiers = createCachedSelector([getGeneral], general => {
-  return manager.getGeneralModifiers(general)
-})(getArmyKey)
-
-export const getGeneralData = createCachedSelector([getGeneral, getGeneralModifiers], (general, modifiers) => {
-  return applyGeneralModifiers(general, modifiers)
-})(getArmyKey)
-
-export const getGeneralDefinition = createCachedSelector(
-  [getCombatSettings, getGeneralData, getTacticsData],
-  (settings, general, tactics) => convertGeneralDefinition(settings, general, tactics)
-)(getArmyKey)
-
-export const getParticipant = (state: AppState, type: SideType, index: number, mode?: Mode): Participant =>
-  getSide(state, type, mode).participants[index]
+export const getParticipant = (state: AppState, sideType: SideType, index?: number, mode?: Mode) => {
+  index = index ?? getSelectedParticipantIndex(state, sideType)
+  return getParticipants(state, sideType, mode)[index]
+}
 
 export const getLeadingArmy = (state: AppState, sideType: SideType) => {
-  const side = getCombatSide(state, sideType)
+  const side = getSide(state, sideType)
   return battleManager.getLeadingArmy(side)
 }
 
-export const useParticipant = (type: SideType, index: number, mode?: Mode) =>
+export const getCohort = (state: AppState, side: SideType, part: ArmyPart, row: number, column: number) =>
+  getArmyPart(getCohorts(state, side), part)[row][column]
+
+export const getCohortForEachRound = (state: AppState, side: SideType, participantIndex: number, index: number) => {
+  const rounds = getSideData(state, side).days
+  return rounds.map(side => {
+    let result = null
+    iterateCohorts(side.cohorts, true, cohort => {
+      if (cohort && cohort.properties.participantIndex === participantIndex && cohort.properties.index === index)
+        result = cohort
+    })
+    return result
+  })
+}
+
+export const useParticipant = (type: SideType, index?: number, mode?: Mode) =>
   useSelector(state => getParticipant(state, type, index, mode))
 
 export const useParticipantName = (type: SideType, index: number, mode?: Mode) =>
   useSelector(state => getParticipantName(getParticipant(state, type, index, mode)))
 
-export const useGeneral = (countryName: CountryName, armyName: ArmyName): GeneralDefinition => {
-  const key = { countryName, armyName }
-  return useSelector(state => getGeneralDefinition(state, key))
-}
-
 export const useLeadingArmy = (sideType: SideType) => useSelector(state => getLeadingArmy(state, sideType))
 
 export const useArmyData = (countryName: CountryName, armyName: ArmyName) =>
-  useSelector(state => getArmyData(state, countryName, armyName))
-
-export const useUnitPrefences = (countryName: CountryName, armyName: ArmyName) =>
-  useSelector(state => getUnitPreferences(state, countryName, armyName))
+  useSelector(state => getArmyData(state, { countryName, armyName }))

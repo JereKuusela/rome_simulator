@@ -54,7 +54,7 @@ export const makeActionReplaceFirstTwice = <T extends any[], K1 extends string, 
   return ret
 }
 
-type GetEntity<S, E> = (draft: S, action: Action, params: ReducerParams, state: S) => E
+type GetEntity<S, E> = (draft: S, action: Action, params: ReducerParams, state: S) => E | undefined
 type GetPayload = (action: Action) => any[]
 
 const getDefaultEntity = (draft: any, action: Action<any>) => draft[action.payload[0]]
@@ -76,7 +76,8 @@ export const makeReducer = <S, E>(
     const func = actionToFunction[action.type]
     if (!func) return state
     return produce(state, (draft: S) => {
-      func(getEntity(draft, action, params, state), ...(getPayload ? getPayload(action) : action.payload))
+      const entity = getEntity(draft, action, params, state)
+      if (entity) func(entity, ...(getPayload ? getPayload(action) : action.payload))
     })
   }
 }
@@ -115,6 +116,7 @@ export function makeContainerReducer<S, E>(
 export type ReducerParams = { mode: Mode }
 
 export const compose = <State>(...reducers: ReducerWithParam<State>[]): ReducerWithParam<State> => {
+  console.log(reducers)
   const initial = reducers[0](undefined, { payload: [] }, {} as ReducerParams)
   const reducer = (state = initial, action: { type: string; payload: any[] }, params: ReducerParams) => {
     if (!action.payload || !Array.isArray(action.payload)) return state

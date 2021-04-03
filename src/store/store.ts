@@ -1,14 +1,6 @@
 import { createStore } from 'redux'
 import { devToolsEnhancer } from 'redux-devtools-extension'
-import {
-  rootReducer,
-  restoreDefaultTactics,
-  restoreDefaultTerrains,
-  restoreDefaultUnits,
-  stripRounds,
-  restoreDefaultSettings,
-  AppState
-} from 'state'
+import { rootReducer, AppState } from 'reducers'
 import { persistStore, persistReducer, createTransform, createMigrate } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { map } from 'utils'
@@ -17,6 +9,13 @@ import { initialize } from 'managers/combat'
 import { PersistPartial } from 'redux-persist/es/persistReducer'
 import { Reducer } from 'react'
 import { Action } from 'reducers/utils'
+import {
+  restoreDefaultTactics,
+  restoreDefaultTerrains,
+  stripRounds,
+  restoreDefaultUnits,
+  restoreDefaultSettings
+} from 'store/transforms'
 
 const TacticsTransform = createTransform(
   inboundState => inboundState,

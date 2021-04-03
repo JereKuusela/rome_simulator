@@ -126,7 +126,7 @@ export const getCultures = (): CultureType[] => cultures
 
 export const getDefaultUnits = (culture?: CultureType): UnitsData =>
   culture ? filter(defaultUnits, unit => !unit.culture || unit.culture === culture) : defaultUnits
-export const getDefaultUnit = (type: UnitType): UnitData => defaultUnits[type]
+export const getDefaultUnit = (type: UnitType) => defaultUnits[type]
 
 interface UnitJSON {
   Parent: string | null

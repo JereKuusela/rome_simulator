@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Button, Table, Header, Checkbox } from 'semantic-ui-react'
 
-import { AppState, getCombatEnvironment, convertSides } from 'state'
+import type { AppState } from 'reducers'
 import { interrupt, calculateWinRate, initResourceLosses } from 'combat'
 import { values, showProgress, filterKeys } from 'utils'
 import {
@@ -23,7 +23,7 @@ import { changeSiteParameter, refreshBattle } from 'reducers'
 import HelpTooltip from 'components/HelpTooltip'
 import AccordionToggle from 'containers/AccordionToggle'
 import GridSettings from 'components/GridSettings'
-import { getMode, getCombatSettings } from 'selectors'
+import { getMode, getCombatSettings, getInitialSides, getCombatEnvironment } from 'selectors'
 
 interface IState extends CasualtiesProgress {
   attackerWinChance: number
@@ -465,7 +465,7 @@ class Analyze extends Component<IProps, IState> {
     const { state } = this.props
     // Initialization done here to reset status.
     const field = getCombatEnvironment(state)
-    const [attacker, defender] = convertSides(state)
+    const [attacker, defender] = getInitialSides(state)
     calculateWinRate(this.update, field, attacker, defender)
   }
 

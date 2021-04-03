@@ -1,6 +1,6 @@
 import { getOpponent } from 'army_utils'
 import { convertTactic, filterTactics } from 'managers/tactics'
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 import { SideType } from 'types'
 import { toArr } from 'utils'
 import { getLeadingArmy } from './armies'
@@ -19,5 +19,4 @@ const getTactics = (state: AppState, side: SideType) => {
 }
 
 export const useTactics = (side: SideType) => useSelector(state => getTactics(state, side))
-
-export const useTactic = (side: SideType) => useSelector(state => getTactics(state, side))
+export const useTacticsData = () => useSelector(getTacticsData)

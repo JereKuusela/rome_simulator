@@ -87,7 +87,7 @@ export enum UnitAttribute {
 }
 
 export type UnitValueType = UnitAttribute | UnitType | TerrainType | CombatPhase
-export type UnitValues = { [key in UnitType]: UnitValue }
+export type UnitValues = Record<UnitType, UnitValue>
 export type UnitValue = DataValues<UnitValueType>
 
 export const formTerrainAttribute = (terrain: TerrainData | TerrainType, attribute: UnitAttribute) => {
@@ -145,8 +145,8 @@ export const unitValueToString = (definition: DataValues<UnitValueType>, type: U
   }
 }
 
-export type UnitsData = { [key in UnitType]: UnitData }
-export type UnitDefinitions = { [key in UnitType]: UnitDefinition }
+export type UnitsData = Partial<Record<UnitType, UnitData>>
+export type UnitDefinitions = Partial<Record<UnitType, UnitDefinition>>
 
 export const dictionaryUnitType: { [key: string]: UnitType } = {
   archers: UnitType.Archers,

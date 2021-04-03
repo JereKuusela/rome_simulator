@@ -2,8 +2,8 @@ import { convertCountryData, convertCountryDefinition, filterArmies } from 'mana
 import * as manager from 'managers/modifiers'
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
-import { AppState } from 'state'
-import { CountryName } from 'types'
+import type { AppState } from 'reducers'
+import { CountryAttribute, CountryName } from 'types'
 import { keys } from 'utils'
 import { getSharedSettings } from './settings'
 import { getMode } from './ui'
@@ -15,6 +15,10 @@ export const getCountryNames = createSelector([getCountries], keys)
 export const getWeariness = (state: AppState, countryName: CountryName) => getCountryData(state, countryName).weariness
 const getCulture = (state: AppState, countryName: CountryName) => getCountryData(state, countryName).modifiers.culture
 const getAllArmies = (state: AppState, countryName: CountryName) => getCountryData(state, countryName).armies
+export const getCountryAttribute = (state: AppState, countryName: CountryName, attribute: CountryAttribute) => {
+  const country = getCountry(state, countryName)
+  return country[attribute]
+}
 
 export const getArmies = createCachedSelector([getAllArmies, getMode], filterArmies)(getKey)
 export const getArmyNames = createCachedSelector([getArmies], keys)(getKey)
@@ -38,3 +42,6 @@ export const useWeariness = (countryName: CountryName) => useSelector(state => g
 export const useCulture = (countryName: CountryName) => useSelector(state => getCulture(state, countryName))
 export const useArmies = (countryName: CountryName) => useSelector(state => getArmies(state, countryName))
 export const useArmyNames = (countryName: CountryName) => useSelector(state => getArmyNames(state, countryName))
+
+export const useCountryAttribute = (countryName: CountryName, attribute: CountryAttribute): number =>
+  useSelector(state => getCountryAttribute(state, countryName, attribute))

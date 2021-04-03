@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
 import { Grid, TextArea, Checkbox, List, Header, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import {
-  AppState,
-  resetMissing,
-  restoreDefaultTactics,
-  restoreDefaultTerrains,
-  restoreDefaultUnits,
-  restoreDefaultSettings
-} from 'state'
+import type { AppState } from 'reducers'
 import { values, keys } from 'utils'
 import { ExportKey } from 'types'
-import { exportState, saveToFile } from 'managers/transfer'
+import { exportState, resetMissing, saveToFile } from 'managers/transfer'
 import { setExportKey, setResetMissing, importState } from 'reducers'
 import { FileInput } from 'components/Utils/Inputs'
+import {
+  restoreDefaultSettings,
+  restoreDefaultTactics,
+  restoreDefaultTerrains,
+  restoreDefaultUnits
+} from 'store/transforms'
 
 interface IState {
   data: string

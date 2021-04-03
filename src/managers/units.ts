@@ -90,15 +90,16 @@ export const getStrengthBasedFlank = (strength: number) => Math.pow(0.5, 4 - Mat
 export const applyLosses = (values: WearinessAttributes, units: ReserveData) =>
   units.map(unit => addValues(unit, ValuesType.LossModifier, 'Custom', generateLosses(values)))
 
-export const applyUnitModifiers = (units: UnitsData, modifiers: ModifierWithKey[]): UnitsData => {
+export const applyUnitModifiers = (unitsData: UnitsData, modifiers: ModifierWithKey[]): UnitsData => {
   modifiers = mapModifiersToUnits2(modifiers)
-  const result = { ...units }
+  const resultUnitsData = { ...unitsData }
   modifiers.forEach(value => {
     const type = value.target as UnitType
-    if (!result[type]) return
-    result[type] = addValue(result[type], value.type, value.key, value.attribute, value.value)
+    const unitData = resultUnitsData[type]
+    if (!unitData) return
+    resultUnitsData[type] = addValue(unitData, value.type, value.key, value.attribute, value.value)
   })
-  return result
+  return resultUnitsData
 }
 
 const generateLosses = (values: WearinessAttributes): [string, number][] =>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container, Grid, Table, Checkbox, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { AppState, getGeneralDefinition } from 'state'
+import type { AppState } from 'reducers'
 import { mapRange, values } from '../utils'
 
 import {
@@ -37,7 +37,14 @@ import { getCultures, policiesEU4, techEU4 } from 'data'
 import CountryValueInput from 'containers/CountryValueInput'
 import ListModifier from 'components/Utils/ListModifier'
 import { TableModifierList } from 'components/TableModifierList'
-import { getCombatSettings, getCountry, getCountryDefinition, getSelectedArmy, getSelectedCountry } from 'selectors'
+import {
+  getCombatSettings,
+  getCountry,
+  getCountryDefinition,
+  getGeneralData,
+  getSelectedArmy,
+  getSelectedCountry
+} from 'selectors'
 
 const TECH_COLUMNS = 4
 const CUSTOM_KEY = 'Base'
@@ -215,12 +222,13 @@ class CountriesEU4 extends Component<IProps> {
 const mapStateToProps = (state: AppState) => {
   const selectedArmy = getSelectedArmy(state)
   const selectedCountry = getSelectedCountry(state)
+  const key = { countryName: selectedCountry, armyName: selectedArmy }
   return {
     countryDefinition: getCountryDefinition(state, selectedCountry),
     country: getCountry(state, selectedCountry),
     selectedCountry,
     selectedArmy,
-    general: getGeneralDefinition(state, selectedCountry, selectedArmy),
+    general: getGeneralData(state, key),
     settings: getCombatSettings(state)
   }
 }

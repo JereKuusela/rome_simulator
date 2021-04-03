@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react'
 import { Container, Grid, Table, List, Input, Checkbox, Button, Tab } from 'semantic-ui-react'
 import { connect, useDispatch } from 'react-redux'
-import { AppState, getGeneral, getGeneralDefinition } from 'state'
+import type { AppState } from 'reducers'
 import { mapRange, values, keys, toArr, ObjSet } from '../utils'
 
 import { addSignWithZero } from 'formatters'
@@ -64,7 +64,15 @@ import { TableModifierList } from 'components/TableModifierList'
 import { groupBy, maxBy, noop } from 'lodash'
 import { Tech } from 'types/generated'
 import { getSelections } from 'managers/modifiers'
-import { getCombatSettings, getCountry, getCountryDefinition, getSelectedArmy, getSelectedCountry } from 'selectors'
+import {
+  getCombatSettings,
+  getCountry,
+  getCountryDefinition,
+  getGeneralData,
+  getGeneralDefinition,
+  getSelectedArmy,
+  getSelectedCountry
+} from 'selectors'
 
 const PERCENT_PADDING = '\u00a0\u00a0\u00a0\u00a0'
 
@@ -166,7 +174,7 @@ class CountriesIR extends Component<IProps> {
     const {
       settings,
       generalDefinition,
-      general,
+      generalData,
       filterNonCombat,
       countryDefinition,
       country,
@@ -192,7 +200,7 @@ class CountriesIR extends Component<IProps> {
           <RenderGeneralSection
             country={country}
             armyName={selectedArmy}
-            general={general}
+            general={generalDefinition}
             filterNonCombat={filterNonCombat}
           />
           <RenderTraditionSection country={country} filterNonCombat={filterNonCombat} />
@@ -247,7 +255,7 @@ class CountriesIR extends Component<IProps> {
                     settings
                   )}
                   customValueKey='Custom'
-                  definition={generalDefinition}
+                  definition={generalData}
                   onChange={this.setGeneralValue}
                 />
               </AccordionToggle>
@@ -259,7 +267,7 @@ class CountriesIR extends Component<IProps> {
   }
 
   renderDropdown = (type: SelectionType, items: DataEntry[]) => {
-    const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
+    const selections = this.props.country.selections[type] ?? this.props.generalData.selections[type]
     const value = selections && keys(selections).length ? keys(selections)[0] : ''
     return (
       <DropdownListDefinition
@@ -289,7 +297,7 @@ class CountriesIR extends Component<IProps> {
     disabled: boolean,
     padding?: string
   ) => {
-    const selections = this.props.country.selections[type] ?? this.props.general.selections[type]
+    const selections = this.props.country.selections[type] ?? this.props.generalData.selections[type]
     const columns = maxBy(Object.values(values), item => item.length)?.length ?? 0
     return (
       <Table celled unstackable fixed>
@@ -420,13 +428,14 @@ class CountriesIR extends Component<IProps> {
 const mapStateToProps = (state: AppState) => {
   const selectedArmy = getSelectedArmy(state)
   const selectedCountry = getSelectedCountry(state)
+  const key = { countryName: selectedCountry, armyName: selectedArmy }
   return {
     countryDefinition: getCountryDefinition(state, selectedCountry),
     country: getCountry(state, selectedCountry),
     filterNonCombat: state.ui.filterNonCombat,
     selectedArmy,
-    generalDefinition: getGeneralDefinition(state, selectedCountry, selectedArmy),
-    general: getGeneral(state, selectedCountry, selectedArmy),
+    generalDefinition: getGeneralDefinition(state, key),
+    generalData: getGeneralData(state, key),
     settings: getCombatSettings(state)
   }
 }

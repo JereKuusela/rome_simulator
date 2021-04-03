@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppState, getUnitImages, mergeUnitTypes } from 'state'
+import type { AppState } from 'reducers'
 import TacticDetail from 'components/TacticDetail'
 import { Mode, TacticType, TacticValueType, ModalType } from 'types'
 import { setTacticValue, setTacticImage, setTacticMode, deleteTactic, closeModal, setTacticType } from 'reducers'
 import BaseModal from './BaseModal'
 import ItemRemover from 'components/ItemRemover'
-import { getTacticsData } from 'selectors'
+import { getMergedUnitTypes, getTacticsData, getUnitImages } from 'selectors'
 import { toArr } from 'utils'
 
 const CUSTOM_VALUE_KEY = 'Custom'
@@ -62,7 +62,7 @@ const mapStateToProps = (state: AppState) => {
     tactic: state.tactics[type],
     tactics: toArr(getTacticsData(state)),
     images: getUnitImages(state),
-    unitTypes: mergeUnitTypes(state)
+    unitTypes: getMergedUnitTypes(state)
   }
 }
 

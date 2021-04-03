@@ -99,15 +99,17 @@ export const overrideRoleWithPreferences = (
   })
 }
 
-export const getUnitList = (
+export const convertUnitDefinitionsToList = (
   units: UnitDefinitions,
   mode: Mode,
   filterParents: boolean,
   settings: CombatSharedSettings
 ) => {
   const parents = getParents(units)
+  const landUnit = units[UnitType.Land]
+  if (!landUnit) return []
   let list = settings[Setting.Tech]
-    ? [units[UnitType.Land]].concat(getArchetypes(units, mode))
+    ? [landUnit].concat(getArchetypes(units, mode))
     : sortBy(toArr(units), unit => unitSorter(unit, mode, parents))
   list = filterParents ? list.filter(unit => !parents[unit.type]) : list
   return list

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect, useSelector } from 'react-redux'
 import { Modals, ModalType } from 'types'
-import { AppState } from 'state'
+import type { AppState } from 'reducers'
 import { closeModal } from 'reducers'
 import { Modal } from 'semantic-ui-react'
 
